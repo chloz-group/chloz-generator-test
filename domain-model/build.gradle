@@ -1,0 +1,33 @@
+plugins {
+    id 'com.chloz.test.java-library-conventions'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+}
+
+version = applicationVersion
+
+dependencies {
+    // QueryDSL
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    annotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+    //Cosium Spring Data Jpa Entity Graph
+    //implementation "com.cosium.spring.data:spring-data-jpa-entity-graph:${springDataJpaEntityGraphVersion}"
+    //annotationProcessor "org.hibernate:hibernate-jpamodelgen"
+    //annotationProcessor "com.cosium.spring.data:spring-data-jpa-entity-graph-generator:${springDataJpaEntityGraphVersion}"
+}
+/*tasks.named('jar') {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation Versions': project.version)
+    }
+}*/
+
+tasks.named("bootJar") {
+    enabled = false
+}
+
+tasks.named("bootBuildImage") {
+    enabled = false
+}

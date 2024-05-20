@@ -1,0 +1,24 @@
+plugins {
+    id 'com.chloz.test.java-application-conventions'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'org.springdoc.openapi-gradle-plugin' version "1.6.0"
+}
+
+version = applicationVersion
+
+dependencies {
+    implementation project(':services')
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    //implementation "io.springfox:springfox-boot-starter:${springfoxVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-common:${springdocVersion}"
+
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'com.chloz.test.web.ChlozGeneratorTestApplication'
+}

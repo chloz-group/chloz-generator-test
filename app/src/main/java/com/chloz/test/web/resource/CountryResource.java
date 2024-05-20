@@ -1,0 +1,72 @@
+package com.chloz.test.web.resource;
+
+import com.chloz.test.service.CountryService;
+import com.chloz.test.service.filter.SimpleCountryFilter;
+import com.chloz.test.service.filter.CountryFilter;
+import com.chloz.test.web.dto.CountryDto;
+import com.chloz.test.web.mapper.CountryMapper;
+import com.chloz.test.web.resource.base.CountryResourceBase;
+import com.chloz.test.web.Constants;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+@RestController
+@RequestMapping(path = Constants.API_BASE_PATH + "/countrys")
+public class CountryResource extends CountryResourceBase {
+
+	public CountryResource(CountryService service, CountryMapper mapper) {
+		super(service, mapper);
+	}
+
+	@GetMapping(path = "{code}")
+	public ResponseEntity<CountryDto> getByCode(@NotNull @PathVariable("code") String code,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.getById(code, graph);
+	}
+
+	@Override
+	@GetMapping
+	public Page<CountryDto> getPageByFilter(@ParameterObject SimpleCountryFilter filter,
+			@ParameterObject Pageable pageable, @Nullable @RequestParam("graph") String graph) {
+		return super.getPageByFilter(filter, pageable, graph);
+	}
+
+	@PostMapping(path = "search")
+	public Page<CountryDto> search(@RequestBody CountryFilter filter, @ParameterObject Pageable pageable,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.getPageByFilter(filter, pageable, graph);
+	}
+
+	@Override
+	@PostMapping
+	public ResponseEntity<CountryDto> create(@Valid @RequestBody CountryDto dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.create(dto, graph);
+	}
+
+	@Override
+	@PutMapping
+	public ResponseEntity<CountryDto> update(@Valid @RequestBody CountryDto dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.update(dto, graph);
+	}
+
+	@PostMapping(path = "updateFields")
+	public ResponseEntity<CountryDto> updateFields(@Valid @RequestBody CountryDto dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.updateFields(dto, graph);
+	}
+
+	@Override
+	@DeleteMapping(path = "{code}")
+	public ResponseEntity<Void> deleteById(@NotNull @PathVariable("code") String code) {
+		return super.deleteById(code);
+	}
+
+}
