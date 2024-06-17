@@ -7,6 +7,7 @@ import com.chloz.test.service.filter.SimpleTownFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
 import com.chloz.test.web.dto.TownDto;
 import com.chloz.test.web.mapper.TownMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +25,7 @@ public class TownResourceBase extends FilterDomainResource<Town, Long, TownDto, 
 	}
 
 	@Override
-	public ResponseEntity<TownDto> create(TownDto dto, String graph) {
+	public ResponseEntity<TownDto> create(@Valid TownDto dto, String graph) {
 		if (dto.getId() != null) {
 			throw new BadRequestException("A new Town cannot already have the id field");
 		}
@@ -32,14 +33,14 @@ public class TownResourceBase extends FilterDomainResource<Town, Long, TownDto, 
 	}
 
 	@Override
-	public ResponseEntity<TownDto> update(TownDto dto, String graph) {
+	public ResponseEntity<TownDto> update(@Valid TownDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<TownDto> updateFields(TownDto dto, String graph) {
+	public ResponseEntity<TownDto> updateFields(@Valid TownDto dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		Optional<Town> opt = service.findById(dto.getId());
 		if (dto.getId() == null || opt.isEmpty()) {

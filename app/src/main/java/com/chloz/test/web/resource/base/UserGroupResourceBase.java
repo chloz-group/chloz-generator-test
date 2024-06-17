@@ -7,6 +7,7 @@ import com.chloz.test.service.filter.SimpleUserGroupFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
 import com.chloz.test.web.dto.UserGroupDto;
 import com.chloz.test.web.mapper.UserGroupMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +25,7 @@ public class UserGroupResourceBase extends FilterDomainResource<UserGroup, Long,
 	}
 
 	@Override
-	public ResponseEntity<UserGroupDto> create(UserGroupDto dto, String graph) {
+	public ResponseEntity<UserGroupDto> create(@Valid UserGroupDto dto, String graph) {
 		if (dto.getId() != null) {
 			throw new BadRequestException("A new UserGroup cannot already have the id field");
 		}
@@ -32,14 +33,14 @@ public class UserGroupResourceBase extends FilterDomainResource<UserGroup, Long,
 	}
 
 	@Override
-	public ResponseEntity<UserGroupDto> update(UserGroupDto dto, String graph) {
+	public ResponseEntity<UserGroupDto> update(@Valid UserGroupDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<UserGroupDto> updateFields(UserGroupDto dto, String graph) {
+	public ResponseEntity<UserGroupDto> updateFields(@Valid UserGroupDto dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		Optional<UserGroup> opt = service.findById(dto.getId());
 		if (dto.getId() == null || opt.isEmpty()) {

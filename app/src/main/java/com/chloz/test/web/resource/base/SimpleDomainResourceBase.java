@@ -4,9 +4,12 @@ import com.chloz.test.service.SimpleDomainService;
 import com.chloz.test.web.mapper.DomainMapper;
 import com.chloz.test.web.resource.DefaultResource;
 import com.chloz.test.web.utils.ResponseUtil;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +28,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		this.mapper = mapper;
 	}
 
-	public ResponseEntity<DTO> create(DTO dto, String graph) {
+	public ResponseEntity<DTO> create(@Valid DTO dto, String graph) {
 		this.handleDtoBeforeCreate(dto);
 		T model = this.mapper.entityFromDto(dto);
 		this.handleModelBeforeCreate(model, dto);
@@ -34,7 +37,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToDto(model, graph));
 	}
 
-	public ResponseEntity<DTO> update(DTO dto, String graph) {
+	public ResponseEntity<DTO> update(@Valid DTO dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		T model = this.mapper.entityFromDto(dto);
 		this.handleModelBeforeUpdate(model, dto);
@@ -43,18 +46,18 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToDto(model, graph));
 	}
 
-	public Page<DTO> getAllPaginate(Pageable pageable, String graph) {
+	public PagedModel<DTO> getAllPaginate(Pageable pageable, String graph) {
 		Page<T> page = this.service.findAll(graph, pageable);
 		List<DTO> dtoList = page.stream().map(t -> mapper.mapToDto(t, graph)).toList();
-		return new PageImpl<>(dtoList, pageable, page.getTotalElements());
+		return new PagedModel<>(new PageImpl<>(dtoList, pageable, page.getTotalElements()));
 	}
 
-	public ResponseEntity<DTO> getById(ID id, String graph) {
+	public ResponseEntity<DTO> getById(@NotNull ID id, String graph) {
 		Optional<T> model = this.service.findById(id, graph);
 		return ResponseUtil.wrapOrNotFound(model.map(t -> mapper.mapToDto(t, graph)));
 	}
 
-	public ResponseEntity<Void> deleteById(ID id) {
+	public ResponseEntity<Void> deleteById(@NotNull ID id) {
 		this.service.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}

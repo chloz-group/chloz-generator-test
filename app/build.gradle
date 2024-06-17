@@ -3,9 +3,11 @@ plugins {
     id 'org.springframework.boot' version "${springBootVersion}"
     id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
     id 'org.springdoc.openapi-gradle-plugin' version "1.6.0"
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 version = applicationVersion
+
 
 dependencies {
     implementation project(':services')
@@ -16,6 +18,14 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-common:${springdocVersion}"
 
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+}
+
+tasks.named('asciidoctor') {
+    inputs.dir snippetsDir
+    dependsOn test
 }
 
 application {

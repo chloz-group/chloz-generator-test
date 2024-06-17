@@ -8,8 +8,8 @@ import com.chloz.test.web.mapper.TownMapper;
 import com.chloz.test.web.resource.base.TownResourceBase;
 import com.chloz.test.web.Constants;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +32,13 @@ public class TownResource extends TownResourceBase {
 
 	@Override
 	@GetMapping
-	public Page<TownDto> getPageByFilter(@ParameterObject SimpleTownFilter filter, @ParameterObject Pageable pageable,
-			@Nullable @RequestParam("graph") String graph) {
+	public PagedModel<TownDto> getPageByFilter(@ParameterObject SimpleTownFilter filter,
+			@ParameterObject Pageable pageable, @Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}
 
 	@PostMapping(path = "search")
-	public Page<TownDto> search(@RequestBody TownFilter filter, @ParameterObject Pageable pageable,
+	public PagedModel<TownDto> search(@RequestBody TownFilter filter, @ParameterObject Pageable pageable,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}

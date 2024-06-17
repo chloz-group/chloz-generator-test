@@ -8,8 +8,8 @@ import com.chloz.test.web.mapper.CountryMapper;
 import com.chloz.test.web.resource.base.CountryResourceBase;
 import com.chloz.test.web.Constants;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +32,13 @@ public class CountryResource extends CountryResourceBase {
 
 	@Override
 	@GetMapping
-	public Page<CountryDto> getPageByFilter(@ParameterObject SimpleCountryFilter filter,
+	public PagedModel<CountryDto> getPageByFilter(@ParameterObject SimpleCountryFilter filter,
 			@ParameterObject Pageable pageable, @Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}
 
 	@PostMapping(path = "search")
-	public Page<CountryDto> search(@RequestBody CountryFilter filter, @ParameterObject Pageable pageable,
+	public PagedModel<CountryDto> search(@RequestBody CountryFilter filter, @ParameterObject Pageable pageable,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}

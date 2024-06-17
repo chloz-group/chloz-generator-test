@@ -8,8 +8,8 @@ import com.chloz.test.web.mapper.UserGroupMapper;
 import com.chloz.test.web.resource.base.UserGroupResourceBase;
 import com.chloz.test.web.Constants;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +32,13 @@ public class UserGroupResource extends UserGroupResourceBase {
 
 	@Override
 	@GetMapping
-	public Page<UserGroupDto> getPageByFilter(@ParameterObject SimpleUserGroupFilter filter,
+	public PagedModel<UserGroupDto> getPageByFilter(@ParameterObject SimpleUserGroupFilter filter,
 			@ParameterObject Pageable pageable, @Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}
 
 	@PostMapping(path = "search")
-	public Page<UserGroupDto> search(@RequestBody UserGroupFilter filter, @ParameterObject Pageable pageable,
+	public PagedModel<UserGroupDto> search(@RequestBody UserGroupFilter filter, @ParameterObject Pageable pageable,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}

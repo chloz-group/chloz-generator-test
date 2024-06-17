@@ -7,6 +7,7 @@ import com.chloz.test.service.filter.SimpleMediaFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
 import com.chloz.test.web.dto.MediaDto;
 import com.chloz.test.web.mapper.MediaMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +25,7 @@ public class MediaResourceBase extends FilterDomainResource<Media, Long, MediaDt
 	}
 
 	@Override
-	public ResponseEntity<MediaDto> create(MediaDto dto, String graph) {
+	public ResponseEntity<MediaDto> create(@Valid MediaDto dto, String graph) {
 		if (dto.getId() != null) {
 			throw new BadRequestException("A new Media cannot already have the id field");
 		}
@@ -32,14 +33,14 @@ public class MediaResourceBase extends FilterDomainResource<Media, Long, MediaDt
 	}
 
 	@Override
-	public ResponseEntity<MediaDto> update(MediaDto dto, String graph) {
+	public ResponseEntity<MediaDto> update(@Valid MediaDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<MediaDto> updateFields(MediaDto dto, String graph) {
+	public ResponseEntity<MediaDto> updateFields(@Valid MediaDto dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		Optional<Media> opt = service.findById(dto.getId());
 		if (dto.getId() == null || opt.isEmpty()) {

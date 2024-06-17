@@ -7,6 +7,7 @@ import com.chloz.test.service.filter.SimpleRoleFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
 import com.chloz.test.web.dto.RoleDto;
 import com.chloz.test.web.mapper.RoleMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +25,7 @@ public class RoleResourceBase extends FilterDomainResource<Role, String, RoleDto
 	}
 
 	@Override
-	public ResponseEntity<RoleDto> create(RoleDto dto, String graph) {
+	public ResponseEntity<RoleDto> create(@Valid RoleDto dto, String graph) {
 		if (dto.getName() != null) {
 			throw new BadRequestException("A new Role cannot already have the name field");
 		}
@@ -32,14 +33,14 @@ public class RoleResourceBase extends FilterDomainResource<Role, String, RoleDto
 	}
 
 	@Override
-	public ResponseEntity<RoleDto> update(RoleDto dto, String graph) {
+	public ResponseEntity<RoleDto> update(@Valid RoleDto dto, String graph) {
 		if (dto.getName() == null || service.findById(dto.getName()).isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<RoleDto> updateFields(RoleDto dto, String graph) {
+	public ResponseEntity<RoleDto> updateFields(@Valid RoleDto dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		Optional<Role> opt = service.findById(dto.getName());
 		if (dto.getName() == null || opt.isEmpty()) {

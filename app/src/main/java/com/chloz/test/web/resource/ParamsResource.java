@@ -8,8 +8,8 @@ import com.chloz.test.web.mapper.ParamsMapper;
 import com.chloz.test.web.resource.base.ParamsResourceBase;
 import com.chloz.test.web.Constants;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +32,13 @@ public class ParamsResource extends ParamsResourceBase {
 
 	@Override
 	@GetMapping
-	public Page<ParamsDto> getPageByFilter(@ParameterObject SimpleParamsFilter filter,
+	public PagedModel<ParamsDto> getPageByFilter(@ParameterObject SimpleParamsFilter filter,
 			@ParameterObject Pageable pageable, @Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}
 
 	@PostMapping(path = "search")
-	public Page<ParamsDto> search(@RequestBody ParamsFilter filter, @ParameterObject Pageable pageable,
+	public PagedModel<ParamsDto> search(@RequestBody ParamsFilter filter, @ParameterObject Pageable pageable,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}

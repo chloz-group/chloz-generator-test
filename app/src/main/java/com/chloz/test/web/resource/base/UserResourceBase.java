@@ -12,6 +12,8 @@ import com.chloz.test.web.dto.*;
 import com.chloz.test.web.exception.BadRequestException;
 import com.chloz.test.web.mapper.UserMapper;
 import com.chloz.test.web.resource.FilterDomainResource;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,7 +39,7 @@ public class UserResourceBase extends FilterDomainResource<User, Long, UserDto, 
 	}
 
 	@Override
-	public ResponseEntity<UserDto> update(UserDto dto, String graph) {
+	public ResponseEntity<UserDto> update(@Valid UserDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 		}

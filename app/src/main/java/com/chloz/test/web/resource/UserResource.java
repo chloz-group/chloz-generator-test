@@ -11,8 +11,8 @@ import com.chloz.test.web.Constants;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -41,13 +41,13 @@ public class UserResource extends UserResourceBase {
 
 	@Override
 	@GetMapping
-	public Page<UserDto> getPageByFilter(@ParameterObject SimpleUserFilter filter, @ParameterObject Pageable pageable,
-			@Nullable @RequestParam("graph") String graph) {
+	public PagedModel<UserDto> getPageByFilter(@ParameterObject SimpleUserFilter filter,
+			@ParameterObject Pageable pageable, @Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}
 
 	@PostMapping(path = "search")
-	public Page<UserDto> search(@RequestBody UserFilter filter, @ParameterObject Pageable pageable,
+	public PagedModel<UserDto> search(@RequestBody UserFilter filter, @ParameterObject Pageable pageable,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}

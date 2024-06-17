@@ -6,6 +6,7 @@ import com.chloz.test.web.exception.BadRequestException;
 import com.chloz.test.web.resource.SimpleDomainResource;
 import com.chloz.test.web.dto.UserDeviceDto;
 import com.chloz.test.web.mapper.UserDeviceMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,7 +24,7 @@ public class UserDeviceResourceBase extends SimpleDomainResource<UserDevice, Lon
 	}
 
 	@Override
-	public ResponseEntity<UserDeviceDto> create(UserDeviceDto dto, String graph) {
+	public ResponseEntity<UserDeviceDto> create(@Valid UserDeviceDto dto, String graph) {
 		if (dto.getId() != null) {
 			throw new BadRequestException("A new UserDevice cannot already have the id field");
 		}
@@ -31,14 +32,14 @@ public class UserDeviceResourceBase extends SimpleDomainResource<UserDevice, Lon
 	}
 
 	@Override
-	public ResponseEntity<UserDeviceDto> update(UserDeviceDto dto, String graph) {
+	public ResponseEntity<UserDeviceDto> update(@Valid UserDeviceDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<UserDeviceDto> updateFields(UserDeviceDto dto, String graph) {
+	public ResponseEntity<UserDeviceDto> updateFields(@Valid UserDeviceDto dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		Optional<UserDevice> opt = service.findById(dto.getId());
 		if (dto.getId() == null || opt.isEmpty()) {

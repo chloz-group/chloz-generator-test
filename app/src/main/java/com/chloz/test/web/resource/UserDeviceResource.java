@@ -6,8 +6,8 @@ import com.chloz.test.web.mapper.UserDeviceMapper;
 import com.chloz.test.web.resource.base.UserDeviceResourceBase;
 import com.chloz.test.web.Constants;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +30,7 @@ public class UserDeviceResource extends UserDeviceResourceBase {
 
 	@Override
 	@GetMapping
-	public Page<UserDeviceDto> getAllPaginate(@ParameterObject Pageable pageable,
+	public PagedModel<UserDeviceDto> getAllPaginate(@ParameterObject Pageable pageable,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.getAllPaginate(pageable, graph);
 	}

@@ -31,6 +31,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class AccountResourceBase extends DefaultResource {
 	 * @throws LoginAlreadyUsedException
 	 *             {@code 400 (Bad Request)} if the login is already used.
 	 */
-	public ResponseEntity<UserDto> registerAccount(UserRegistrationDto dto) throws URISyntaxException {
+	public ResponseEntity<UserDto> registerAccount(@Valid UserRegistrationDto dto) throws URISyntaxException {
 		if (!checkPasswordLength(dto.getPassword())) {
 			throw new InvalidPasswordException();
 		}
@@ -126,7 +127,7 @@ public class AccountResourceBase extends DefaultResource {
 	 *             {@code 500 (Internal Server Error)} if the user login wasn't
 	 *             found.
 	 */
-	public void updateAccount(UserDto userDTO) {
+	public void updateAccount(@Valid UserDto userDTO) {
 		String userLogin = SecurityUtils.getCurrentUserLogin()
 				.orElseThrow(() -> new AccountResourceException("Current user login not found"));
 		Optional<User> existingUser = userService.findOneByEmailIgnoreCase(userDTO.getEmail());
@@ -183,7 +184,7 @@ public class AccountResourceBase extends DefaultResource {
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<AuthTokenDto> authorize(LoginDto loginDto) {
+	public ResponseEntity<AuthTokenDto> authorize(@Valid LoginDto loginDto) {
 		User user = this.findUser(loginDto.getUsername());
 		if (user == null || user.isDeleted()) {
 			throw new UserAccountNotFoundException("User account " + loginDto.getUsername() + " not found");
@@ -243,7 +244,7 @@ public class AccountResourceBase extends DefaultResource {
 		return new ResponseEntity<>(AuthTokenDto.builder().token(jwt).build(), httpHeaders, HttpStatus.OK);
 	}
 
-	public void requestAuthenticationCode(AuthenticationCodeRequestDto lp) {
+	public void requestAuthenticationCode(@Valid AuthenticationCodeRequestDto lp) {
 		User user = this.findUser(lp.getUsername());
 		if (user == null) {
 			throw new UserAccountNotFoundException("User account " + lp.getUsername() + " not found");

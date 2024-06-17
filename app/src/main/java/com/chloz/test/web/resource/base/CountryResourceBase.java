@@ -7,6 +7,7 @@ import com.chloz.test.service.filter.SimpleCountryFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
 import com.chloz.test.web.dto.CountryDto;
 import com.chloz.test.web.mapper.CountryMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +25,7 @@ public class CountryResourceBase extends FilterDomainResource<Country, String, C
 	}
 
 	@Override
-	public ResponseEntity<CountryDto> create(CountryDto dto, String graph) {
+	public ResponseEntity<CountryDto> create(@Valid CountryDto dto, String graph) {
 		if (dto.getCode() != null) {
 			throw new BadRequestException("A new Country cannot already have the code field");
 		}
@@ -32,14 +33,14 @@ public class CountryResourceBase extends FilterDomainResource<Country, String, C
 	}
 
 	@Override
-	public ResponseEntity<CountryDto> update(CountryDto dto, String graph) {
+	public ResponseEntity<CountryDto> update(@Valid CountryDto dto, String graph) {
 		if (dto.getCode() == null || service.findById(dto.getCode()).isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<CountryDto> updateFields(CountryDto dto, String graph) {
+	public ResponseEntity<CountryDto> updateFields(@Valid CountryDto dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		Optional<Country> opt = service.findById(dto.getCode());
 		if (dto.getCode() == null || opt.isEmpty()) {

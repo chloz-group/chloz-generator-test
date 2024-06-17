@@ -19,8 +19,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -80,8 +80,8 @@ public class MediaResource extends MediaResourceBase {
 
 	@Override
 	@GetMapping
-	public Page<MediaDto> getPageByFilter(@ParameterObject SimpleMediaFilter filter, @ParameterObject Pageable pageable,
-			@Nullable @RequestParam("graph") String graph) {
+	public PagedModel<MediaDto> getPageByFilter(@ParameterObject SimpleMediaFilter filter,
+			@ParameterObject Pageable pageable, @Nullable @RequestParam("graph") String graph) {
 		return super.getPageByFilter(filter, pageable, graph);
 	}
 

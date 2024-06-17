@@ -7,6 +7,7 @@ import com.chloz.test.web.resource.SimpleDomainResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import java.util.List;
 
 /**
@@ -27,10 +28,10 @@ public class FilterDomainResourceBase<T, ID, DTO, F extends SimpleFilter> extend
 		this.mapper = mapper;
 	}
 
-	public Page<DTO> getPageByFilter(F filter, Pageable pageable, String graph) {
+	public PagedModel<DTO> getPageByFilter(F filter, Pageable pageable, String graph) {
 		Page<T> page = this.service.findByFilter(filter, pageable, graph);
 		List<DTO> dtoList = page.stream().map(t -> mapper.mapToDto(t, graph)).toList();
-		return new PageImpl<>(dtoList, pageable, page.getTotalElements());
+		return new PagedModel<>(new PageImpl<>(dtoList, pageable, page.getTotalElements()));
 	}
 
 	public List<DTO> getAllByFilter(F filter, String graph) {

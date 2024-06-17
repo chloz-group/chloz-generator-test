@@ -7,6 +7,7 @@ import com.chloz.test.service.filter.SimpleParamsFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
 import com.chloz.test.web.dto.ParamsDto;
 import com.chloz.test.web.mapper.ParamsMapper;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +25,7 @@ public class ParamsResourceBase extends FilterDomainResource<Params, Long, Param
 	}
 
 	@Override
-	public ResponseEntity<ParamsDto> create(ParamsDto dto, String graph) {
+	public ResponseEntity<ParamsDto> create(@Valid ParamsDto dto, String graph) {
 		if (dto.getId() != null) {
 			throw new BadRequestException("A new Params cannot already have the id field");
 		}
@@ -32,14 +33,14 @@ public class ParamsResourceBase extends FilterDomainResource<Params, Long, Param
 	}
 
 	@Override
-	public ResponseEntity<ParamsDto> update(ParamsDto dto, String graph) {
+	public ResponseEntity<ParamsDto> update(@Valid ParamsDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<ParamsDto> updateFields(ParamsDto dto, String graph) {
+	public ResponseEntity<ParamsDto> updateFields(@Valid ParamsDto dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		Optional<Params> opt = service.findById(dto.getId());
 		if (dto.getId() == null || opt.isEmpty()) {

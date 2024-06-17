@@ -10,6 +10,7 @@ dependencies {
     // QueryDSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    implementation 'org.liquibase:liquibase-core'
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     annotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
     //Cosium Spring Data Jpa Entity Graph
