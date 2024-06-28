@@ -1,4 +1,4 @@
-package com.chloz.test.web.security;
+package com.chloz.test.service.utils;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
