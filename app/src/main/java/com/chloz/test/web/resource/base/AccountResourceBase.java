@@ -300,7 +300,7 @@ public class AccountResourceBase extends DefaultResource {
 				verificationType);
 		VerificationCode verificationCode = Optional.ofNullable(codeList).orElse(new ArrayList<>()).stream()
 				.filter(vc -> {
-					return vc.isEnableAndNotDeleted() && !vc.isCodeUsed() && vc.getExpiryDate().isAfter(Instant.now())
+					return vc.isEnable() && !vc.isCodeUsed() && vc.getExpiryDate().isAfter(Instant.now())
 							&& vc.getCode().equals(code);
 				}).findFirst().orElse(null);
 		if (verificationCode != null) {

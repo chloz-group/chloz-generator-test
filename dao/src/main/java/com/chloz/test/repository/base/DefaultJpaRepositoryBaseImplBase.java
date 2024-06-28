@@ -72,7 +72,7 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 
 	@Override
 	public Optional<T> findOne(Predicate predicate, EntityGraph<T> graph) {
-		Assert.notNull(predicate, "Predicate must not be null");
+		// Assert.notNull(predicate, "Predicate must not be null");
 		try {
 			return Optional.ofNullable(createQuery(graph, predicate).select(path).limit(2).fetchOne());
 		} catch (NonUniqueResultException ex) {
@@ -82,7 +82,7 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 
 	@Override
 	public Page<T> findAll(Predicate predicate, EntityGraph<T> graph, Pageable pageable) {
-		Assert.notNull(predicate, "Predicate must not be null");
+		// Assert.notNull(predicate, "Predicate must not be null");
 		Assert.notNull(pageable, "Pageable must not be null");
 		final JPQLQuery<?> countQuery = createCountQuery(predicate);
 		JPQLQuery<T> query = querydsl.applyPagination(pageable, createQuery(graph, predicate).select(path));
@@ -91,7 +91,7 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 
 	@Override
 	public List<T> findAll(Predicate predicate, EntityGraph<T> graph) {
-		Assert.notNull(predicate, "Predicate must not be null");
+		// Assert.notNull(predicate, "Predicate must not be null");
 		return createQuery(graph, predicate).select(path).fetch();
 	}
 
@@ -112,7 +112,7 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 	 * @return the Querydsl {@link JPQLQuery}.
 	 */
 	protected AbstractJPAQuery<?, ?> createQuery(EntityGraph<T> graph, Predicate... predicate) {
-		Assert.notNull(predicate, "Predicate must not be null");
+		// Assert.notNull(predicate, "Predicate must not be null");
 		AbstractJPAQuery<?, ?> query = null;
 		if (graph != null) {
 			query = doCreateQuery(QueryHints.of(ENTITY_GRAPH_TYPE, graph), predicate);

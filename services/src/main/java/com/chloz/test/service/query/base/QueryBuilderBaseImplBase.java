@@ -239,7 +239,8 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 	// LocalDate, UUID, ...,
 	protected List<Predicate> createAbstractEntityPredicates(QAbstractAuditingEntity path, T filter) {
 		List<Predicate> predicates = new ArrayList<>();
-		predicates.add(path.deleted.isNull().or(path.deleted.isFalse()));
+		// Deprecated code after use of Hibernate @SQLRestriction
+		// predicates.add(path.deleted.isNull().or(path.deleted.isFalse()));
 		if (filter.getDisabled() != null) {
 			predicates.addAll(this.buildBooleanPredicate(path.disabled, filter.getDisabled()));
 		}

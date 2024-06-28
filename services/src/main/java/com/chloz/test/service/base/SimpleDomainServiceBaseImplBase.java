@@ -60,19 +60,20 @@ public abstract class SimpleDomainServiceBaseImplBase<T, ID> extends DefaultServ
 
 	@Override
 	public void deleteById(ID id) {
-		this.repository.findById(id).ifPresent(t -> delete(t));
+		// Deprecated code after use of Hibernate @SQLRestriction
+		// this.repository.findById(id).ifPresent(t -> delete(t));
+		this.repository.deleteById(id);
 	}
 
 	@Override
 	public void delete(T entity) {
-		if (!logicalDeletion) {
-			this.repository.delete(entity);
-		} else {
-			AbstractAuditingEntity ent = (AbstractAuditingEntity) entity;
-			ent.setDeleted(true);
-			ent.setDisabled(true);
-			this.repository.save(entity);
-		}
+		this.repository.delete(entity);
+		// Deprecated code after use of Hibernate @SQLRestriction
+		/*
+		 * if (!logicalDeletion) { this.repository.delete(entity); } else {
+		 * AbstractAuditingEntity ent = (AbstractAuditingEntity) entity;
+		 * ent.setDeleted(true); ent.setDisabled(true); this.repository.save(entity); }
+		 */
 	}
 
 	@Override
@@ -147,11 +148,12 @@ public abstract class SimpleDomainServiceBaseImplBase<T, ID> extends DefaultServ
 	}
 
 	private Optional<T> filterDeleted(Optional<T> optional) {
-		Optional<T> opt = optional;
-		if (this.logicalDeletion) {
-			opt = optional.filter(t -> !((AbstractAuditingEntity) t).isDeleted());
-		}
-		return opt;
+		// Deprecated code after use of Hibernate @SQLRestriction
+		/*
+		 * Optional<T> opt = optional; if (this.logicalDeletion) { opt =
+		 * optional.filter(t -> !((AbstractAuditingEntity) t).isDeleted()); }
+		 */
+		return optional;
 	}
 
 	protected EntityGraph<T> createGraph(Class<T> clazz, String graph) {

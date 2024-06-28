@@ -45,10 +45,16 @@ public abstract class AbstractAuditingEntityBase implements Serializable {
 	@Builder.Default
 	private OffsetDateTime lastModifiedDate = OffsetDateTime.now();
 
-	private Boolean deleted;
+	@Getter(AccessLevel.NONE)
+	@Setter(AccessLevel.NONE)
+	@Builder.Default
+	private Boolean deleted = false;
 
-	private Boolean disabled;
+	@Builder.Default
+	private Boolean disabled = false;
+	@Deprecated
 	public boolean isDeleted() {
+		// Deprecated code after use of Hibernate @SQLRestriction
 		return deleted == null ? false : deleted;
 	}
 
@@ -56,7 +62,7 @@ public abstract class AbstractAuditingEntityBase implements Serializable {
 		return disabled == null ? false : disabled;
 	}
 
-	public boolean isEnableAndNotDeleted() {
+	public boolean isEnable() {
 		return !this.isDisabled() && !this.isDeleted();
 	}
 

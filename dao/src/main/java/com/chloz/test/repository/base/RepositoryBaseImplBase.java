@@ -20,17 +20,14 @@ public class RepositoryBaseImplBase<T, ID> extends SimpleJpaRepository<T, ID> {
 	@Override
 	@Transactional
 	public void delete(T entity) {
-		if (!applyCustomCode) {
-			super.delete(entity);
-		} else {
-			if (entityInformation.isNew(entity)) {
-				return;
-			}
-			AbstractAuditingEntity ent = (AbstractAuditingEntity) entity;
-			ent.setDeleted(true);
-			ent.setDisabled(true);
-			super.save(entity);
-		}
+		super.delete(entity);
+		//// Deprecated code after use of Hibernate @SQLRestriction
+		/*
+		 * if (!applyCustomCode) { super.delete(entity); } else { if
+		 * (entityInformation.isNew(entity)) { return; } AbstractAuditingEntity ent =
+		 * (AbstractAuditingEntity) entity; ent.setDeleted(true); ent.setDisabled(true);
+		 * super.save(entity); }
+		 */
 	}
 
 }

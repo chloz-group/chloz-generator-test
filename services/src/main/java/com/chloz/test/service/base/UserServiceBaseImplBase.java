@@ -172,7 +172,7 @@ public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long,
 		List<VerificationCode> codeList = this.findUserVerificationCodesOrderByExpiryDateDesc(user, verType);
 		VerificationCode verificationCode = Optional.ofNullable(codeList).orElse(new ArrayList<>()).stream()
 				.filter(vc -> {
-					return vc.isEnableAndNotDeleted() && vc.getExpiryDate().isAfter(Instant.now()) && !vc.getCodeUsed();
+					return vc.isEnable() && vc.getExpiryDate().isAfter(Instant.now()) && !vc.getCodeUsed();
 				}).findFirst().orElse(null);
 		if (verificationCode != null) {
 			// TODO : Find a way to get the locale

@@ -47,9 +47,11 @@ public abstract class DomainMapperBase<T, DTO> {
 
 	private <A> A map(DomainGraph domainGraph, Object model, Class<A> targetType) {
 		A destination = null;
-		if (model instanceof AbstractAuditingEntity && ((AbstractAuditingEntity) model).isDeleted()) {
-			return null;
-		}
+		// Deprecated code after use of Hibernate @SQLRestriction
+		/*
+		 * if (model instanceof AbstractAuditingEntity && ((AbstractAuditingEntity)
+		 * model).isDeleted()) { return null; }
+		 */
 		try {
 			destination = targetType.getDeclaredConstructor().newInstance();
 			ClassDescriptor descriptor = ClassDescriptor.getInstance(targetType);

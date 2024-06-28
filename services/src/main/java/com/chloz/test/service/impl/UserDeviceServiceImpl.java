@@ -27,9 +27,12 @@ public class UserDeviceServiceImpl extends UserDeviceServiceBaseImplBase impleme
 	@Override
 	public void deleteToken(String token) {
 		this.repository.findByToken(token).ifPresent(userDevice -> {
-			userDevice.setDisabled(true);
-			userDevice.setDeleted(true);
-			repository.save(userDevice);
+			repository.delete(userDevice);
+			// Deprecated code after use of Hibernate @SQLRestriction
+			/*
+			 * userDevice.setDisabled(true); userDevice.setDeleted(true);
+			 * repository.save(userDevice);
+			 */
 		});
 	}
 
@@ -42,6 +45,7 @@ public class UserDeviceServiceImpl extends UserDeviceServiceBaseImplBase impleme
 	public List<UserDevice> findDevicesOwnedByUsers(List<User> users) {
 		List<Long> ids = users.stream().map(User::getId).toList();
 		QUserDevice root = QUserDevice.userDevice;
+		// Deprecated code after use of Hibernate @SQLRestriction
 		Predicate predicate = ExpressionUtils.or(root.deleted.isNull(), root.deleted.isFalse());
 		predicate = ExpressionUtils.and(predicate, ExpressionUtils.or(root.disabled.isNull(), root.disabled.isFalse()));
 		predicate = ExpressionUtils.and(predicate, root.createdBy._super.id.in(ids));
