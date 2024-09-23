@@ -39,6 +39,7 @@ public class UserMapperBase extends DomainMapper<User, UserDto> {
 			ent = service.findById(dto.getId())
 					.orElseThrow(() -> new NoSuchElementException("User with id " + dto.getId() + " does not exists"));
 		}
+		ent.setDisabled(dto.getDisabled());
 		ent.setId(dto.getId());
 		ent.setLogin(dto.getLogin());
 		ent.setEmail(dto.getEmail());

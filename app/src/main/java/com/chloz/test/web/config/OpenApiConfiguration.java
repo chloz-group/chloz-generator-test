@@ -18,9 +18,8 @@ public class OpenApiConfiguration {
 
 	@Bean
 	public OpenAPI springOpenAPI() {
-		return new OpenAPI().info(new Info().title("Chloz Generator test API")
-				.description("Chloz Generator test application API").version("v1.0.0")
-				.license(new License().name("Apache 2.0").url("http://www.chlozgeneratortest.com")));
+		return new OpenAPI().info(new Info().title("Chloz test API").description("Chloz test application API")
+				.version("v1.0.0").license(new License().name("Apache 2.0").url("http://www.chloztest.com")));
 	}
 
 	@Bean

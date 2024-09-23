@@ -5,7 +5,7 @@ import com.chloz.test.service.TemplateService;
 import com.chloz.test.service.base.TemplateServiceBaseImplBase;
 import com.chloz.test.service.query.TemplateQueryBuilder;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

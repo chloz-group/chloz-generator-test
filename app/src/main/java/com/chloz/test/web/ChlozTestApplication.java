@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 
 @SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
-public class ChlozGeneratorTestApplication {
+public class ChlozTestApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChlozGeneratorTestApplication.class, args);
+		SpringApplication.run(ChlozTestApplication.class, args);
 	}
 
 }

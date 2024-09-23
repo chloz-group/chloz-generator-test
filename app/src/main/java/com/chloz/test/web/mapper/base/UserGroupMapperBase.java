@@ -39,6 +39,7 @@ public class UserGroupMapperBase extends DomainMapper<UserGroup, UserGroupDto> {
 			ent = service.findById(dto.getId()).orElseThrow(
 					() -> new NoSuchElementException("UserGroup with id " + dto.getId() + " does not exists"));
 		}
+		ent.setDisabled(dto.getDisabled());
 		ent.setId(dto.getId());
 		ent.setName(dto.getName());
 		ent.setDescription(dto.getDescription());

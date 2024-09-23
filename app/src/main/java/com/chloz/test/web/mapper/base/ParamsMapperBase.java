@@ -37,6 +37,7 @@ public class ParamsMapperBase extends DomainMapper<Params, ParamsDto> {
 			ent = service.findById(dto.getId()).orElseThrow(
 					() -> new NoSuchElementException("Params with id " + dto.getId() + " does not exists"));
 		}
+		ent.setDisabled(dto.getDisabled());
 		ent.setId(dto.getId());
 		ent.setParamKey(dto.getParamKey());
 		ent.setStringValue(dto.getStringValue());

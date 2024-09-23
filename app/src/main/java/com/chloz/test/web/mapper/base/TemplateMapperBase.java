@@ -37,6 +37,7 @@ public class TemplateMapperBase extends DomainMapper<Template, TemplateDto> {
 			ent = service.findById(dto.getId()).orElseThrow(
 					() -> new NoSuchElementException("Template with id " + dto.getId() + " does not exists"));
 		}
+		ent.setDisabled(dto.getDisabled());
 		ent.setId(dto.getId());
 		ent.setCode(dto.getCode());
 		ent.setContent(dto.getContent());

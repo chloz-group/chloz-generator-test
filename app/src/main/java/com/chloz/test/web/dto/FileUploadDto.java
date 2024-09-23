@@ -26,4 +26,7 @@ public class FileUploadDto implements Serializable {
 	@NotBlank
 	private String contentType;
 
+	@Builder.Default
+	private Boolean optimizeImage = true;
+
 }

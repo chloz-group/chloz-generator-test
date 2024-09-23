@@ -18,12 +18,12 @@ import java.util.List;
 
 @Component
 @Transactional
-public class ChlozGeneratorTestAuthenticationManager implements AuthenticationManager {
+public class ChlozTestAuthenticationManager implements AuthenticationManager {
 
 	private final UserService userService;
 
 	private final PasswordEncoder passwordEncoder;
-	public ChlozGeneratorTestAuthenticationManager(UserService userService, PasswordEncoder passwordEncoder) {
+	public ChlozTestAuthenticationManager(UserService userService, PasswordEncoder passwordEncoder) {
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 	}

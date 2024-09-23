@@ -5,7 +5,7 @@ import com.chloz.test.service.CountryService;
 import com.chloz.test.service.base.CountryServiceBaseImplBase;
 import com.chloz.test.service.query.CountryQueryBuilder;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

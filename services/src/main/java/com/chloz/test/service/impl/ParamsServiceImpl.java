@@ -5,7 +5,7 @@ import com.chloz.test.service.ParamsService;
 import com.chloz.test.service.base.ParamsServiceBaseImplBase;
 import com.chloz.test.service.query.ParamsQueryBuilder;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

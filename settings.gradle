@@ -1,2 +1,2 @@
-rootProject.name = 'Chloz Generator test'
+rootProject.name = 'Chloz test'
 include('app', 'dao', 'domain-model', 'services')

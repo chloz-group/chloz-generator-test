@@ -37,6 +37,7 @@ public class UserDeviceMapperBase extends DomainMapper<UserDevice, UserDeviceDto
 			ent = service.findById(dto.getId()).orElseThrow(
 					() -> new NoSuchElementException("UserDevice with id " + dto.getId() + " does not exists"));
 		}
+		ent.setDisabled(dto.getDisabled());
 		ent.setId(dto.getId());
 		ent.setToken(dto.getToken());
 		return ent;

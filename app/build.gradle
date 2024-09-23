@@ -16,6 +16,7 @@ dependencies {
     //implementation "io.springfox:springfox-boot-starter:${springfoxVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-common:${springdocVersion}"
+    implementation "net.coobird:thumbnailator:0.4.20"
 
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
@@ -30,5 +31,5 @@ tasks.named('asciidoctor') {
 
 application {
     // Define the main class for the application.
-    mainClass = 'com.chloz.test.web.ChlozGeneratorTestApplication'
+    mainClass = 'com.chloz.test.web.ChlozTestApplication'
 }

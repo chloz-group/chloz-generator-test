@@ -57,10 +57,12 @@ public class UserResourceBase extends FilterDomainResource<User, Long, UserDto, 
 		}
 		Boolean emailChecked = null;
 		Boolean phoneChecked = null;
-		if (existingUser.get().getEmail() != null && !existingUser.get().getEmail().equals(dto.getEmail())) {
+		if (existingUser.isPresent() && existingUser.get().getEmail() != null
+				&& !existingUser.get().getEmail().equals(dto.getEmail())) {
 			emailChecked = false;
 		}
-		if (existingUser.get().getPhone() != null && !existingUser.get().getPhone().equals(dto.getPhone())) {
+		if (existingUser.isPresent() && existingUser.get().getPhone() != null
+				&& !existingUser.get().getPhone().equals(dto.getPhone())) {
 			phoneChecked = false;
 		}
 		this.handleDtoBeforeUpdate(dto);

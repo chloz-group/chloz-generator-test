@@ -37,6 +37,7 @@ public class MediaMapperBase extends DomainMapper<Media, MediaDto> {
 			ent = service.findById(dto.getId())
 					.orElseThrow(() -> new NoSuchElementException("Media with id " + dto.getId() + " does not exists"));
 		}
+		ent.setDisabled(dto.getDisabled());
 		ent.setId(dto.getId());
 		ent.setName(dto.getName());
 		ent.setContentType(dto.getContentType());

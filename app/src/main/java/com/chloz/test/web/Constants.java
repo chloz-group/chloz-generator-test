@@ -2,7 +2,7 @@ package com.chloz.test.web;
 
 public class Constants {
 
-	public static final String API_BASE_PATH = "/api";
+	public static final String API_BASE_PATH = "";
 
 	/**
 	 * Minimum Password length

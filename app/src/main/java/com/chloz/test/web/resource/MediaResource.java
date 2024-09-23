@@ -10,7 +10,9 @@ import com.chloz.test.web.dto.FileUploadDto;
 import com.chloz.test.web.dto.MediaDto;
 import com.chloz.test.web.mapper.MediaMapper;
 import com.chloz.test.web.resource.base.MediaResourceBase;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +37,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -57,6 +62,12 @@ public class MediaResource extends MediaResourceBase {
 	private final MediaMapper mapper;
 
 	private Path rootDir;
+
+	// The target width for the optimized image
+	private final int optimizedImagedWith = 300;
+
+	// The target height for the optimized image
+	private final int optimizedImageHeight = 300;
 	public MediaResource(MediaService service, MediaMapper mapper) {
 		super(service, mapper);
 		this.service = service;
@@ -91,7 +102,7 @@ public class MediaResource extends MediaResourceBase {
 		if (file == null || file.isEmpty()) {
 			throw new IllegalArgumentException("No file uploaded");
 		}
-		Media media = this.saveMedia(new Media(), file);
+		Media media = this.saveMedia(new Media(), file, true);
 		return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToDto(media, graph));
 	}
 
@@ -111,24 +122,51 @@ public class MediaResource extends MediaResourceBase {
 		// try to parse contentType to make sur it's a valid content type
 		ContentType.parse(fileUpload.getContentType());
 		InputStream is = new ByteArrayInputStream(Base64.getDecoder().decode(fileUpload.getBase64Content()));
-		return this.saveMedia(media, is, fileUpload.getFileName(), fileUpload.getContentType());
+		return this.saveMedia(media, is, fileUpload.getFileName(), fileUpload.getContentType(),
+				fileUpload.getOptimizeImage());
 	}
 
-	private Media saveMedia(Media media, MultipartFile file) {
+	private Media saveMedia(Media media, MultipartFile file, boolean optimizeImage) {
 		try {
-			return this.saveMedia(media, file.getInputStream(), file.getOriginalFilename(), file.getContentType());
+			return this.saveMedia(media, file.getInputStream(), file.getOriginalFilename(), file.getContentType(),
+					optimizeImage);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not upload the file", e);
 		}
 	}
 
-	private Media saveMedia(Media media, InputStream is, String fileName, String contentType) {
+	private Media saveMedia(Media media, InputStream stream, String fileName, String contentType,
+			boolean optimizeImage) {
 		media.setContentType(contentType);
 		media.setName(fileName);
 		String key = media.getKey();
 		if (key == null) {
 			key = DigestUtils.md5Hex(System.currentTimeMillis() + fileName);
 		}
+		byte[] data;
+		try {
+			data = IOUtils.toByteArray(stream);
+			stream.close();
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to read the media content", e);
+		}
+		// Optimize image
+		try {
+			boolean isImage = contentType != null && contentType.toLowerCase().startsWith("image/");
+			if (isImage && optimizeImage) {
+				logger.info("Optimizing the image");
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				ByteArrayInputStream bis = new ByteArrayInputStream(data);
+				Thumbnails.of(bis).size(optimizedImagedWith, optimizedImageHeight).toOutputStream(bos);
+				data = bos.toByteArray();
+				bis.close();
+				bos.close();
+			}
+		} catch (IOException e) {
+			logger.warn("Could not optimize the image", e);
+		}
+		//
+		ByteArrayInputStream is = new ByteArrayInputStream(data);
 		LocalDate date = LocalDate.now();
 		Path relativePath = Path.of("" + date.getYear(), StringUtils.leftPad("" + date.getMonthValue(), 2, "0"),
 				StringUtils.leftPad("" + date.getDayOfMonth(), 2, "0"), key + "-" + media.getName());
@@ -152,7 +190,7 @@ public class MediaResource extends MediaResourceBase {
 			@NotNull @RequestParam("file") MultipartFile file, @Nullable @RequestParam("graph") String graph) {
 		Media media = this.service.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Media not found"));
-		media = this.saveMedia(media, file);
+		media = this.saveMedia(media, file, true);
 		return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToDto(media, graph));
 	}
 
@@ -194,6 +232,9 @@ public class MediaResource extends MediaResourceBase {
 	private ResponseEntity<Resource> download(Media media, HttpServletRequest request) throws IOException {
 		InputStream is = Files.newInputStream(this.rootDir.resolve(media.getPath()));
 		Resource resource = new InputStreamResource(is);
+		String etag = "M" + media.getId()
+				+ Optional.ofNullable(media.getLastModifiedDate()).map(dt -> dt.toInstant().getEpochSecond());
+		etag = Base64.getEncoder().encodeToString(etag.getBytes(StandardCharsets.UTF_8));
 		String contentType = media.getContentType();
 		if (contentType == null) {
 			try {
@@ -206,6 +247,7 @@ public class MediaResource extends MediaResourceBase {
 			contentType = "application/octet-stream";
 		}
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CACHE_CONTROL, "public, max-age=7776000").header(HttpHeaders.ETAG, etag)
 				// .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
 				// media.getName() + "\"")
 				.body(resource);

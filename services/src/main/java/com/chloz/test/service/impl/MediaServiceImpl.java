@@ -5,7 +5,7 @@ import com.chloz.test.service.MediaService;
 import com.chloz.test.service.base.MediaServiceBaseImplBase;
 import com.chloz.test.service.query.MediaQueryBuilder;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

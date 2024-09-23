@@ -38,6 +38,7 @@ public class CountryMapperBase extends DomainMapper<Country, CountryDto> {
 			ent = service.findById(dto.getCode()).orElseThrow(
 					() -> new NoSuchElementException("Country with code " + dto.getCode() + " does not exists"));
 		}
+		ent.setDisabled(dto.getDisabled());
 		ent.setCode(dto.getCode());
 		ent.setName(dto.getName());
 		ent.setCallingCode(dto.getCallingCode());

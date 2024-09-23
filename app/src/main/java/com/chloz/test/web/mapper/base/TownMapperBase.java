@@ -38,6 +38,7 @@ public class TownMapperBase extends DomainMapper<Town, TownDto> {
 			ent = service.findById(dto.getId())
 					.orElseThrow(() -> new NoSuchElementException("Town with id " + dto.getId() + " does not exists"));
 		}
+		ent.setDisabled(dto.getDisabled());
 		ent.setId(dto.getId());
 		ent.setName(dto.getName());
 		ent.setCountry(applicationContext.getBean(CountryMapper.class).entityFromIdOrElseFromDto(dto.getCountry()));
