@@ -13,6 +13,9 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +40,44 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToDto(model, graph));
 	}
 
+	public ResponseEntity<List<DTO>> bulkCreate(@Valid List<DTO> list, String graph) {
+		List<T> toSaveList = new ArrayList<>();
+		for (DTO dto : list){
+			this.handleDtoBeforeCreate(dto);
+			T model = this.mapper.entityFromDto(dto);
+			this.handleModelBeforeCreate(model, dto);
+			toSaveList.add(model);
+		}
+		Iterable<T> savedList = this.service.saveAll(toSaveList);
+		Iterator<T> it = savedList.iterator();
+		List<DTO> res = new ArrayList<>(list.size());
+		while (it.hasNext()){
+			T model = it.next();
+			this.handleModelAfterCreate(model, null);
+			res.add(mapper.mapToDto(model, graph));
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(res);
+	}
+
+	public ResponseEntity<List<DTO>> bulkUpdate(@Valid List<DTO> list, String graph) {
+		List<T> toSaveList = new ArrayList<>();
+		for (DTO dto : list){
+			this.handleDtoBeforeUpdate(dto);
+			T model = this.mapper.entityFromDto(dto);
+			this.handleModelBeforeUpdate(model, dto);
+			toSaveList.add(model);
+		}
+		Iterable<T> savedList = this.service.saveAll(toSaveList);
+		Iterator<T> it = savedList.iterator();
+		List<DTO> res = new ArrayList<>(list.size());
+		while (it.hasNext()){
+			T model = it.next();
+			this.handleModelAfterUpdate(model, null);
+			res.add(mapper.mapToDto(model, graph));
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(res);
+	}
+
 	public ResponseEntity<DTO> update(@Valid DTO dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		T model = this.mapper.entityFromDto(dto);
@@ -57,8 +98,18 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseUtil.wrapOrNotFound(model.map(t -> mapper.mapToDto(t, graph)));
 	}
 
+	public ResponseEntity<Void> updateEnableStatus(@NotNull List<ID> ids, @NotNull Boolean value) {
+        this.service.updateEnableStatus(ids, value);
+		return ResponseEntity.noContent().build();
+	}
+
 	public ResponseEntity<Void> deleteById(@NotNull ID id) {
 		this.service.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	public ResponseEntity<Void> deleteAllById(@NotNull List<ID> ids) {
+		this.service.deleteAllById(ids);
 		return ResponseEntity.noContent().build();
 	}
 

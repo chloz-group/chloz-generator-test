@@ -66,6 +66,11 @@ public abstract class SimpleDomainServiceBaseImplBase<T, ID> extends DefaultServ
 	}
 
 	@Override
+	public void deleteAllById(Iterable<ID> ids) {
+		ids.forEach(this::deleteById);
+	}
+
+	@Override
 	public void delete(T entity) {
 		this.repository.delete(entity);
 		// Deprecated code after use of Hibernate @SQLRestriction
@@ -145,6 +150,11 @@ public abstract class SimpleDomainServiceBaseImplBase<T, ID> extends DefaultServ
 	@Transactional(readOnly = true)
 	public boolean exists(Predicate predicate) {
 		return this.repository.exists(predicate);
+	}
+
+	@Override
+	public void updateEnableStatus(List<ID> ids, Boolean value) {
+		this.repository.updateEnableStatus(ids, value);
 	}
 
 	private Optional<T> filterDeleted(Optional<T> optional) {

@@ -106,4 +106,11 @@ public interface DefaultJpaRepositoryBase<T, ID> {
 	 */
 	Page<T> findAll(EntityGraph<T> graph, Pageable pageable);
 
+	/**
+	 * Change the entity enable state
+	 * @param ids list of ids for witch the enable
+	 * @param value the state to set
+	 */
+	void updateEnableStatus(List<ID> ids, Boolean value);
+
 }
