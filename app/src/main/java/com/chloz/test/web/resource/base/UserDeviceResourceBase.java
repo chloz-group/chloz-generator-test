@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
 import java.util.Optional;
 
 public class UserDeviceResourceBase extends SimpleDomainResource<UserDevice, Long, UserDeviceDto> {
@@ -37,6 +38,16 @@ public class UserDeviceResourceBase extends SimpleDomainResource<UserDevice, Lon
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
+	}
+
+	@Override
+	public ResponseEntity<List<UserDeviceDto>> bulkUpdate(@Valid List<UserDeviceDto> list, String graph) {
+		list.forEach(dto -> {
+			if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			}
+		});
+		return super.bulkUpdate(list, graph);
 	}
 
 	public ResponseEntity<UserDeviceDto> updateFields(@Valid UserDeviceDto dto, String graph) {

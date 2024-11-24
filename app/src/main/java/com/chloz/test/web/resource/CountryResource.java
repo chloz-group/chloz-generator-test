@@ -15,6 +15,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = Constants.API_BASE_PATH + "/countrys")
@@ -57,16 +58,42 @@ public class CountryResource extends CountryResourceBase {
 		return super.update(dto, graph);
 	}
 
+	@Override
+	@PostMapping(path = "bulk")
+	public ResponseEntity<List<CountryDto>> bulkCreate(@Valid @RequestBody List<CountryDto> dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.bulkCreate(dto, graph);
+	}
+
+	@Override
+	@PutMapping(path = "bulk")
+	public ResponseEntity<List<CountryDto>> bulkUpdate(@Valid @RequestBody List<CountryDto> dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.bulkUpdate(dto, graph);
+	}
+
 	@PostMapping(path = "updateFields")
 	public ResponseEntity<CountryDto> updateFields(@Valid @RequestBody CountryDto dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.updateFields(dto, graph);
 	}
 
+	@PostMapping(path = "enable-status/{codes}")
+	public ResponseEntity<Void> updateEnableStatus(@NotNull @PathVariable("codes") List<String> codes,
+			@NotNull @RequestParam("status") boolean status) {
+		return super.updateEnableStatus(codes, status);
+	}
+
 	@Override
 	@DeleteMapping(path = "{code}")
 	public ResponseEntity<Void> deleteById(@NotNull @PathVariable("code") String code) {
 		return super.deleteById(code);
+	}
+
+	@Override
+	@DeleteMapping(path = "bulk/{codes}")
+	public ResponseEntity<Void> deleteAllById(@NotNull @PathVariable("codes") List<String> codes) {
+		return super.deleteAllById(codes);
 	}
 
 }

@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
 import java.util.Optional;
 
 public class RoleResourceBase extends FilterDomainResource<Role, String, RoleDto, SimpleRoleFilter> {
@@ -38,6 +39,16 @@ public class RoleResourceBase extends FilterDomainResource<Role, String, RoleDto
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
+	}
+
+	@Override
+	public ResponseEntity<List<RoleDto>> bulkUpdate(@Valid List<RoleDto> list, String graph) {
+		list.forEach(dto -> {
+			if (dto.getName() == null || service.findById(dto.getName()).isEmpty()) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			}
+		});
+		return super.bulkUpdate(list, graph);
 	}
 
 	public ResponseEntity<RoleDto> updateFields(@Valid RoleDto dto, String graph) {

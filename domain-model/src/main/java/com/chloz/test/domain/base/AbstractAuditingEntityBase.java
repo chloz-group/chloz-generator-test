@@ -66,4 +66,11 @@ public abstract class AbstractAuditingEntityBase implements Serializable {
 		return !this.isDisabled() && !this.isDeleted();
 	}
 
+	@PrePersist
+	protected void prePersit() {
+		if (this.disabled == null) {
+			this.disabled = false;
+		}
+	}
+
 }

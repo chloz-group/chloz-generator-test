@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
 import java.util.Optional;
 
 public class TemplateResourceBase extends FilterDomainResource<Template, Long, TemplateDto, SimpleTemplateFilter> {
@@ -38,6 +39,16 @@ public class TemplateResourceBase extends FilterDomainResource<Template, Long, T
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
+	}
+
+	@Override
+	public ResponseEntity<List<TemplateDto>> bulkUpdate(@Valid List<TemplateDto> list, String graph) {
+		list.forEach(dto -> {
+			if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			}
+		});
+		return super.bulkUpdate(list, graph);
 	}
 
 	public ResponseEntity<TemplateDto> updateFields(@Valid TemplateDto dto, String graph) {

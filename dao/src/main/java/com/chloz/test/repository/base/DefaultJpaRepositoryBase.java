@@ -108,8 +108,11 @@ public interface DefaultJpaRepositoryBase<T, ID> {
 
 	/**
 	 * Change the entity enable state
-	 * @param ids list of ids for witch the enable
-	 * @param value the state to set
+	 * 
+	 * @param ids
+	 *            list of ids for witch the enable
+	 * @param value
+	 *            the state to set
 	 */
 	void updateEnableStatus(List<ID> ids, Boolean value);
 

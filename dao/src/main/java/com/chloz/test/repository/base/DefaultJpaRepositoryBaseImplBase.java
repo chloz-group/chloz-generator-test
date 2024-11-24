@@ -6,7 +6,6 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.AbstractJPAQuery;
-import jakarta.persistence.Query;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +16,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import jakarta.persistence.Query;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import java.util.HashMap;
@@ -146,11 +146,12 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 	@Override
 	public void updateEnableStatus(List<ID> ids, Boolean value) {
 		String idFieldName = entityInformation.getIdAttribute().getName();
-        Query query = em.createQuery("UPDATE " + entityInformation.getEntityName() +
-                " ent SET ent.disabled = :disabled WHERE ent." + idFieldName + " IN :id");
-        query.setParameter("disabled", !value);
-        query.setParameter("id", ids);
-        // Execute the update and check if it succeeded
-        query.executeUpdate();
+		Query query = em.createQuery("UPDATE " + entityInformation.getEntityName()
+				+ " ent SET ent.disabled = :disabled WHERE ent." + idFieldName + " IN :id");
+		query.setParameter("disabled", !value);
+		query.setParameter("id", ids);
+		// Execute the update and check if it succeeded
+		query.executeUpdate();
 	}
+
 }

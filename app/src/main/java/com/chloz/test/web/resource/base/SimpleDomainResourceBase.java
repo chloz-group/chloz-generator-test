@@ -13,7 +13,6 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +41,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 
 	public ResponseEntity<List<DTO>> bulkCreate(@Valid List<DTO> list, String graph) {
 		List<T> toSaveList = new ArrayList<>();
-		for (DTO dto : list){
+		for (DTO dto : list) {
 			this.handleDtoBeforeCreate(dto);
 			T model = this.mapper.entityFromDto(dto);
 			this.handleModelBeforeCreate(model, dto);
@@ -51,28 +50,9 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		Iterable<T> savedList = this.service.saveAll(toSaveList);
 		Iterator<T> it = savedList.iterator();
 		List<DTO> res = new ArrayList<>(list.size());
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			T model = it.next();
 			this.handleModelAfterCreate(model, null);
-			res.add(mapper.mapToDto(model, graph));
-		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(res);
-	}
-
-	public ResponseEntity<List<DTO>> bulkUpdate(@Valid List<DTO> list, String graph) {
-		List<T> toSaveList = new ArrayList<>();
-		for (DTO dto : list){
-			this.handleDtoBeforeUpdate(dto);
-			T model = this.mapper.entityFromDto(dto);
-			this.handleModelBeforeUpdate(model, dto);
-			toSaveList.add(model);
-		}
-		Iterable<T> savedList = this.service.saveAll(toSaveList);
-		Iterator<T> it = savedList.iterator();
-		List<DTO> res = new ArrayList<>(list.size());
-		while (it.hasNext()){
-			T model = it.next();
-			this.handleModelAfterUpdate(model, null);
 			res.add(mapper.mapToDto(model, graph));
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(res);
@@ -87,6 +67,25 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToDto(model, graph));
 	}
 
+	public ResponseEntity<List<DTO>> bulkUpdate(@Valid List<DTO> list, String graph) {
+		List<T> toSaveList = new ArrayList<>();
+		for (DTO dto : list) {
+			this.handleDtoBeforeUpdate(dto);
+			T model = this.mapper.entityFromDto(dto);
+			this.handleModelBeforeUpdate(model, dto);
+			toSaveList.add(model);
+		}
+		Iterable<T> savedList = this.service.saveAll(toSaveList);
+		Iterator<T> it = savedList.iterator();
+		List<DTO> res = new ArrayList<>(list.size());
+		while (it.hasNext()) {
+			T model = it.next();
+			this.handleModelAfterUpdate(model, null);
+			res.add(mapper.mapToDto(model, graph));
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(res);
+	}
+
 	public PagedModel<DTO> getAllPaginate(Pageable pageable, String graph) {
 		Page<T> page = this.service.findAll(graph, pageable);
 		List<DTO> dtoList = page.stream().map(t -> mapper.mapToDto(t, graph)).toList();
@@ -99,7 +98,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 	}
 
 	public ResponseEntity<Void> updateEnableStatus(@NotNull List<ID> ids, @NotNull Boolean value) {
-        this.service.updateEnableStatus(ids, value);
+		this.service.updateEnableStatus(ids, value);
 		return ResponseEntity.noContent().build();
 	}
 

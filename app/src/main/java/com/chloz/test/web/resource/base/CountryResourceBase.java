@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
 import java.util.Optional;
 
 public class CountryResourceBase extends FilterDomainResource<Country, String, CountryDto, SimpleCountryFilter> {
@@ -38,6 +39,16 @@ public class CountryResourceBase extends FilterDomainResource<Country, String, C
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
 		}
 		return super.update(dto, graph);
+	}
+
+	@Override
+	public ResponseEntity<List<CountryDto>> bulkUpdate(@Valid List<CountryDto> list, String graph) {
+		list.forEach(dto -> {
+			if (dto.getCode() == null || service.findById(dto.getCode()).isEmpty()) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			}
+		});
+		return super.bulkUpdate(list, graph);
 	}
 
 	public ResponseEntity<CountryDto> updateFields(@Valid CountryDto dto, String graph) {

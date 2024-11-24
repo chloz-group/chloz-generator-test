@@ -13,6 +13,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = Constants.API_BASE_PATH + "/userDevices")
@@ -40,6 +41,13 @@ public class UserDeviceResource extends UserDeviceResourceBase {
 	public ResponseEntity<UserDeviceDto> create(@Valid @RequestBody UserDeviceDto dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.create(dto, graph);
+	}
+
+	@Override
+	@PostMapping(path = "bulk")
+	public ResponseEntity<List<UserDeviceDto>> bulkCreate(@Valid @RequestBody List<UserDeviceDto> dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.bulkCreate(dto, graph);
 	}
 
 }

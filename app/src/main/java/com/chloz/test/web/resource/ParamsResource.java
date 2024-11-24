@@ -15,6 +15,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = Constants.API_BASE_PATH + "/paramss")
@@ -57,16 +58,42 @@ public class ParamsResource extends ParamsResourceBase {
 		return super.update(dto, graph);
 	}
 
+	@Override
+	@PostMapping(path = "bulk")
+	public ResponseEntity<List<ParamsDto>> bulkCreate(@Valid @RequestBody List<ParamsDto> dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.bulkCreate(dto, graph);
+	}
+
+	@Override
+	@PutMapping(path = "bulk")
+	public ResponseEntity<List<ParamsDto>> bulkUpdate(@Valid @RequestBody List<ParamsDto> dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.bulkUpdate(dto, graph);
+	}
+
 	@PostMapping(path = "updateFields")
 	public ResponseEntity<ParamsDto> updateFields(@Valid @RequestBody ParamsDto dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.updateFields(dto, graph);
 	}
 
+	@PostMapping(path = "enable-status/{ids}")
+	public ResponseEntity<Void> updateEnableStatus(@NotNull @PathVariable("ids") List<Long> ids,
+			@NotNull @RequestParam("status") boolean status) {
+		return super.updateEnableStatus(ids, status);
+	}
+
 	@Override
 	@DeleteMapping(path = "{id}")
 	public ResponseEntity<Void> deleteById(@NotNull @PathVariable("id") Long id) {
 		return super.deleteById(id);
+	}
+
+	@Override
+	@DeleteMapping(path = "bulk/{ids}")
+	public ResponseEntity<Void> deleteAllById(@NotNull @PathVariable("ids") List<Long> ids) {
+		return super.deleteAllById(ids);
 	}
 
 }

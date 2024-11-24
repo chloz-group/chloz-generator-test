@@ -2,11 +2,11 @@ package com.chloz.test.service.base;
 
 import com.querydsl.core.types.Predicate;
 import com.chloz.test.service.DefaultService;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.EntityGraph;
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +85,12 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	 */
 	void deleteById(ID id);
 
+	/**
+	 * Deletes entities with the given list of id.
+	 *
+	 * @param id
+	 *            must not be {@literal null}.
+	 */
 	void deleteAllById(Iterable<ID> ids);
 
 	/**
@@ -210,5 +216,9 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	 */
 	boolean exists(Predicate predicate);
 
-    void updateEnableStatus(@NotNull List<ID> ids, @NotNull Boolean value);
+	/**
+	 * Update the status of the entity to either enable it or disable it
+	 */
+	void updateEnableStatus(@NotNull List<ID> ids, @NotNull Boolean value);
+
 }
