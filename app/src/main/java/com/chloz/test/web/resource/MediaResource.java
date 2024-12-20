@@ -96,7 +96,13 @@ public class MediaResource extends MediaResourceBase {
 		return super.getPageByFilter(filter, pageable, graph);
 	}
 
-	@PostMapping
+	// @PostMapping
+	// TODO : comment this because there is an issue when generating client on dart
+	// using OpenAPI Generator
+	// [SEVERE] json_serializable on lib/src/model/create_request.dart (cached):
+	// Cannot populate the required constructor argument: file. It is assigned to a
+	// field not meant to be used in fromJson.
+	// package:****/src/model/create_request.dart:19:3
 	public ResponseEntity<MediaDto> create(@NotNull @RequestParam("file") MultipartFile file,
 			@Nullable @RequestParam("graph") String graph) {
 		if (file == null || file.isEmpty()) {
@@ -185,7 +191,13 @@ public class MediaResource extends MediaResourceBase {
 		return res;
 	}
 
-	@PostMapping(path = "{id}")
+	// @PutMapping(path = "{id}")
+	// TODO : comment this because there is an issue when generating client on dart
+	// using OpenAPI Generator
+	// [SEVERE] json_serializable on lib/src/model/create_request.dart (cached):
+	// Cannot populate the required constructor argument: file. It is assigned to a
+	// field not meant to be used in fromJson.
+	// package:****/src/model/create_request.dart:19:3
 	public ResponseEntity<MediaDto> update(@NotNull @PathVariable("id") Long id,
 			@NotNull @RequestParam("file") MultipartFile file, @Nullable @RequestParam("graph") String graph) {
 		Media media = this.service.findById(id)

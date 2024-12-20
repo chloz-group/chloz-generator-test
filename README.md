@@ -30,3 +30,30 @@ docker container stop chloztest
 ```bash
 docker container logs -f chloztest
 ```
+
+## Dart API Generation
+* Install Node.js
+
+* Install NPM :
+```bash
+npm install -g npm
+```
+* Install openapi-generator :
+```bash
+npm install @openapitools/openapi-generator-cli -g
+```
+* Create the directory for the project (same name as pubName below), and run the below commands in that directory
+* Next run the following to generate the api on windows (set specPath and pubName to correct values)
+```bash
+openapi-generator-cli generate ^
+    -g dart-dio ^
+    -i http://specPath ^
+    --enable-post-process-file ^
+    --generate-alias-as-model ^
+    --skip-validate-spec ^
+    --additional-properties=pubName=chloztest_dart_client,serializationLibrary=json_serializable
+```
+* Then run
+```bash
+dart run build_runner build
+```
