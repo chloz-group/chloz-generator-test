@@ -43,6 +43,14 @@ public class CountryMapperBase extends DomainMapper<Country, CountryDto> {
 			dto.getTowns().stream().map(applicationContext.getBean(TownMapper.class)::entityFromIdOrModelFromDto)
 					.forEach(model.getTowns()::add);
 		}
+		if (dto.getCode() != null) {
+			service.findById(dto.getCode()).ifPresent(ent -> {
+				model.setCreatedBy(ent.getCreatedBy());
+				model.setCreatedDate(ent.getCreatedDate());
+				model.setLastModifiedBy(ent.getLastModifiedBy());
+				model.setLastModifiedDate(ent.getLastModifiedDate());
+			});
+		}
 		return model;
 	}
 

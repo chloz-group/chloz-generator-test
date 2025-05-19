@@ -38,6 +38,14 @@ public class MediaMapperBase extends DomainMapper<Media, MediaDto> {
 		model.setName(dto.getName());
 		model.setContentType(dto.getContentType());
 		model.setKey(dto.getKey());
+		if (dto.getId() != null) {
+			service.findById(dto.getId()).ifPresent(ent -> {
+				model.setCreatedBy(ent.getCreatedBy());
+				model.setCreatedDate(ent.getCreatedDate());
+				model.setLastModifiedBy(ent.getLastModifiedBy());
+				model.setLastModifiedDate(ent.getLastModifiedDate());
+			});
+		}
 		return model;
 	}
 

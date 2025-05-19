@@ -72,11 +72,17 @@ public class CountryResourceBase extends FilterDomainResource<Country, String, C
 	@Override
 	protected void handleModelBeforeCreate(Country model, CountryDto dto) {
 		super.handleModelBeforeCreate(model, dto);
+		if (model.getTowns() != null) {
+			model.getTowns().forEach(el -> el.setCountry(model));
+		}
 	}
 
 	@Override
 	protected void handleModelBeforeUpdate(Country model, CountryDto dto) {
 		super.handleModelBeforeUpdate(model, dto);
+		if (model.getTowns() != null) {
+			model.getTowns().forEach(el -> el.setCountry(model));
+		}
 	}
 
 }

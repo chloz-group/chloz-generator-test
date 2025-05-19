@@ -30,7 +30,7 @@ public class CountryBase extends AbstractAuditingEntity implements Serializable 
 	@Column(name = "calling_code", length = 20)
 	protected String callingCode;
 
-	@OneToMany(mappedBy = "country")
+	@OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
 	@QueryInit("*.*")
 	protected List<Town> towns;
 

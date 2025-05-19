@@ -49,6 +49,14 @@ public class UserGroupMapperBase extends DomainMapper<UserGroup, UserGroupDto> {
 			dto.getRoles().stream().map(applicationContext.getBean(RoleMapper.class)::entityFromIdOrModelFromDto)
 					.forEach(model.getRoles()::add);
 		}
+		if (dto.getId() != null) {
+			service.findById(dto.getId()).ifPresent(ent -> {
+				model.setCreatedBy(ent.getCreatedBy());
+				model.setCreatedDate(ent.getCreatedDate());
+				model.setLastModifiedBy(ent.getLastModifiedBy());
+				model.setLastModifiedDate(ent.getLastModifiedDate());
+			});
+		}
 		return model;
 	}
 

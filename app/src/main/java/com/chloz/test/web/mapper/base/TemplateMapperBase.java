@@ -39,6 +39,14 @@ public class TemplateMapperBase extends DomainMapper<Template, TemplateDto> {
 		model.setContent(dto.getContent());
 		model.setTitle(dto.getTitle());
 		model.setShortContent(dto.getShortContent());
+		if (dto.getId() != null) {
+			service.findById(dto.getId()).ifPresent(ent -> {
+				model.setCreatedBy(ent.getCreatedBy());
+				model.setCreatedDate(ent.getCreatedDate());
+				model.setLastModifiedBy(ent.getLastModifiedBy());
+				model.setLastModifiedDate(ent.getLastModifiedDate());
+			});
+		}
 		return model;
 	}
 

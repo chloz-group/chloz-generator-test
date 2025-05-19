@@ -40,6 +40,14 @@ public class ParamsMapperBase extends DomainMapper<Params, ParamsDto> {
 		model.setNumberValue(dto.getNumberValue());
 		model.setDecimalValue(dto.getDecimalValue());
 		model.setBooleanValue(dto.getBooleanValue());
+		if (dto.getId() != null) {
+			service.findById(dto.getId()).ifPresent(ent -> {
+				model.setCreatedBy(ent.getCreatedBy());
+				model.setCreatedDate(ent.getCreatedDate());
+				model.setLastModifiedBy(ent.getLastModifiedBy());
+				model.setLastModifiedDate(ent.getLastModifiedDate());
+			});
+		}
 		return model;
 	}
 

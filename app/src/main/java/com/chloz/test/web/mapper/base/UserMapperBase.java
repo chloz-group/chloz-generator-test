@@ -54,6 +54,14 @@ public class UserMapperBase extends DomainMapper<User, UserDto> {
 					.forEach(model.getRoles()::add);
 		}
 		model.setPicture(applicationContext.getBean(MediaMapper.class).entityFromIdOrModelFromDto(dto.getPicture()));
+		if (dto.getId() != null) {
+			service.findById(dto.getId()).ifPresent(ent -> {
+				model.setCreatedBy(ent.getCreatedBy());
+				model.setCreatedDate(ent.getCreatedDate());
+				model.setLastModifiedBy(ent.getLastModifiedBy());
+				model.setLastModifiedDate(ent.getLastModifiedDate());
+			});
+		}
 		return model;
 	}
 

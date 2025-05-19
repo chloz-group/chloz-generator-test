@@ -36,7 +36,7 @@ public abstract class AbstractAuditingEntityBase implements Serializable {
 	private OffsetDateTime createdDate = OffsetDateTime.now();
 
 	@LastModifiedBy
-	@JoinColumn(name = "UPDATED_BY")
+	@JoinColumn(name = "LAST_MODIFIED_BY")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User lastModifiedBy;
 

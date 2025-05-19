@@ -38,6 +38,14 @@ public class TownMapperBase extends DomainMapper<Town, TownDto> {
 		model.setId(dto.getId());
 		model.setName(dto.getName());
 		model.setCountry(applicationContext.getBean(CountryMapper.class).entityFromIdOrModelFromDto(dto.getCountry()));
+		if (dto.getId() != null) {
+			service.findById(dto.getId()).ifPresent(ent -> {
+				model.setCreatedBy(ent.getCreatedBy());
+				model.setCreatedDate(ent.getCreatedDate());
+				model.setLastModifiedBy(ent.getLastModifiedBy());
+				model.setLastModifiedDate(ent.getLastModifiedDate());
+			});
+		}
 		return model;
 	}
 

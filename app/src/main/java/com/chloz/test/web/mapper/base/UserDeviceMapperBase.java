@@ -36,6 +36,14 @@ public class UserDeviceMapperBase extends DomainMapper<UserDevice, UserDeviceDto
 		model.setDisabled(dto.getDisabled());
 		model.setId(dto.getId());
 		model.setToken(dto.getToken());
+		if (dto.getId() != null) {
+			service.findById(dto.getId()).ifPresent(ent -> {
+				model.setCreatedBy(ent.getCreatedBy());
+				model.setCreatedDate(ent.getCreatedDate());
+				model.setLastModifiedBy(ent.getLastModifiedBy());
+				model.setLastModifiedDate(ent.getLastModifiedDate());
+			});
+		}
 		return model;
 	}
 
