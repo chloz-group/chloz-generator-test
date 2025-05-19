@@ -66,7 +66,7 @@ public class UserResourceBase extends FilterDomainResource<User, Long, UserDto, 
 			phoneChecked = false;
 		}
 		this.handleDtoBeforeUpdate(dto);
-		User user = this.mapper.entityFromDto(dto);
+		User user = this.mapper.modelFromDto(dto);
 		this.handleModelBeforeUpdate(user, dto);
 		if (emailChecked != null) {
 			user.setEmailChecked(emailChecked);

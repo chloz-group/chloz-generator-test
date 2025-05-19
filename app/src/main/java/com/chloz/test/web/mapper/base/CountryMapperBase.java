@@ -20,37 +20,30 @@ public class CountryMapperBase extends DomainMapper<Country, CountryDto> {
 	}
 
 	@Override
-	public Country entityFromIdOrElseFromDto(CountryDto dto) {
+	public Country entityFromIdOrModelFromDto(CountryDto dto) {
 		if (dto != null && dto.getCode() != null) {
 			return service.findById(dto.getCode()).orElseThrow(
 					() -> new NoSuchElementException("Country with code " + dto.getCode() + " does not exists"));
 		}
-		return this.entityFromDto(dto);
+		return this.modelFromDto(dto);
 	}
 
 	@Override
-	public Country entityFromDto(CountryDto dto) {
+	public Country modelFromDto(CountryDto dto) {
 		if (dto == null) {
 			return null;
 		}
-		Country ent = new Country();
-		if (dto.getCode() != null) {
-			ent = service.findById(dto.getCode()).orElseThrow(
-					() -> new NoSuchElementException("Country with code " + dto.getCode() + " does not exists"));
-		}
-		ent.setDisabled(dto.getDisabled());
-		ent.setCode(dto.getCode());
-		ent.setName(dto.getName());
-		ent.setCallingCode(dto.getCallingCode());
+		Country model = new Country();
+		model.setDisabled(dto.getDisabled());
+		model.setCode(dto.getCode());
+		model.setName(dto.getName());
+		model.setCallingCode(dto.getCallingCode());
 		if (dto.getTowns() != null) {
-			if (ent.getTowns() != null)
-				ent.getTowns().clear();
-			else
-				ent.setTowns(new ArrayList<>());
-			dto.getTowns().stream().map(applicationContext.getBean(TownMapper.class)::entityFromIdOrElseFromDto)
-					.forEach(ent.getTowns()::add);
+			model.setTowns(new ArrayList<>());
+			dto.getTowns().stream().map(applicationContext.getBean(TownMapper.class)::entityFromIdOrModelFromDto)
+					.forEach(model.getTowns()::add);
 		}
-		return ent;
+		return model;
 	}
 
 }

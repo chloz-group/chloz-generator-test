@@ -7,8 +7,8 @@ import com.chloz.test.web.mapper.DomainMapper;
 public class RoleMapperBase extends DomainMapper<Role, RoleDto> {
 
 	@Override
-	public Role entityFromIdOrElseFromDto(RoleDto dto) {
-		return this.entityFromDto(dto);
+	public Role entityFromIdOrModelFromDto(RoleDto dto) {
+		return this.modelFromDto(dto);
 	}
 
 }

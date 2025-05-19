@@ -55,7 +55,7 @@ public class UserResource extends UserResourceBase {
 	@PostMapping
 	public ResponseEntity<UserDto> create(@Valid @RequestBody UserRegistrationDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		User user = this.mapper.entityFromDto(dto);
+		User user = this.mapper.modelFromDto(dto);
 		user = this.service.createNewUser(user, dto.getPassword());
 		return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToDto(user, graph));
 	}

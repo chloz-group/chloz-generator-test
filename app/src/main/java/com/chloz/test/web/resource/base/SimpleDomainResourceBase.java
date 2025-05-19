@@ -32,7 +32,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 
 	public ResponseEntity<DTO> create(@Valid DTO dto, String graph) {
 		this.handleDtoBeforeCreate(dto);
-		T model = this.mapper.entityFromDto(dto);
+		T model = this.mapper.modelFromDto(dto);
 		this.handleModelBeforeCreate(model, dto);
 		model = this.service.save(model);
 		this.handleModelAfterCreate(model, dto);
@@ -43,7 +43,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		List<T> toSaveList = new ArrayList<>();
 		for (DTO dto : list) {
 			this.handleDtoBeforeCreate(dto);
-			T model = this.mapper.entityFromDto(dto);
+			T model = this.mapper.modelFromDto(dto);
 			this.handleModelBeforeCreate(model, dto);
 			toSaveList.add(model);
 		}
@@ -60,7 +60,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 
 	public ResponseEntity<DTO> update(@Valid DTO dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
-		T model = this.mapper.entityFromDto(dto);
+		T model = this.mapper.modelFromDto(dto);
 		this.handleModelBeforeUpdate(model, dto);
 		model = this.service.save(model);
 		this.handleModelAfterUpdate(model, dto);
@@ -71,7 +71,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		List<T> toSaveList = new ArrayList<>();
 		for (DTO dto : list) {
 			this.handleDtoBeforeUpdate(dto);
-			T model = this.mapper.entityFromDto(dto);
+			T model = this.mapper.modelFromDto(dto);
 			this.handleModelBeforeUpdate(model, dto);
 			toSaveList.add(model);
 		}

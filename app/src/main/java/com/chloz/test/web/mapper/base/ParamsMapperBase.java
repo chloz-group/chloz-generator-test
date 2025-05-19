@@ -19,32 +19,28 @@ public class ParamsMapperBase extends DomainMapper<Params, ParamsDto> {
 	}
 
 	@Override
-	public Params entityFromIdOrElseFromDto(ParamsDto dto) {
+	public Params entityFromIdOrModelFromDto(ParamsDto dto) {
 		if (dto != null && dto.getId() != null) {
 			return service.findById(dto.getId()).orElseThrow(
 					() -> new NoSuchElementException("Params with id " + dto.getId() + " does not exists"));
 		}
-		return this.entityFromDto(dto);
+		return this.modelFromDto(dto);
 	}
 
 	@Override
-	public Params entityFromDto(ParamsDto dto) {
+	public Params modelFromDto(ParamsDto dto) {
 		if (dto == null) {
 			return null;
 		}
-		Params ent = new Params();
-		if (dto.getId() != null) {
-			ent = service.findById(dto.getId()).orElseThrow(
-					() -> new NoSuchElementException("Params with id " + dto.getId() + " does not exists"));
-		}
-		ent.setDisabled(dto.getDisabled());
-		ent.setId(dto.getId());
-		ent.setParamKey(dto.getParamKey());
-		ent.setStringValue(dto.getStringValue());
-		ent.setNumberValue(dto.getNumberValue());
-		ent.setDecimalValue(dto.getDecimalValue());
-		ent.setBooleanValue(dto.getBooleanValue());
-		return ent;
+		Params model = new Params();
+		model.setDisabled(dto.getDisabled());
+		model.setId(dto.getId());
+		model.setParamKey(dto.getParamKey());
+		model.setStringValue(dto.getStringValue());
+		model.setNumberValue(dto.getNumberValue());
+		model.setDecimalValue(dto.getDecimalValue());
+		model.setBooleanValue(dto.getBooleanValue());
+		return model;
 	}
 
 }

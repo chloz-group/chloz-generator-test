@@ -20,29 +20,25 @@ public class TownMapperBase extends DomainMapper<Town, TownDto> {
 	}
 
 	@Override
-	public Town entityFromIdOrElseFromDto(TownDto dto) {
+	public Town entityFromIdOrModelFromDto(TownDto dto) {
 		if (dto != null && dto.getId() != null) {
 			return service.findById(dto.getId())
 					.orElseThrow(() -> new NoSuchElementException("Town with id " + dto.getId() + " does not exists"));
 		}
-		return this.entityFromDto(dto);
+		return this.modelFromDto(dto);
 	}
 
 	@Override
-	public Town entityFromDto(TownDto dto) {
+	public Town modelFromDto(TownDto dto) {
 		if (dto == null) {
 			return null;
 		}
-		Town ent = new Town();
-		if (dto.getId() != null) {
-			ent = service.findById(dto.getId())
-					.orElseThrow(() -> new NoSuchElementException("Town with id " + dto.getId() + " does not exists"));
-		}
-		ent.setDisabled(dto.getDisabled());
-		ent.setId(dto.getId());
-		ent.setName(dto.getName());
-		ent.setCountry(applicationContext.getBean(CountryMapper.class).entityFromIdOrElseFromDto(dto.getCountry()));
-		return ent;
+		Town model = new Town();
+		model.setDisabled(dto.getDisabled());
+		model.setId(dto.getId());
+		model.setName(dto.getName());
+		model.setCountry(applicationContext.getBean(CountryMapper.class).entityFromIdOrModelFromDto(dto.getCountry()));
+		return model;
 	}
 
 }

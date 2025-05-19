@@ -19,28 +19,24 @@ public class UserDeviceMapperBase extends DomainMapper<UserDevice, UserDeviceDto
 	}
 
 	@Override
-	public UserDevice entityFromIdOrElseFromDto(UserDeviceDto dto) {
+	public UserDevice entityFromIdOrModelFromDto(UserDeviceDto dto) {
 		if (dto != null && dto.getId() != null) {
 			return service.findById(dto.getId()).orElseThrow(
 					() -> new NoSuchElementException("UserDevice with id " + dto.getId() + " does not exists"));
 		}
-		return this.entityFromDto(dto);
+		return this.modelFromDto(dto);
 	}
 
 	@Override
-	public UserDevice entityFromDto(UserDeviceDto dto) {
+	public UserDevice modelFromDto(UserDeviceDto dto) {
 		if (dto == null) {
 			return null;
 		}
-		UserDevice ent = new UserDevice();
-		if (dto.getId() != null) {
-			ent = service.findById(dto.getId()).orElseThrow(
-					() -> new NoSuchElementException("UserDevice with id " + dto.getId() + " does not exists"));
-		}
-		ent.setDisabled(dto.getDisabled());
-		ent.setId(dto.getId());
-		ent.setToken(dto.getToken());
-		return ent;
+		UserDevice model = new UserDevice();
+		model.setDisabled(dto.getDisabled());
+		model.setId(dto.getId());
+		model.setToken(dto.getToken());
+		return model;
 	}
 
 }

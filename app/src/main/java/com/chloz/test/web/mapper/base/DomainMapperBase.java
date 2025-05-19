@@ -1,6 +1,5 @@
 package com.chloz.test.web.mapper.base;
 
-import com.chloz.test.domain.AbstractAuditingEntity;
 import com.chloz.test.service.DomainGraph;
 import com.chloz.test.service.GraphBuilder;
 import lombok.Getter;
@@ -33,25 +32,42 @@ public abstract class DomainMapperBase<T, DTO> {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 	}
 
+	/**
+	 * Generate the dto from the model
+	 * 
+	 * @param model
+	 * @param graph
+	 * @return The Dto from the model
+	 */
 	public DTO mapToDto(T model, String graph) {
 		DomainGraph domainGraph = graphBuilder.toGraph(modelType, graph);
 		DTO res = map(domainGraph, model, dtoType);
 		return res;
 	}
 
-	public abstract T entityFromIdOrElseFromDto(DTO dto);
+	/**
+	 * Return the entity from the dto ID if an ID has been provided in the DTO. If
+	 * not, transform the DTO to a model object.
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	public abstract T entityFromIdOrModelFromDto(DTO dto);
 
-	public T entityFromDto(DTO dto) {
+	/**
+	 * Transform the dto to a model. When transforming, the model dependencies are
+	 * fetched from the database if theirs IDs are provided in the DTO.
+	 * 
+	 * @param dto
+	 *            The DTO object
+	 * @return The model from the DTO object
+	 */
+	public T modelFromDto(DTO dto) {
 		return modelMapper.map(dto, modelType);
 	}
 
 	private <A> A map(DomainGraph domainGraph, Object model, Class<A> targetType) {
 		A destination = null;
-		// Deprecated code after use of Hibernate @SQLRestriction
-		/*
-		 * if (model instanceof AbstractAuditingEntity && ((AbstractAuditingEntity)
-		 * model).isDeleted()) { return null; }
-		 */
 		try {
 			destination = targetType.getDeclaredConstructor().newInstance();
 			ClassDescriptor descriptor = ClassDescriptor.getInstance(targetType);

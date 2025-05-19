@@ -21,47 +21,40 @@ public class UserMapperBase extends DomainMapper<User, UserDto> {
 	}
 
 	@Override
-	public User entityFromIdOrElseFromDto(UserDto dto) {
+	public User entityFromIdOrModelFromDto(UserDto dto) {
 		if (dto != null && dto.getId() != null) {
 			return service.findById(dto.getId())
 					.orElseThrow(() -> new NoSuchElementException("User with id " + dto.getId() + " does not exists"));
 		}
-		return this.entityFromDto(dto);
+		return this.modelFromDto(dto);
 	}
 
 	@Override
-	public User entityFromDto(UserDto dto) {
+	public User modelFromDto(UserDto dto) {
 		if (dto == null) {
 			return null;
 		}
-		User ent = new User();
-		if (dto.getId() != null) {
-			ent = service.findById(dto.getId())
-					.orElseThrow(() -> new NoSuchElementException("User with id " + dto.getId() + " does not exists"));
-		}
-		ent.setDisabled(dto.getDisabled());
-		ent.setId(dto.getId());
-		ent.setLogin(dto.getLogin());
-		ent.setEmail(dto.getEmail());
-		ent.setPhone(dto.getPhone());
-		ent.setPhoneChecked(dto.getPhoneChecked());
-		ent.setAccountLocked(dto.getAccountLocked());
-		ent.setEmailChecked(dto.getEmailChecked());
-		ent.setActivated(dto.getActivated());
-		ent.setAttempts(dto.getAttempts());
-		ent.setFirstName(dto.getFirstName());
-		ent.setName(dto.getName());
-		ent.setLang(dto.getLang());
+		User model = new User();
+		model.setDisabled(dto.getDisabled());
+		model.setId(dto.getId());
+		model.setLogin(dto.getLogin());
+		model.setEmail(dto.getEmail());
+		model.setPhone(dto.getPhone());
+		model.setPhoneChecked(dto.getPhoneChecked());
+		model.setAccountLocked(dto.getAccountLocked());
+		model.setEmailChecked(dto.getEmailChecked());
+		model.setActivated(dto.getActivated());
+		model.setAttempts(dto.getAttempts());
+		model.setFirstName(dto.getFirstName());
+		model.setName(dto.getName());
+		model.setLang(dto.getLang());
 		if (dto.getRoles() != null) {
-			if (ent.getRoles() != null)
-				ent.getRoles().clear();
-			else
-				ent.setRoles(new ArrayList<>());
-			dto.getRoles().stream().map(applicationContext.getBean(RoleMapper.class)::entityFromIdOrElseFromDto)
-					.forEach(ent.getRoles()::add);
+			model.setRoles(new ArrayList<>());
+			dto.getRoles().stream().map(applicationContext.getBean(RoleMapper.class)::entityFromIdOrModelFromDto)
+					.forEach(model.getRoles()::add);
 		}
-		ent.setPicture(applicationContext.getBean(MediaMapper.class).entityFromIdOrElseFromDto(dto.getPicture()));
-		return ent;
+		model.setPicture(applicationContext.getBean(MediaMapper.class).entityFromIdOrModelFromDto(dto.getPicture()));
+		return model;
 	}
 
 }

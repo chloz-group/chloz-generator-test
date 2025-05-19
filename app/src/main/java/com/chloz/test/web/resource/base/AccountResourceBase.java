@@ -76,7 +76,7 @@ public class AccountResourceBase extends DefaultResource {
 		if (!checkPasswordLength(dto.getPassword())) {
 			throw new InvalidPasswordException();
 		}
-		User user = userService.registerNewUser(userMapper.entityFromDto(dto), dto.getPassword());
+		User user = userService.registerNewUser(userMapper.modelFromDto(dto), dto.getPassword());
 		if (!StringUtils.isBlank(user.getEmail())) {
 			userService.sendActivationCodes(user, MessageType.EMAIL);
 		}

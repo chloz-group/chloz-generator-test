@@ -19,30 +19,26 @@ public class MediaMapperBase extends DomainMapper<Media, MediaDto> {
 	}
 
 	@Override
-	public Media entityFromIdOrElseFromDto(MediaDto dto) {
+	public Media entityFromIdOrModelFromDto(MediaDto dto) {
 		if (dto != null && dto.getId() != null) {
 			return service.findById(dto.getId())
 					.orElseThrow(() -> new NoSuchElementException("Media with id " + dto.getId() + " does not exists"));
 		}
-		return this.entityFromDto(dto);
+		return this.modelFromDto(dto);
 	}
 
 	@Override
-	public Media entityFromDto(MediaDto dto) {
+	public Media modelFromDto(MediaDto dto) {
 		if (dto == null) {
 			return null;
 		}
-		Media ent = new Media();
-		if (dto.getId() != null) {
-			ent = service.findById(dto.getId())
-					.orElseThrow(() -> new NoSuchElementException("Media with id " + dto.getId() + " does not exists"));
-		}
-		ent.setDisabled(dto.getDisabled());
-		ent.setId(dto.getId());
-		ent.setName(dto.getName());
-		ent.setContentType(dto.getContentType());
-		ent.setKey(dto.getKey());
-		return ent;
+		Media model = new Media();
+		model.setDisabled(dto.getDisabled());
+		model.setId(dto.getId());
+		model.setName(dto.getName());
+		model.setContentType(dto.getContentType());
+		model.setKey(dto.getKey());
+		return model;
 	}
 
 }

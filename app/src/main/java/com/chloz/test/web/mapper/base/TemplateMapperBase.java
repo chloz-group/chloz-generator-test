@@ -19,31 +19,27 @@ public class TemplateMapperBase extends DomainMapper<Template, TemplateDto> {
 	}
 
 	@Override
-	public Template entityFromIdOrElseFromDto(TemplateDto dto) {
+	public Template entityFromIdOrModelFromDto(TemplateDto dto) {
 		if (dto != null && dto.getId() != null) {
 			return service.findById(dto.getId()).orElseThrow(
 					() -> new NoSuchElementException("Template with id " + dto.getId() + " does not exists"));
 		}
-		return this.entityFromDto(dto);
+		return this.modelFromDto(dto);
 	}
 
 	@Override
-	public Template entityFromDto(TemplateDto dto) {
+	public Template modelFromDto(TemplateDto dto) {
 		if (dto == null) {
 			return null;
 		}
-		Template ent = new Template();
-		if (dto.getId() != null) {
-			ent = service.findById(dto.getId()).orElseThrow(
-					() -> new NoSuchElementException("Template with id " + dto.getId() + " does not exists"));
-		}
-		ent.setDisabled(dto.getDisabled());
-		ent.setId(dto.getId());
-		ent.setCode(dto.getCode());
-		ent.setContent(dto.getContent());
-		ent.setTitle(dto.getTitle());
-		ent.setShortContent(dto.getShortContent());
-		return ent;
+		Template model = new Template();
+		model.setDisabled(dto.getDisabled());
+		model.setId(dto.getId());
+		model.setCode(dto.getCode());
+		model.setContent(dto.getContent());
+		model.setTitle(dto.getTitle());
+		model.setShortContent(dto.getShortContent());
+		return model;
 	}
 
 }

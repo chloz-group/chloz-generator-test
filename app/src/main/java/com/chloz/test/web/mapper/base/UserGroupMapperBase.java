@@ -21,45 +21,35 @@ public class UserGroupMapperBase extends DomainMapper<UserGroup, UserGroupDto> {
 	}
 
 	@Override
-	public UserGroup entityFromIdOrElseFromDto(UserGroupDto dto) {
+	public UserGroup entityFromIdOrModelFromDto(UserGroupDto dto) {
 		if (dto != null && dto.getId() != null) {
 			return service.findById(dto.getId()).orElseThrow(
 					() -> new NoSuchElementException("UserGroup with id " + dto.getId() + " does not exists"));
 		}
-		return this.entityFromDto(dto);
+		return this.modelFromDto(dto);
 	}
 
 	@Override
-	public UserGroup entityFromDto(UserGroupDto dto) {
+	public UserGroup modelFromDto(UserGroupDto dto) {
 		if (dto == null) {
 			return null;
 		}
-		UserGroup ent = new UserGroup();
-		if (dto.getId() != null) {
-			ent = service.findById(dto.getId()).orElseThrow(
-					() -> new NoSuchElementException("UserGroup with id " + dto.getId() + " does not exists"));
-		}
-		ent.setDisabled(dto.getDisabled());
-		ent.setId(dto.getId());
-		ent.setName(dto.getName());
-		ent.setDescription(dto.getDescription());
+		UserGroup model = new UserGroup();
+		model.setDisabled(dto.getDisabled());
+		model.setId(dto.getId());
+		model.setName(dto.getName());
+		model.setDescription(dto.getDescription());
 		if (dto.getUsers() != null) {
-			if (ent.getUsers() != null)
-				ent.getUsers().clear();
-			else
-				ent.setUsers(new ArrayList<>());
-			dto.getUsers().stream().map(applicationContext.getBean(UserMapper.class)::entityFromIdOrElseFromDto)
-					.forEach(ent.getUsers()::add);
+			model.setUsers(new ArrayList<>());
+			dto.getUsers().stream().map(applicationContext.getBean(UserMapper.class)::entityFromIdOrModelFromDto)
+					.forEach(model.getUsers()::add);
 		}
 		if (dto.getRoles() != null) {
-			if (ent.getRoles() != null)
-				ent.getRoles().clear();
-			else
-				ent.setRoles(new ArrayList<>());
-			dto.getRoles().stream().map(applicationContext.getBean(RoleMapper.class)::entityFromIdOrElseFromDto)
-					.forEach(ent.getRoles()::add);
+			model.setRoles(new ArrayList<>());
+			dto.getRoles().stream().map(applicationContext.getBean(RoleMapper.class)::entityFromIdOrModelFromDto)
+					.forEach(model.getRoles()::add);
 		}
-		return ent;
+		return model;
 	}
 
 }
