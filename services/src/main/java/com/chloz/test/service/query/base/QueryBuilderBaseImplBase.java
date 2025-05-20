@@ -10,15 +10,18 @@ import com.chloz.test.service.filter.SimpleFilter;
 import com.chloz.test.service.filter.common.*;
 import com.chloz.test.service.query.UserQueryBuilder;
 import org.springframework.context.ApplicationContext;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends EntityPathBase>
 		implements
 			QueryBuilderBase<T, Q> {
 
 	private final ApplicationContext applicationContext;
-	public QueryBuilderBaseImplBase(ApplicationContext applicationContext) {
+	protected QueryBuilderBaseImplBase(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}
 
@@ -30,7 +33,7 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 			predicateList.addAll(fieldPredicates);
 		}
 		Predicate predicate;
-		if (filter.getOperator() == FilterOperator.or) {
+		if (filter.getOperator() == FilterOperator.OR) {
 			predicate = ExpressionUtils.anyOf(predicateList);
 		} else {
 			predicate = ExpressionUtils.allOf(predicateList);
@@ -139,8 +142,8 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 	 * @param filter
 	 * @return
 	 */
-	protected <A extends Comparable> List<Predicate> buildDateAndTimePredicate(DateTimePath<A> expression,
-			DateAndTimeFilter<A> filter) {
+	protected <A extends Comparable & Serializable> List<Predicate> buildDateAndTimePredicate(DateTimePath<A> expression,
+																							  DateAndTimeFilter<A> filter) {
 		List<Predicate> list = this.buildPredicate(expression, filter);
 		if (filter.getGoe() != null) {
 			list.add(expression.goe(filter.getGoe()));
@@ -157,7 +160,7 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 		return list;
 	}
 
-	protected <A extends Comparable> List<Predicate> buildDatePredicate(DatePath<A> expression,
+	protected <A extends Comparable & Serializable> List<Predicate> buildDatePredicate(DatePath<A> expression,
 			DateAndTimeFilter<A> filter) {
 		List<Predicate> list = this.buildPredicate(expression, filter);
 		if (filter.getGoe() != null) {
@@ -177,7 +180,7 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 
 	protected List<Predicate> buildStringPredicate(StringPath expression, StringFilter filter) {
 		List<Predicate> list = this.buildPredicate(expression, filter);
-		boolean ignoreCase = filter.getIgnoreCase() == null ? false : filter.getIgnoreCase();
+		boolean ignoreCase = Optional.ofNullable(filter.getIgnoreCase()).orElse(false);
 		if (filter.getContains() != null) {
 			if (ignoreCase)
 				list.add(expression.containsIgnoreCase(filter.getContains()));
@@ -212,7 +215,7 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 	 * @param filter
 	 * @return
 	 */
-	private List<Predicate> buildPredicate(SimpleExpression expression, Filter filter) {
+	private <A extends Serializable> List<Predicate> buildPredicate(SimpleExpression<A> expression, Filter<A> filter) {
 		List<Predicate> list = new ArrayList<>();
 		if (filter.getIsNotNull() != null && filter.getIsNotNull()) {
 			list.add(expression.isNotNull());
@@ -239,8 +242,6 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 	// LocalDate, UUID, ...,
 	protected List<Predicate> createAbstractEntityPredicates(QAbstractAuditingEntity path, T filter) {
 		List<Predicate> predicates = new ArrayList<>();
-		// Deprecated code after use of Hibernate @SQLRestriction
-		// predicates.add(path.deleted.isNull().or(path.deleted.isFalse()));
 		if (filter.getDisabled() != null) {
 			predicates.addAll(this.buildBooleanPredicate(path.disabled, filter.getDisabled()));
 		}

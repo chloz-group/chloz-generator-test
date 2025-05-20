@@ -6,6 +6,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.AbstractJPAQuery;
+import jakarta.persistence.metamodel.SingularAttribute;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +26,11 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @param <T>
- * @param <ID>
+ * @param <T> The entity class
+ * @param <I> The class of the entity id field
  */
 @Transactional
-public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaRepositoryBase<T, ID> {
+public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaRepositoryBase<T, I> {
 
 	private static final String ENTITY_GRAPH_TYPE = "jakarta.persistence.fetchgraph";
 
@@ -64,7 +65,7 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 	}
 
 	@Override
-	public Optional<T> findOneById(ID id, EntityGraph<T> graph) {
+	public Optional<T> findOneById(I id, EntityGraph<T> graph) {
 		Map<String, Object> properties = new HashMap<>();
 		properties.put(ENTITY_GRAPH_TYPE, graph);
 		T t = em.find(path.getType(), id, properties);
@@ -73,7 +74,6 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 
 	@Override
 	public Optional<T> findOne(Predicate predicate, EntityGraph<T> graph) {
-		// Assert.notNull(predicate, "Predicate must not be null");
 		try {
 			return Optional.ofNullable(createQuery(graph, predicate).select(path).limit(2).fetchOne());
 		} catch (NonUniqueResultException ex) {
@@ -83,7 +83,6 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 
 	@Override
 	public Page<T> findAll(Predicate predicate, EntityGraph<T> graph, Pageable pageable) {
-		// Assert.notNull(predicate, "Predicate must not be null");
 		Assert.notNull(pageable, "Pageable must not be null");
 		final JPQLQuery<?> countQuery = createCountQuery(predicate);
 		JPQLQuery<T> query = querydsl.applyPagination(pageable, createQuery(graph, predicate).select(path));
@@ -92,7 +91,6 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 
 	@Override
 	public List<T> findAll(Predicate predicate, EntityGraph<T> graph) {
-		// Assert.notNull(predicate, "Predicate must not be null");
 		return createQuery(graph, predicate).select(path).fetch();
 	}
 
@@ -113,7 +111,6 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 	 * @return the Querydsl {@link JPQLQuery}.
 	 */
 	protected AbstractJPAQuery<?, ?> createQuery(EntityGraph<T> graph, Predicate... predicate) {
-		// Assert.notNull(predicate, "Predicate must not be null");
 		AbstractJPAQuery<?, ?> query = null;
 		if (graph != null) {
 			query = doCreateQuery(QueryHints.of(ENTITY_GRAPH_TYPE, graph), predicate);
@@ -144,14 +141,17 @@ public class DefaultJpaRepositoryBaseImplBase<T, ID> implements DefaultJpaReposi
 	}
 
 	@Override
-	public void updateEnableStatus(List<ID> ids, Boolean value) {
-		String idFieldName = entityInformation.getIdAttribute().getName();
-		Query query = em.createQuery("UPDATE " + entityInformation.getEntityName()
-				+ " ent SET ent.disabled = :disabled WHERE ent." + idFieldName + " IN :id");
-		query.setParameter("disabled", !value);
-		query.setParameter("id", ids);
-		// Execute the update and check if it succeeded
-		query.executeUpdate();
+	public void updateEnableStatus(List<I> ids, Boolean value) {
+		SingularAttribute<? super T, ?> idAttr = entityInformation.getIdAttribute();
+		if(idAttr != null){
+			String idFieldName = idAttr.getName();
+			Query query = em.createQuery("UPDATE " + entityInformation.getEntityName()
+					+ " ent SET ent.disabled = :disabled WHERE ent." + idFieldName + " IN :id");
+			query.setParameter("disabled", !value);
+			query.setParameter("id", ids);
+			// Execute the update and check if it succeeded
+			query.executeUpdate();
+		}
 	}
 
 }

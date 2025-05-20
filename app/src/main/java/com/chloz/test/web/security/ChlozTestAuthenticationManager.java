@@ -1,6 +1,7 @@
 package com.chloz.test.web.security;
 
 import com.chloz.test.domain.User;
+import com.chloz.test.domain.base.UserGroupBase;
 import com.chloz.test.service.UserService;
 import com.chloz.test.web.exception.UserAccountNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,8 +43,10 @@ public class ChlozTestAuthenticationManager implements AuthenticationManager {
 		}
 		List<SimpleGrantedAuthority> userRoles = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName())).toList();
-		List<SimpleGrantedAuthority> groupRoles = user.getGroups().stream().filter(g -> !g.isDeleted())
-				.map(g -> g.getRoles()).reduce(new ArrayList<>(), (roles1, roles2) -> {
+		List<SimpleGrantedAuthority> groupRoles = user.getGroups().stream()
+				//.filter(g -> !g.isDeleted())
+				.map(UserGroupBase::getRoles)
+				.reduce(new ArrayList<>(), (roles1, roles2) -> {
 					roles1.addAll(roles2);
 					return roles1;
 				}).stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();

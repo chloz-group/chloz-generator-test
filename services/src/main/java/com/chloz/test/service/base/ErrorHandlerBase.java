@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
-import org.xml.sax.ErrorHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -27,7 +26,8 @@ public class ErrorHandlerBase {
 	@Value("${admin.emails:}")
 	private String administratorsEmails;
 
-	private Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+	private Logger logger = LoggerFactory.getLogger(ErrorHandlerBase.class);
+
 	public ErrorHandlerBase(MailMessagingService mailMessagingService, SMSMessagingService smsMessagingService) {
 		this.mailMessagingService = mailMessagingService;
 		this.smsMessagingService = smsMessagingService;

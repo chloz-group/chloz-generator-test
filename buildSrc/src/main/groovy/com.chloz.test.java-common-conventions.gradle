@@ -1,6 +1,7 @@
 plugins {
     // Apply the java Plugin to add support for Java.
     id 'java'
+    id "org.sonarqube"
 }
 
 group = 'com.chloz.test'

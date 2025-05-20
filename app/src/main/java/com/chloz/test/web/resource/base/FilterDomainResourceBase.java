@@ -11,33 +11,32 @@ import org.springframework.data.web.PagedModel;
 import java.util.List;
 
 /**
- * @param <T>
- *            the domain class
- * @param <F>
- *            the filter class for the domain
+ * @param <T> The entity class
+ * @param <I> The class of the entity id field
+ * @param <F> The Filter class for the entity
+ * @param <D> The DTO class for the entity
  */
-public class FilterDomainResourceBase<T, ID, DTO, F extends SimpleFilter> extends SimpleDomainResource<T, ID, DTO> {
+public class FilterDomainResourceBase<T, I, D, F extends SimpleFilter> extends SimpleDomainResource<T, I, D> {
 
-	private final FilterDomainService<T, ID, F> service;
+	private final FilterDomainService<T, I, F> service;
 
-	private final DomainMapper<T, DTO> mapper;
-	public <S extends FilterDomainService<T, ID, F>, M extends DomainMapper<T, DTO>> FilterDomainResourceBase(S service,
-			M mapper) {
+	private final DomainMapper<T, D> mapper;
+	public <S extends FilterDomainService<T, I, F>, M extends DomainMapper<T, D>> FilterDomainResourceBase(S service,
+																										   M mapper) {
 		super(service, mapper);
 		this.service = service;
 		this.mapper = mapper;
 	}
 
-	public PagedModel<DTO> getPageByFilter(F filter, Pageable pageable, String graph) {
+	public PagedModel<D> getPageByFilter(F filter, Pageable pageable, String graph) {
 		Page<T> page = this.service.findByFilter(filter, pageable, graph);
-		List<DTO> dtoList = page.stream().map(t -> mapper.mapToDto(t, graph)).toList();
+		List<D> dtoList = page.stream().map(t -> mapper.mapToDto(t, graph)).toList();
 		return new PagedModel<>(new PageImpl<>(dtoList, pageable, page.getTotalElements()));
 	}
 
-	public List<DTO> getAllByFilter(F filter, String graph) {
+	public List<D> getAllByFilter(F filter, String graph) {
 		List<T> list = this.service.findByFilter(filter, graph);
-		List<DTO> dtoList = list.stream().map(t -> mapper.mapToDto(t, graph)).toList();
-		return dtoList;
+		return list.stream().map(t -> mapper.mapToDto(t, graph)).toList();
 	}
 
 }

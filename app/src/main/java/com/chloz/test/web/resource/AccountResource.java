@@ -6,15 +6,12 @@ import com.chloz.test.web.mapper.UserMapper;
 import com.chloz.test.web.resource.base.AccountResourceBase;
 import com.chloz.test.web.security.jwt.TokenProvider;
 import com.chloz.test.web.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.net.URISyntaxException;
 
 /**
  * REST controller for managing the current user's account.
@@ -23,7 +20,6 @@ import java.net.URISyntaxException;
 @RequestMapping(path = Constants.API_BASE_PATH)
 public class AccountResource extends AccountResourceBase {
 
-	private final Logger log = LoggerFactory.getLogger(AccountResource.class);
 	public AccountResource(UserService userService, UserMapper userMapper, AuthenticationManager authenticationManager,
 			TokenProvider tokenProvider) {
 		super(userService, userMapper, authenticationManager, tokenProvider);
@@ -31,37 +27,43 @@ public class AccountResource extends AccountResourceBase {
 
 	@PostMapping("/register")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<UserDto> registerAccount(@Valid @RequestBody UserRegistrationDto dto)
-			throws URISyntaxException {
+	@Override
+	public ResponseEntity<UserDto> registerAccount(@Valid @RequestBody UserRegistrationDto dto) {
 		return super.registerAccount(dto);
 	}
 
 	@GetMapping("/authenticate")
+	@Override
 	public String isAuthenticated(HttpServletRequest request) {
 		return super.isAuthenticated(request);
 	}
 
 	@GetMapping("/account")
+	@Override
 	public UserDto getAccount() {
 		return super.getAccount();
 	}
 
 	@PostMapping("/account")
+	@Override
 	public void updateAccount(@Valid @RequestBody UserDto userDTO) {
 		super.updateAccount(userDTO);
 	}
 
 	@PostMapping(path = "/account/change-password")
+	@Override
 	public void changePassword(@RequestBody PasswordChangeDto dto) {
 		super.changePassword(dto);
 	}
 
 	@PostMapping("/authenticate")
+	@Override
 	public ResponseEntity<AuthTokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
 		return super.authorize(loginDto);
 	}
 
 	@PostMapping("/request-authentication-code")
+	@Override
 	public void requestAuthenticationCode(@Valid @RequestBody AuthenticationCodeRequestDto lp) {
 		super.requestAuthenticationCode(lp);
 	}

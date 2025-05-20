@@ -1,9 +1,6 @@
 package com.chloz.test.web.resource;
 
 import com.chloz.test.service.UserService;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Predicate;
-import com.chloz.test.domain.QUserDevice;
 import com.chloz.test.domain.User;
 import com.chloz.test.domain.base.UserDeviceBase;
 import com.chloz.test.service.UserDeviceService;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +36,7 @@ public class NotificationResource {
 	}
 
 	@PostMapping(path = "send-to-users")
-	public ResponseEntity sendToUsers(@Valid @RequestBody NotificationDto dto) throws IOException {
+	public ResponseEntity<String> sendToUsers(@Valid @RequestBody NotificationDto dto) throws IOException {
 		List<String> tokens = null;
 		if (dto.getUserFilter() != null) {
 			List<User> users = userService.findByFilter(dto.getUserFilter(), "*");

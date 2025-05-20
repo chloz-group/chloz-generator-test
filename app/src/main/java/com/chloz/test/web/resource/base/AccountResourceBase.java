@@ -32,7 +32,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,7 @@ public class AccountResourceBase extends DefaultResource {
 	 * @throws LoginAlreadyUsedException
 	 *             {@code 400 (Bad Request)} if the login is already used.
 	 */
-	public ResponseEntity<UserDto> registerAccount(@Valid UserRegistrationDto dto) throws URISyntaxException {
+	public ResponseEntity<UserDto> registerAccount(@Valid UserRegistrationDto dto) {
 		if (!checkPasswordLength(dto.getPassword())) {
 			throw new InvalidPasswordException();
 		}
@@ -166,10 +165,10 @@ public class AccountResourceBase extends DefaultResource {
 		if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
 			throw new InvalidPasswordException();
 		}
-		SecurityUtils.getCurrentUserLogin().flatMap(userService::findOneByLogin).ifPresent(user -> {
+		SecurityUtils.getCurrentUserLogin().flatMap(userService::findOneByLogin).ifPresent(user ->
 			userService.changePassword(user, passwordChangeDto.getCurrentPassword(),
-					passwordChangeDto.getNewPassword());
-		});
+					passwordChangeDto.getNewPassword())
+		);
 	}
 
 	protected static boolean checkPasswordLength(String password) {
@@ -186,16 +185,17 @@ public class AccountResourceBase extends DefaultResource {
 	@Transactional
 	public ResponseEntity<AuthTokenDto> authorize(@Valid LoginDto loginDto) {
 		User user = this.findUser(loginDto.getUsername());
-		if (user == null || user.isDeleted()) {
+		if (user == null) {
 			throw new UserAccountNotFoundException("User account " + loginDto.getUsername() + " not found");
 		}
-		boolean accountActivated = user.getActivated() != null && user.getActivated();
-		if (!accountActivated && (loginDto.getSmsCode() == null && loginDto.getEmailCode() == null)) {
+		boolean accountActivated = Optional.ofNullable(user.getActivated()).orElse(false);
+		boolean otpCodeNotProvided = loginDto.getSmsCode() == null && loginDto.getEmailCode() == null;
+		if (!accountActivated && otpCodeNotProvided) {
 			// user account is not activated
 			throw new AccountResourceException("Account not activated");
 		}
-		boolean accountLocked = user.getAccountLocked() != null && user.getAccountLocked();
-		if (accountLocked && (loginDto.getSmsCode() == null && loginDto.getEmailCode() == null)) {
+		boolean accountLocked = Optional.ofNullable(user.getAccountLocked()).orElse(false);
+		if (accountLocked && otpCodeNotProvided) {
 			// user account is locked
 			throw new AccountResourceException("Locked account");
 		}
@@ -205,25 +205,10 @@ public class AccountResourceBase extends DefaultResource {
 		if (!checkCodes) {
 			e = new InvalidVerificationCodeException();
 		} else {
-			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-					loginDto.getUsername(), loginDto.getPassword());
 			try {
-				Authentication authentication = authenticationManager.authenticate(authenticationToken);
-				if (!accountActivated) {
-					// this is a new user so we activate it
-					user.setDisabled(false);
-					user.setActivated(true);
-					user.setAccountLocked(false);
-					this.userService.save(user);
-				} else if (accountLocked) {
-					user.setAccountLocked(false);
-					this.userService.save(user);
-				}
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-				boolean rememberMe = (loginDto.getRememberMe() == null) ? false : loginDto.getRememberMe();
-				jwt = tokenProvider.createToken(authentication, rememberMe);
+				jwt=this.authenticate(loginDto,user,accountActivated, accountLocked);
 			} catch (AuthenticationException ex) {
-				log.warn("Authentication failed " + ex.getMessage());
+				log.warn("Authentication failed {}", ex.getMessage());
 				e = ex;
 			}
 		}
@@ -242,6 +227,25 @@ public class AccountResourceBase extends DefaultResource {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add(Constants.AUTHORIZATION_HEADER, "Bearer " + jwt);
 		return new ResponseEntity<>(AuthTokenDto.builder().token(jwt).build(), httpHeaders, HttpStatus.OK);
+	}
+
+	private String authenticate(LoginDto loginDto, User user, boolean accountActivated, boolean accountLocked) {
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+				loginDto.getUsername(), loginDto.getPassword());
+		Authentication authentication = authenticationManager.authenticate(authenticationToken);
+		if (!accountActivated) {
+			// this is a new user so we activate it
+			user.setDisabled(false);
+			user.setActivated(true);
+			user.setAccountLocked(false);
+			this.userService.save(user);
+		} else if (accountLocked) {
+			user.setAccountLocked(false);
+			this.userService.save(user);
+		}
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		boolean rememberMe = Optional.ofNullable(loginDto.getRememberMe()).orElse(false);
+		return tokenProvider.createToken(authentication, rememberMe);
 	}
 
 	public void requestAuthenticationCode(@Valid AuthenticationCodeRequestDto lp) {
@@ -272,10 +276,9 @@ public class AccountResourceBase extends DefaultResource {
 	}
 
 	protected User findUser(String username) {
-		User user = this.userService.findOneByLogin(username)
+		return this.userService.findOneByLogin(username)
 				.orElseGet(() -> this.userService.findOneByEmailIgnoreCase(username)
 						.orElseGet(() -> this.userService.findOneByPhone(username).orElse(null)));
-		return user;
 	}
 
 	protected boolean verifyCodes(User user, LoginDto loginDto) {
@@ -299,10 +302,10 @@ public class AccountResourceBase extends DefaultResource {
 		List<VerificationCode> codeList = this.userService.findUserVerificationCodesOrderByExpiryDateDesc(user,
 				verificationType);
 		VerificationCode verificationCode = Optional.ofNullable(codeList).orElse(new ArrayList<>()).stream()
-				.filter(vc -> {
-					return vc.isEnable() && !vc.isCodeUsed() && vc.getExpiryDate().isAfter(Instant.now())
-							&& vc.getCode().equals(code);
-				}).findFirst().orElse(null);
+				.filter(vc ->
+					 vc.isEnable() && !vc.isCodeUsed() && vc.getExpiryDate().isAfter(Instant.now())
+							&& vc.getCode().equals(code)
+				).findFirst().orElse(null);
 		if (verificationCode != null) {
 			ok = true;
 			verificationCode.setCodeUsed(true);

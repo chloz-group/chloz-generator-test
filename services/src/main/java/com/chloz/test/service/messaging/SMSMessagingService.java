@@ -56,6 +56,7 @@ public class SMSMessagingService implements MessagingService {
 	@Value("${sms.apiAddress}")
 	private URI apiAddress;
 	public SMSMessagingService() {
+		//empty constructor
 	}
 
 	@Override
@@ -71,9 +72,11 @@ public class SMSMessagingService implements MessagingService {
 		HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
 		ResponseEntity<ApiResult> responseEntity = this.sendRequest(request);
 		ApiResult result = responseEntity.getBody();
+		if(result == null ){
+			return false;
+		}
 		log.info("Sms sending to {} result is {}. The message is {}.", phoneStr, result, message);
-		boolean ok = responseEntity.getStatusCode() == HttpStatus.OK && STATUS_SUCCESS.equals(result.getStatus());
-		return ok;
+		return responseEntity.getStatusCode() == HttpStatus.OK && STATUS_SUCCESS.equals(result.getStatus());
 	}
 
 	/**
@@ -115,8 +118,7 @@ public class SMSMessagingService implements MessagingService {
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 		requestFactory.setHttpClient(httpClient);
 		RestTemplate restTemplate = new RestTemplate(requestFactory);
-		ResponseEntity<ApiResult> response = restTemplate.postForEntity(apiAddress, request, ApiResult.class);
-		return response;
+		return restTemplate.postForEntity(apiAddress, request, ApiResult.class);
 	}
 	@Getter
 	@Setter

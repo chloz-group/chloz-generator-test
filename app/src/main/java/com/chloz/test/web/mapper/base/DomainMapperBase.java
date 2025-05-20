@@ -2,7 +2,6 @@ package com.chloz.test.web.mapper.base;
 
 import com.chloz.test.service.DomainGraph;
 import com.chloz.test.service.GraphBuilder;
-import lombok.Getter;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.modelmapper.ModelMapper;
@@ -24,7 +23,8 @@ public abstract class DomainMapperBase<T, DTO> {
 
 	@Autowired
 	private GraphBuilder graphBuilder;
-	public DomainMapperBase() {
+
+	protected DomainMapperBase() {
 		Class<?>[] types = GenericTypeResolver.resolveTypeArguments(getClass(), DomainMapperBase.class);
 		this.modelType = (Class<T>) types[0];
 		this.dtoType = (Class<DTO>) types[1];
@@ -41,8 +41,7 @@ public abstract class DomainMapperBase<T, DTO> {
 	 */
 	public DTO mapToDto(T model, String graph) {
 		DomainGraph domainGraph = graphBuilder.toGraph(modelType, graph);
-		DTO res = map(domainGraph, model, dtoType);
-		return res;
+		return map(domainGraph, model, dtoType);
 	}
 
 	/**
@@ -108,10 +107,10 @@ public abstract class DomainMapperBase<T, DTO> {
 
 	private <A> void writeList(Object model, Field targetField, A target, DomainGraph graph) {
 		try {
-			List list = (List) PropertyUtils.getProperty(model, targetField.getName());
+			List<?> list = (List) PropertyUtils.getProperty(model, targetField.getName());
 			if (list != null && !list.isEmpty()) {
-				List destinationList = new ArrayList();
-				Class desType = (Class) ((ParameterizedType) targetField.getGenericType()).getActualTypeArguments()[0];
+				List destinationList = new ArrayList<>();
+				Class<?> desType = (Class) ((ParameterizedType) targetField.getGenericType()).getActualTypeArguments()[0];
 				list.forEach(src -> {
 					Object dest = map(graph, src, desType);
 					if (dest != null)
@@ -126,10 +125,10 @@ public abstract class DomainMapperBase<T, DTO> {
 
 	private <A> void writeSet(Object model, Field targetField, A target, DomainGraph graph) {
 		try {
-			Set set = (Set) PropertyUtils.getProperty(model, targetField.getName());
+			Set<?> set = (Set) PropertyUtils.getProperty(model, targetField.getName());
 			if (set != null && !set.isEmpty()) {
 				Set destinationList = new HashSet<>();
-				Class desType = (Class) ((ParameterizedType) targetField.getGenericType()).getActualTypeArguments()[0];
+				Class<?> desType = (Class) ((ParameterizedType) targetField.getGenericType()).getActualTypeArguments()[0];
 				set.forEach(src -> {
 					Object dest = map(graph, src, desType);
 					if (dest != null)
@@ -151,15 +150,15 @@ public abstract class DomainMapperBase<T, DTO> {
 			throw new IllegalStateException(e);
 		}
 	}
-	@Getter
+
 	private static class ClassDescriptor {
 
-		private static Map<Class, DomainMapperBase.ClassDescriptor> descriptors = new HashMap<>();
+		private static Map<Class<?>, DomainMapperBase.ClassDescriptor> descriptors = new HashMap<>();
 
 		private final List<Field> fields;
 
 		private final Map<String, Field> fieldsMap;
-		private ClassDescriptor(Class clazz) {
+		private ClassDescriptor(Class<?> clazz) {
 			this.fields = FieldUtils.getAllFieldsList(clazz);
 			fieldsMap = new HashMap<>();
 			this.fields.forEach(field -> fieldsMap.put(field.getName(), field));
@@ -169,8 +168,8 @@ public abstract class DomainMapperBase<T, DTO> {
 			return this.fieldsMap.containsKey(prop);
 		}
 
-		public static final synchronized DomainMapperBase.ClassDescriptor getInstance(Class clazz) {
-			return descriptors.computeIfAbsent(clazz, c -> new DomainMapperBase.ClassDescriptor(c));
+		public static final synchronized DomainMapperBase.ClassDescriptor getInstance(Class<?> clazz) {
+			return descriptors.computeIfAbsent(clazz, ClassDescriptor::new);
 		}
 
 	}

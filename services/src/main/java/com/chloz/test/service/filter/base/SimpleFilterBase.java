@@ -19,7 +19,7 @@ public class SimpleFilterBase implements Serializable {
 	 * The operator to apply between the filters
 	 */
 	@Builder.Default
-	private FilterOperator operator = FilterOperator.and;
+	private FilterOperator operator = FilterOperator.AND;
 
 	private OffsetDateTimeFilter createdDate;
 

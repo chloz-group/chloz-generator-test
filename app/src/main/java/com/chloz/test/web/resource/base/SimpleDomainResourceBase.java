@@ -18,19 +18,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ *
+ * @param <T> The entity class
+ * @param <I> The class of the entity id field
+ * @param <D> The DTO class for the entity
+ */
 @Transactional
-public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
+public class SimpleDomainResourceBase<T, I, D> extends DefaultResource {
 
-	private final DomainMapper<T, DTO> mapper;
+	private final DomainMapper<T, D> mapper;
 
-	private final SimpleDomainService<T, ID> service;
-	public <S extends SimpleDomainService<T, ID>, M extends DomainMapper<T, DTO>> SimpleDomainResourceBase(S service,
-			M mapper) {
+	private final SimpleDomainService<T, I> service;
+	public <S extends SimpleDomainService<T, I>, M extends DomainMapper<T, D>> SimpleDomainResourceBase(S service,
+																										M mapper) {
 		this.service = service;
 		this.mapper = mapper;
 	}
 
-	public ResponseEntity<DTO> create(@Valid DTO dto, String graph) {
+	public ResponseEntity<D> create(@Valid D dto, String graph) {
 		this.handleDtoBeforeCreate(dto);
 		T model = this.mapper.modelFromDto(dto);
 		this.handleModelBeforeCreate(model, dto);
@@ -39,9 +45,9 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToDto(model, graph));
 	}
 
-	public ResponseEntity<List<DTO>> bulkCreate(@Valid List<DTO> list, String graph) {
+	public ResponseEntity<List<D>> bulkCreate(@Valid List<D> list, String graph) {
 		List<T> toSaveList = new ArrayList<>();
-		for (DTO dto : list) {
+		for (D dto : list) {
 			this.handleDtoBeforeCreate(dto);
 			T model = this.mapper.modelFromDto(dto);
 			this.handleModelBeforeCreate(model, dto);
@@ -49,7 +55,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		}
 		Iterable<T> savedList = this.service.saveAll(toSaveList);
 		Iterator<T> it = savedList.iterator();
-		List<DTO> res = new ArrayList<>(list.size());
+		List<D> res = new ArrayList<>(list.size());
 		while (it.hasNext()) {
 			T model = it.next();
 			this.handleModelAfterCreate(model, null);
@@ -58,7 +64,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(res);
 	}
 
-	public ResponseEntity<DTO> update(@Valid DTO dto, String graph) {
+	public ResponseEntity<D> update(@Valid D dto, String graph) {
 		this.handleDtoBeforeUpdate(dto);
 		T model = this.mapper.modelFromDto(dto);
 		this.handleModelBeforeUpdate(model, dto);
@@ -67,9 +73,9 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToDto(model, graph));
 	}
 
-	public ResponseEntity<List<DTO>> bulkUpdate(@Valid List<DTO> list, String graph) {
+	public ResponseEntity<List<D>> bulkUpdate(@Valid List<D> list, String graph) {
 		List<T> toSaveList = new ArrayList<>();
-		for (DTO dto : list) {
+		for (D dto : list) {
 			this.handleDtoBeforeUpdate(dto);
 			T model = this.mapper.modelFromDto(dto);
 			this.handleModelBeforeUpdate(model, dto);
@@ -77,7 +83,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		}
 		Iterable<T> savedList = this.service.saveAll(toSaveList);
 		Iterator<T> it = savedList.iterator();
-		List<DTO> res = new ArrayList<>(list.size());
+		List<D> res = new ArrayList<>(list.size());
 		while (it.hasNext()) {
 			T model = it.next();
 			this.handleModelAfterUpdate(model, null);
@@ -86,28 +92,28 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(res);
 	}
 
-	public PagedModel<DTO> getAllPaginate(Pageable pageable, String graph) {
+	public PagedModel<D> getAllPaginate(Pageable pageable, String graph) {
 		Page<T> page = this.service.findAll(graph, pageable);
-		List<DTO> dtoList = page.stream().map(t -> mapper.mapToDto(t, graph)).toList();
+		List<D> dtoList = page.stream().map(t -> mapper.mapToDto(t, graph)).toList();
 		return new PagedModel<>(new PageImpl<>(dtoList, pageable, page.getTotalElements()));
 	}
 
-	public ResponseEntity<DTO> getById(@NotNull ID id, String graph) {
+	public ResponseEntity<D> getById(@NotNull I id, String graph) {
 		Optional<T> model = this.service.findById(id, graph);
 		return ResponseUtil.wrapOrNotFound(model.map(t -> mapper.mapToDto(t, graph)));
 	}
 
-	public ResponseEntity<Void> updateEnableStatus(@NotNull List<ID> ids, @NotNull Boolean value) {
+	public ResponseEntity<Void> updateEnableStatus(@NotNull List<I> ids, @NotNull Boolean value) {
 		this.service.updateEnableStatus(ids, value);
 		return ResponseEntity.noContent().build();
 	}
 
-	public ResponseEntity<Void> deleteById(@NotNull ID id) {
+	public ResponseEntity<Void> deleteById(@NotNull I id) {
 		this.service.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 
-	public ResponseEntity<Void> deleteAllById(@NotNull List<ID> ids) {
+	public ResponseEntity<Void> deleteAllById(@NotNull List<I> ids) {
 		this.service.deleteAllById(ids);
 		return ResponseEntity.noContent().build();
 	}
@@ -118,7 +124,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 	 *
 	 * @param dto
 	 */
-	protected void handleDtoBeforeCreate(DTO dto) {
+	protected void handleDtoBeforeCreate(D dto) {
 		// Method to be implemented in sub class
 	}
 
@@ -128,7 +134,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 	 *
 	 * @param dto
 	 */
-	protected void handleDtoBeforeUpdate(DTO dto) {
+	protected void handleDtoBeforeUpdate(D dto) {
 		// Method to be implemented in sub class
 	}
 
@@ -138,7 +144,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 	 * @param dto
 	 * @param model
 	 */
-	protected void handleModelBeforeCreate(T model, DTO dto) {
+	protected void handleModelBeforeCreate(T model, D dto) {
 	}
 
 	/**
@@ -147,7 +153,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 	 * @param dto
 	 * @param model
 	 */
-	protected void handleModelBeforeUpdate(T model, DTO dto) {
+	protected void handleModelBeforeUpdate(T model, D dto) {
 	}
 
 	/**
@@ -156,7 +162,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 	 * @param model
 	 * @param dto
 	 */
-	protected void handleModelAfterCreate(T model, DTO dto) {
+	protected void handleModelAfterCreate(T model, D dto) {
 	}
 
 	/**
@@ -165,7 +171,7 @@ public class SimpleDomainResourceBase<T, ID, DTO> extends DefaultResource {
 	 * @param model
 	 * @param dto
 	 */
-	protected void handleModelAfterUpdate(T model, DTO dto) {
+	protected void handleModelAfterUpdate(T model, D dto) {
 	}
 
 }

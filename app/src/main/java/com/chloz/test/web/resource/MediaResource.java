@@ -52,6 +52,7 @@ import java.util.Optional;
 @RequestMapping(path = Constants.API_BASE_PATH + "/medias")
 public class MediaResource extends MediaResourceBase {
 
+	private static final String MEDIA_NOT_FOUND_MESSAGE = "Media not found";
 	private final Logger logger = LoggerFactory.getLogger(MediaResource.class);
 
 	@Value("${media.storageLocation:}")
@@ -64,10 +65,10 @@ public class MediaResource extends MediaResourceBase {
 	private Path rootDir;
 
 	// The target width for the optimized image
-	private final int optimizedImagedWith = 300;
+	private static final int optimizedImagedWith = 300;
 
 	// The target height for the optimized image
-	private final int optimizedImageHeight = 300;
+	private static final int optimizedImageHeight = 300;
 	public MediaResource(MediaService service, MediaMapper mapper) {
 		super(service, mapper);
 		this.service = service;
@@ -84,6 +85,7 @@ public class MediaResource extends MediaResourceBase {
 	}
 
 	@GetMapping(path = "{id}")
+	@Override
 	public ResponseEntity<MediaDto> getById(@NotNull @PathVariable("id") Long id,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.getById(id, graph);
@@ -137,7 +139,7 @@ public class MediaResource extends MediaResourceBase {
 			return this.saveMedia(media, file.getInputStream(), file.getOriginalFilename(), file.getContentType(),
 					optimizeImage);
 		} catch (IOException e) {
-			throw new RuntimeException("Could not upload the file", e);
+			throw new IllegalStateException("Could not upload the file", e);
 		}
 	}
 
@@ -154,7 +156,7 @@ public class MediaResource extends MediaResourceBase {
 			data = IOUtils.toByteArray(stream);
 			stream.close();
 		} catch (IOException e) {
-			throw new RuntimeException("Unable to read the media content", e);
+			throw new IllegalStateException("Unable to read the media content", e);
 		}
 		// Optimize image
 		try {
@@ -184,24 +186,24 @@ public class MediaResource extends MediaResourceBase {
 			Files.copy(is, destination, StandardCopyOption.REPLACE_EXISTING);
 			is.close();
 		} catch (IOException e) {
-			throw new RuntimeException("Could not upload the file", e);
+			throw new IllegalStateException("Could not upload the file", e);
 		}
 		Media res = this.service.save(media);
 		logger.info("Media saved at {}", destination);
 		return res;
 	}
 
-	// @PutMapping(path = "{id}")
 	// TODO : comment this because there is an issue when generating client on dart
 	// using OpenAPI Generator
 	// [SEVERE] json_serializable on lib/src/model/create_request.dart (cached):
 	// Cannot populate the required constructor argument: file. It is assigned to a
 	// field not meant to be used in fromJson.
 	// package:****/src/model/create_request.dart:19:3
+	// @PutMapping(path = "{id}")
 	public ResponseEntity<MediaDto> update(@NotNull @PathVariable("id") Long id,
 			@NotNull @RequestParam("file") MultipartFile file, @Nullable @RequestParam("graph") String graph) {
 		Media media = this.service.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Media not found"));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, MEDIA_NOT_FOUND_MESSAGE));
 		media = this.saveMedia(media, file, true);
 		return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToDto(media, graph));
 	}
@@ -210,32 +212,31 @@ public class MediaResource extends MediaResourceBase {
 	public ResponseEntity<MediaDto> update(@NotNull @PathVariable("id") Long id,
 			@Valid @RequestBody FileUploadDto fileUpload, @Nullable @RequestParam("graph") String graph) {
 		Media media = this.service.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Media not found"));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, MEDIA_NOT_FOUND_MESSAGE));
 		media = this.saveMedia(media, fileUpload);
 		return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToDto(media, graph));
 	}
 
 	@Transactional(readOnly = true)
-	@RequestMapping(path = "download/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Resource> downloadFile(@NotNull @PathVariable("id") Long id, HttpServletRequest request)
-			throws Exception {
+	@GetMapping(path = "download/{id}")
+	public ResponseEntity<Resource> downloadFile(@NotNull @PathVariable("id") Long id, HttpServletRequest request) throws IOException {
 		Optional<Media> opt = service.findById(id);
-		if (!opt.isPresent() || opt.get().isDeleted()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Media not found");
+		if (!opt.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, MEDIA_NOT_FOUND_MESSAGE);
 		}
 		Media media = opt.get();
 		return this.download(media, request);
 	}
 
 	@Transactional(readOnly = true)
-	@RequestMapping(path = "download-key/{key}", method = RequestMethod.GET)
+	@GetMapping(path = "download-key/{key}")
 	public ResponseEntity<Resource> downloadByKey(@NotNull @PathVariable("key") String key, HttpServletRequest request)
-			throws Exception {
+			throws IOException {
 		Optional<Media> opt = service
 				.findByFilter(MediaFilter.builder().key(StringFilter.builder().eq(key).build()).build(), "*").stream()
 				.findFirst();
-		if (!opt.isPresent() || opt.get().isDeleted()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Media not found");
+		if (!opt.isPresent()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, MEDIA_NOT_FOUND_MESSAGE);
 		}
 		Media media = opt.get();
 		return this.download(media, request);

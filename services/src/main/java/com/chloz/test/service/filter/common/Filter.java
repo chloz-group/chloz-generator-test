@@ -24,7 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Filter<T> implements Serializable {
+public class Filter<T extends Serializable> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

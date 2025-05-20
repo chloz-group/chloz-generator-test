@@ -1,7 +1,6 @@
 package com.chloz.test.service.base;
 
 import com.querydsl.core.types.Predicate;
-import com.chloz.test.domain.AbstractAuditingEntity;
 import com.chloz.test.repository.SimpleDomainRepository;
 import com.chloz.test.service.GraphBuilder;
 import com.chloz.test.service.impl.DefaultServiceImpl;
@@ -14,26 +13,23 @@ import jakarta.persistence.EntityGraph;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class SimpleDomainServiceBaseImplBase<T, ID> extends DefaultServiceImpl
+public abstract class SimpleDomainServiceBaseImplBase<T, I> extends DefaultServiceImpl
 		implements
-			SimpleDomainServiceBase<T, ID> {
+			SimpleDomainServiceBase<T, I> {
 
-	private final SimpleDomainRepository<T, ID> repository;
+	private final SimpleDomainRepository<T, I> repository;
 
 	private final Class<T> entityType;
 
-	private final Class<ID> idType;
-
-	private final boolean logicalDeletion;
-
 	@Autowired
 	private GraphBuilder entityGraphBuilder;
-	protected SimpleDomainServiceBaseImplBase(SimpleDomainRepository<T, ID> repository) {
+
+	protected SimpleDomainServiceBaseImplBase(SimpleDomainRepository<T, I> repository) {
 		this.repository = repository;
 		Class<?>[] types = GenericTypeResolver.resolveTypeArguments(getClass(), SimpleDomainServiceBaseImplBase.class);
-		this.entityType = (Class<T>) types[0];
-		this.idType = (Class<ID>) types[1];
-		this.logicalDeletion = AbstractAuditingEntity.class.isAssignableFrom(entityType);
+		this.entityType = types == null ? null : (Class<T>) types[0];
+		//this.idType = (Class<I>) types[1];
+		//this.logicalDeletion = AbstractAuditingEntity.class.isAssignableFrom(entityType);
 	}
 
 	@Override
@@ -48,37 +44,29 @@ public abstract class SimpleDomainServiceBaseImplBase<T, ID> extends DefaultServ
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<T> findById(ID id) {
-		return filterDeleted(this.repository.findById(id));
+	public Optional<T> findById(I id) {
+		return this.repository.findById(id);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public boolean existsById(ID id) {
-		return this.findById(id).isPresent();
+	public boolean existsById(I id) {
+		return this.repository.findById(id).isPresent();
 	}
 
 	@Override
-	public void deleteById(ID id) {
-		// Deprecated code after use of Hibernate @SQLRestriction
-		// this.repository.findById(id).ifPresent(t -> delete(t));
+	public void deleteById(I id) {
 		this.repository.deleteById(id);
 	}
 
 	@Override
-	public void deleteAllById(Iterable<ID> ids) {
+	public void deleteAllById(Iterable<I> ids) {
 		ids.forEach(this::deleteById);
 	}
 
 	@Override
 	public void delete(T entity) {
 		this.repository.delete(entity);
-		// Deprecated code after use of Hibernate @SQLRestriction
-		/*
-		 * if (!logicalDeletion) { this.repository.delete(entity); } else {
-		 * AbstractAuditingEntity ent = (AbstractAuditingEntity) entity;
-		 * ent.setDeleted(true); ent.setDisabled(true); this.repository.save(entity); }
-		 */
 	}
 
 	@Override
@@ -88,20 +76,20 @@ public abstract class SimpleDomainServiceBaseImplBase<T, ID> extends DefaultServ
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<T> findById(ID id, EntityGraph<T> graph) {
-		return this.filterDeleted(this.repository.findOneById(id, graph));
+	public Optional<T> findById(I id, EntityGraph<T> graph) {
+		return this.repository.findOneById(id, graph);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<T> findById(ID id, String graph) {
+	public Optional<T> findById(I id, String graph) {
 		return this.findById(id, this.createGraph(this.entityType, graph));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<T> findOne(Predicate predicate, EntityGraph<T> graph) {
-		return this.filterDeleted(this.repository.findOne(predicate, graph));
+		return this.repository.findOne(predicate, graph);
 	}
 
 	@Override
@@ -153,17 +141,8 @@ public abstract class SimpleDomainServiceBaseImplBase<T, ID> extends DefaultServ
 	}
 
 	@Override
-	public void updateEnableStatus(List<ID> ids, Boolean value) {
+	public void updateEnableStatus(List<I> ids, Boolean value) {
 		this.repository.updateEnableStatus(ids, value);
-	}
-
-	private Optional<T> filterDeleted(Optional<T> optional) {
-		// Deprecated code after use of Hibernate @SQLRestriction
-		/*
-		 * Optional<T> opt = optional; if (this.logicalDeletion) { opt =
-		 * optional.filter(t -> !((AbstractAuditingEntity) t).isDeleted()); }
-		 */
-		return optional;
 	}
 
 	protected EntityGraph<T> createGraph(Class<T> clazz, String graph) {

@@ -3,7 +3,6 @@ package com.chloz.test.service;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import jakarta.persistence.*;
 import java.lang.reflect.Field;
@@ -18,12 +17,16 @@ public class GraphBuilder {
 
 	private static final List<String> ALL_SIMPLE_AND_CHILD_ATTRIBUTES = List.of("**", "__");
 
-	@Autowired
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
-	private Map<String, EntityGraph> entityGraphCache = new HashMap<>(1000);
+	private Map<String, EntityGraph<?>> entityGraphCache = new HashMap<>(1000);
 
 	private Map<String, DomainGraph> domainGraphCache = new HashMap<>(1000);
+
+	public GraphBuilder(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
+
 	/**
 	 * Create the entityGraph according to the graph text provided
 	 *
@@ -36,7 +39,7 @@ public class GraphBuilder {
 	public <T> EntityGraph<T> createEntityGraph(Class<T> clazz, String graph) {
 		String cacheKey = this.getCacheKey(clazz, graph);
 		if (entityGraphCache.containsKey(cacheKey)) {
-			return entityGraphCache.get(cacheKey);
+			return (EntityGraph<T>) entityGraphCache.get(cacheKey);
 		}
 		DomainGraph g = this.toGraph(clazz, graph);
 		EntityGraph<T> entityGraph = null;
@@ -78,7 +81,7 @@ public class GraphBuilder {
 		}
 	}
 
-	public DomainGraph toGraph(Class clazz, String graph) {
+	public DomainGraph toGraph(Class<?> clazz, String graph) {
 		String cacheKey = getCacheKey(clazz, graph);
 		if (domainGraphCache.containsKey(cacheKey)) {
 			return domainGraphCache.get(cacheKey);
@@ -93,7 +96,7 @@ public class GraphBuilder {
 			List<String> list = new ArrayList<>(Arrays.asList(graph.split(",")));
 			List<Field> simpleFields = descriptor.getSimpleFields();
 			List<Field> entitiesFields = descriptor.getEntitiesFields();
-			if (list.stream().anyMatch(s -> ALL_SIMPLE_AND_CHILD_ATTRIBUTES.contains(s))) {
+			if (list.stream().anyMatch(ALL_SIMPLE_AND_CHILD_ATTRIBUTES::contains)) {
 				// we add all simple attributes
 				list.add(ALL_SIMPLE_ATTRIBUTES.get(0));
 				// we add all the child attributes that are not collections
@@ -103,7 +106,7 @@ public class GraphBuilder {
 					}
 				}
 			}
-			if (list.stream().anyMatch(s -> ALL_SIMPLE_ATTRIBUTES.contains(s))) {
+			if (list.stream().anyMatch(ALL_SIMPLE_ATTRIBUTES::contains)) {
 				simpleFields.stream().map(Field::getName).forEach(attributes::add);
 			} else {
 				// simple fields
@@ -133,7 +136,7 @@ public class GraphBuilder {
 								.map(s -> s.substring(fieldName.length() + 1)).toList();
 						Field f = entitiesFields.stream().filter(field -> field.getName().equals(fieldName)).findFirst()
 								.get();
-						Class type = Collection.class.isAssignableFrom(f.getType())
+						Class<?> type = Collection.class.isAssignableFrom(f.getType())
 								? (Class) ((ParameterizedType) f.getGenericType()).getActualTypeArguments()[0]
 								: f.getType();
 						DomainGraph g = toGraph(type, StringUtils.join(subList, ","));
@@ -150,7 +153,7 @@ public class GraphBuilder {
 		return res;
 	}
 
-	private String getCacheKey(Class clazz, String graph) {
+	private String getCacheKey(Class<?> clazz, String graph) {
 		String cacheKey = clazz.getName();
 		if (graph != null && !graph.trim().isEmpty()) {
 			List<String> list = new ArrayList<>(Arrays.asList(graph.split(",")));
@@ -162,19 +165,19 @@ public class GraphBuilder {
 	@Getter
 	private static class ClassDescriptor {
 
-		private static Map<Class, ClassDescriptor> descriptors = new HashMap<>();
+		private static Map<Class<?>, ClassDescriptor> descriptors = new HashMap<>();
 
 		private final List<Field> idFields;
 
 		private final List<Field> entitiesFields;
 
 		private final List<Field> simpleFields;
-		private ClassDescriptor(Class clazz) {
+		private ClassDescriptor(Class<?> clazz) {
 			this.idFields = new ArrayList<>();
 			this.entitiesFields = new ArrayList<>();
 			this.simpleFields = new ArrayList<>();
 			List<Field> fields = FieldUtils.getAllFieldsList(clazz);
-			fields.stream().filter(field -> isClassField(field)).forEach(field -> {
+			fields.stream().filter(this::isClassField).forEach(field -> {
 				if (isEntity(field)) {
 					entitiesFields.add(field);
 				} else if (isId(field)) {
@@ -196,14 +199,14 @@ public class GraphBuilder {
 		}
 
 		private boolean isEntity(Field field) {
-			Class type = Collection.class.isAssignableFrom(field.getType())
+			Class<?> type = Collection.class.isAssignableFrom(field.getType())
 					? (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0]
 					: field.getType();
 			return type.getAnnotation(Entity.class) != null;
 		}
 
-		public static final synchronized ClassDescriptor getInstance(Class clazz) {
-			return descriptors.computeIfAbsent(clazz, c -> new ClassDescriptor(c));
+		public static final synchronized ClassDescriptor getInstance(Class<?> clazz) {
+			return descriptors.computeIfAbsent(clazz, ClassDescriptor::new);
 		}
 
 	}

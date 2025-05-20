@@ -13,9 +13,4 @@ public class ExceptionHandler implements ProblemHandling, SecurityAdviceTrait {
 		return false;
 	}
 
-	/*
-	 * @Override public ResponseEntity<Problem> handleThrowable(Throwable throwable,
-	 * NativeWebRequest request) { return
-	 * ProblemHandling.super.handleThrowable(throwable, request); }
-	 */
 }

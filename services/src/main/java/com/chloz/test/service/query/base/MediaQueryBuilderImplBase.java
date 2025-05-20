@@ -43,9 +43,6 @@ public class MediaQueryBuilderImplBase extends QueryBuilderBaseImplBase<SimpleMe
 		if (filter.getKey() != null) {
 			predicates.addAll(this.buildStringPredicate(path.key, filter.getKey()));
 		}
-		if (filter instanceof MediaFilter) {
-			MediaFilter f = (MediaFilter) filter;
-		}
 		return predicates;
 	}
 

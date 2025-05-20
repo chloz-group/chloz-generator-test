@@ -1,32 +1,36 @@
 package com.chloz.test.service;
 
 import com.chloz.test.domain.User;
-import org.apache.commons.collections.CollectionUtils;
+import jakarta.persistence.AttributeNode;
+import jakarta.persistence.EntityGraph;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import jakarta.persistence.AttributeNode;
-import jakarta.persistence.EntityGraph;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = ServiceConfigurationTest.class)
+@SpringBootTest
 class GraphBuilderTest {
 
-	@Autowired
-	private GraphBuilder builder;
+	private final GraphBuilder builder;
+
+	public GraphBuilderTest(GraphBuilder builder) {
+		this.builder = builder;
+	}
+
 	@BeforeEach
 	void setUp() {
+		//This will be implemented later
 	}
 
 	@AfterEach
 	void tearDown() {
+		//This will be implemented later
 	}
 
 	@Test

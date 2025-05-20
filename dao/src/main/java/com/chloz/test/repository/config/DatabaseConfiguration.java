@@ -3,8 +3,6 @@ package com.chloz.test.repository.config;
 import com.chloz.test.domain.User;
 import com.chloz.test.repository.CustomJpaRepositoryFactoryBean;
 import com.chloz.test.repository.RepositoryBaseImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +25,6 @@ import java.util.Optional;
 @EnableJpaAuditing(auditorAwareRef = "jpaAuditorAwareProvider", dateTimeProviderRef = "jpaAuditorDateTimeProvider")
 public class DatabaseConfiguration {
 
-	private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
 	@Bean
 	public AuditorAware<User> jpaAuditorAwareProvider() {
 		return () -> {
@@ -37,8 +34,8 @@ public class DatabaseConfiguration {
 			User u = null;
 			if (opt.isPresent()) {
 				Object o = opt.get();
-				if (o instanceof User) {
-					u = (User) o;
+				if (o instanceof User user) {
+					u = user;
 				}
 			}
 			return Optional.ofNullable(u);
@@ -47,9 +44,7 @@ public class DatabaseConfiguration {
 
 	@Bean
 	public DateTimeProvider jpaAuditorDateTimeProvider() {
-		return () -> {
-			return Optional.of(OffsetDateTime.now());
-		};
+		return () -> Optional.of(OffsetDateTime.now());
 	}
 
 }

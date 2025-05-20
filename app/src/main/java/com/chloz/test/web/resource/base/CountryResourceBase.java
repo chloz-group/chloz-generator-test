@@ -2,6 +2,7 @@ package com.chloz.test.web.resource.base;
 
 import com.chloz.test.domain.Country;
 import com.chloz.test.service.CountryService;
+import com.chloz.test.web.Constants;
 import com.chloz.test.web.exception.BadRequestException;
 import com.chloz.test.service.filter.SimpleCountryFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
@@ -36,7 +37,7 @@ public class CountryResourceBase extends FilterDomainResource<Country, String, C
 	@Override
 	public ResponseEntity<CountryDto> update(@Valid CountryDto dto, String graph) {
 		if (dto.getCode() == null || service.findById(dto.getCode()).isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 		}
 		return super.update(dto, graph);
 	}
@@ -45,7 +46,7 @@ public class CountryResourceBase extends FilterDomainResource<Country, String, C
 	public ResponseEntity<List<CountryDto>> bulkUpdate(@Valid List<CountryDto> list, String graph) {
 		list.forEach(dto -> {
 			if (dto.getCode() == null || service.findById(dto.getCode()).isEmpty()) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 			}
 		});
 		return super.bulkUpdate(list, graph);
@@ -55,7 +56,7 @@ public class CountryResourceBase extends FilterDomainResource<Country, String, C
 		this.handleDtoBeforeUpdate(dto);
 		Optional<Country> opt = service.findById(dto.getCode());
 		if (dto.getCode() == null || opt.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 		}
 		// set fields
 		Country ent = opt.get();

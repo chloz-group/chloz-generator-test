@@ -1,11 +1,9 @@
 package com.chloz.test.domain.base;
 
-import com.querydsl.core.annotations.QueryInit;
 import com.chloz.test.domain.AbstractAuditingEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import java.io.Serializable;
 
 @MappedSuperclass

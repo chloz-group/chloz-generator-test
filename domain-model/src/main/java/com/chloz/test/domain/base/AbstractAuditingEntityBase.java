@@ -52,9 +52,12 @@ public abstract class AbstractAuditingEntityBase implements Serializable {
 
 	@Builder.Default
 	private Boolean disabled = false;
-	@Deprecated
+
+	/**
+	 * @deprecated (Deprecated code after use of Hibernate @SQLRestriction)
+	 */
+	@Deprecated(forRemoval = true)
 	public boolean isDeleted() {
-		// Deprecated code after use of Hibernate @SQLRestriction
 		return deleted == null ? false : deleted;
 	}
 
@@ -63,7 +66,7 @@ public abstract class AbstractAuditingEntityBase implements Serializable {
 	}
 
 	public boolean isEnable() {
-		return !this.isDisabled() && !this.isDeleted();
+		return !this.isDisabled();
 	}
 
 	@PrePersist

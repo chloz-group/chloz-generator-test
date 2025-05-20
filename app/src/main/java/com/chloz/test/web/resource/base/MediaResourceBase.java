@@ -16,6 +16,8 @@ import java.util.Optional;
 
 public class MediaResourceBase extends FilterDomainResource<Media, Long, MediaDto, SimpleMediaFilter> {
 
+	private static final String MEDIA_NOT_FOUND_MESSAGE = "Media not found";
+
 	private final MediaService service;
 
 	private final MediaMapper mapper;
@@ -36,7 +38,7 @@ public class MediaResourceBase extends FilterDomainResource<Media, Long, MediaDt
 	@Override
 	public ResponseEntity<MediaDto> update(@Valid MediaDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, MEDIA_NOT_FOUND_MESSAGE);
 		}
 		return super.update(dto, graph);
 	}
@@ -45,7 +47,7 @@ public class MediaResourceBase extends FilterDomainResource<Media, Long, MediaDt
 	public ResponseEntity<List<MediaDto>> bulkUpdate(@Valid List<MediaDto> list, String graph) {
 		list.forEach(dto -> {
 			if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, MEDIA_NOT_FOUND_MESSAGE);
 			}
 		});
 		return super.bulkUpdate(list, graph);
@@ -55,7 +57,7 @@ public class MediaResourceBase extends FilterDomainResource<Media, Long, MediaDt
 		this.handleDtoBeforeUpdate(dto);
 		Optional<Media> opt = service.findById(dto.getId());
 		if (dto.getId() == null || opt.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, MEDIA_NOT_FOUND_MESSAGE);
 		}
 		// set fields
 		Media ent = opt.get();
@@ -68,16 +70,6 @@ public class MediaResourceBase extends FilterDomainResource<Media, Long, MediaDt
 		ent = this.service.save(ent);
 		this.handleModelAfterUpdate(ent, dto);
 		return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToDto(ent, graph));
-	}
-
-	@Override
-	protected void handleModelBeforeCreate(Media model, MediaDto dto) {
-		super.handleModelBeforeCreate(model, dto);
-	}
-
-	@Override
-	protected void handleModelBeforeUpdate(Media model, MediaDto dto) {
-		super.handleModelBeforeUpdate(model, dto);
 	}
 
 }

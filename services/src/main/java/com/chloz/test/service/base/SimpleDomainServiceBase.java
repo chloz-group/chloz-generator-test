@@ -11,7 +11,12 @@ import jakarta.persistence.EntityGraph;
 import java.util.List;
 import java.util.Optional;
 
-public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
+/**
+ * A Service class for an entity to do common CRUD operations
+ * @param <T> The entity class
+ * @param <I> The class of the entity id field
+ */
+public interface SimpleDomainServiceBase<T, I> extends DefaultService {
 
 	/**
 	 * Saves a given entity. Use the returned instance for further operations as the
@@ -59,7 +64,7 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	 * @throws IllegalArgumentException
 	 *             if {@literal id} is {@literal null}.
 	 */
-	Optional<T> findById(ID id);
+	Optional<T> findById(I id);
 
 	/**
 	 * Returns whether an entity with the given id exists.
@@ -71,7 +76,7 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	 * @throws IllegalArgumentException
 	 *             if {@literal id} is {@literal null}.
 	 */
-	boolean existsById(ID id);
+	boolean existsById(I id);
 
 	/**
 	 * Deletes the entity with the given id.
@@ -83,7 +88,7 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	 * @throws IllegalArgumentException
 	 *             in case the given {@literal id} is {@literal null}
 	 */
-	void deleteById(ID id);
+	void deleteById(I id);
 
 	/**
 	 * Deletes entities with the given list of id.
@@ -91,7 +96,7 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	 * @param id
 	 *            must not be {@literal null}.
 	 */
-	void deleteAllById(Iterable<ID> ids);
+	void deleteAllById(Iterable<I> ids);
 
 	/**
 	 * Deletes a given entity.
@@ -126,7 +131,7 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	 *            the entityGraph for returned result.
 	 * @return
 	 */
-	Optional<T> findById(ID id, EntityGraph<T> graph);
+	Optional<T> findById(I id, EntityGraph<T> graph);
 
 	/**
 	 * Return the entity matching the given ID or {@link Optional#empty()} if none
@@ -139,7 +144,7 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	 *            the entityGraph for returned result.
 	 * @return
 	 */
-	Optional<T> findById(ID id, String graph);
+	Optional<T> findById(I id, String graph);
 
 	/**
 	 * Returns a single entity matching the given {@link Predicate} or
@@ -219,6 +224,6 @@ public interface SimpleDomainServiceBase<T, ID> extends DefaultService {
 	/**
 	 * Update the status of the entity to either enable it or disable it
 	 */
-	void updateEnableStatus(@NotNull List<ID> ids, @NotNull Boolean value);
+	void updateEnableStatus(@NotNull List<I> ids, @NotNull Boolean value);
 
 }

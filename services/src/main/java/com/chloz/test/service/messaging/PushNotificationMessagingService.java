@@ -99,7 +99,7 @@ public class PushNotificationMessagingService implements MessagingService, Initi
 				throw new IllegalStateException(e);
 			}
 		}
-		return false;
+		return true;
 	}
 
 	private Map<String, String> getAllData(Map<String, Object> messageParams) {

@@ -3,11 +3,13 @@ package com.chloz.test.service.filter.common;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
+
 /**
  * Filter class for Comparable types, where less than / greater than / etc
  * relations could be interpreted. It can be added to a criteria class as a
  * member, to support the following query parameters:
- * 
+ *
  * <pre>
  *      fieldName.eq=42
  *      fieldName.neq=42
@@ -34,7 +36,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(builderMethodName = "builder_")
-public class DateAndTimeFilter<T extends Comparable> extends Filter<T> {
+public class DateAndTimeFilter<T extends Comparable & Serializable> extends Filter<T> {
 
 	private static final long serialVersionUID = 1L;
 

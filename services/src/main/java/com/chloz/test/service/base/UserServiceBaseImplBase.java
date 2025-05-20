@@ -48,8 +48,6 @@ public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long,
 
 	private final UserRepository repository;
 
-	private final UserQueryBuilder queryBuilder;
-
 	private final PasswordEncoder passwordEncoder;
 
 	@Value("${spring.application.name}")
@@ -59,7 +57,6 @@ public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long,
 			PasswordEncoder passwordEncoder) {
 		super(repository, queryBuilder);
 		this.repository = repository;
-		this.queryBuilder = queryBuilder;
 		this.verificationCodeRepository = verificationCodeRepository;
 		this.messagingService = messagingService;
 		this.passwordEncoder = passwordEncoder;
@@ -171,9 +168,9 @@ public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long,
 		}
 		List<VerificationCode> codeList = this.findUserVerificationCodesOrderByExpiryDateDesc(user, verType);
 		VerificationCode verificationCode = Optional.ofNullable(codeList).orElse(new ArrayList<>()).stream()
-				.filter(vc -> {
-					return vc.isEnable() && vc.getExpiryDate().isAfter(Instant.now()) && !vc.getCodeUsed();
-				}).findFirst().orElse(null);
+				.filter(vc ->
+					vc.isEnable() && vc.getExpiryDate().isAfter(Instant.now()) && !vc.getCodeUsed()
+				).findFirst().orElse(null);
 		if (verificationCode != null) {
 			// TODO : Find a way to get the locale
 			Locale locale = Locale.ENGLISH;

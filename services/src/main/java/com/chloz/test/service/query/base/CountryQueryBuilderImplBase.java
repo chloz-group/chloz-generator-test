@@ -38,12 +38,9 @@ public class CountryQueryBuilderImplBase extends QueryBuilderBaseImplBase<Simple
 		if (filter.getCallingCode() != null) {
 			predicates.addAll(this.buildStringPredicate(path.callingCode, filter.getCallingCode()));
 		}
-		if (filter instanceof CountryFilter) {
-			CountryFilter f = (CountryFilter) filter;
-			if (f.getTowns() != null) {
+		if (filter instanceof CountryFilter f && f.getTowns() != null) {
 				predicates.add(applicationContext.getBean(TownQueryBuilder.class).createPredicate(f.getTowns(),
 						path.towns.any()));
-			}
 		}
 		return predicates;
 	}

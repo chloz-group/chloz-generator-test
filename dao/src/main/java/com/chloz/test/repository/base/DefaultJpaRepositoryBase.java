@@ -11,11 +11,11 @@ import java.util.Optional;
 /**
  * The base class for the default repository
  *
- * @param <T>
- * @param <ID>
+ * @param <T> The entity class
+ * @param <I> The class of the entity id field
  */
 @NoRepositoryBean
-public interface DefaultJpaRepositoryBase<T, ID> {
+public interface DefaultJpaRepositoryBase<T, I> {
 
 	/**
 	 * Will Remove the entity physically from the datastore
@@ -42,7 +42,7 @@ public interface DefaultJpaRepositoryBase<T, ID> {
 	 *            the entityGraph for returned result.
 	 * @return
 	 */
-	Optional<T> findOneById(ID id, EntityGraph<T> graph);
+	Optional<T> findOneById(I id, EntityGraph<T> graph);
 
 	/**
 	 * Returns a single entity matching the given {@link Predicate} or
@@ -114,6 +114,6 @@ public interface DefaultJpaRepositoryBase<T, ID> {
 	 * @param value
 	 *            the state to set
 	 */
-	void updateEnableStatus(List<ID> ids, Boolean value);
+	void updateEnableStatus(List<I> ids, Boolean value);
 
 }

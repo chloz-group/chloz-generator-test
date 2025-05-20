@@ -11,21 +11,21 @@ import org.springframework.data.domain.Pageable;
 import jakarta.persistence.EntityGraph;
 import java.util.List;
 
-public class FilterDomainServiceBaseImplBase<T, ID, F extends SimpleFilter> extends SimpleDomainServiceImpl<T, ID>
+public class FilterDomainServiceBaseImplBase<T, I, F extends SimpleFilter> extends SimpleDomainServiceImpl<T, I>
 		implements
-			FilterDomainServiceBase<T, ID, F> {
+			FilterDomainServiceBase<T, I, F> {
 
 	private final QueryBuilder<F, ?> queryBuilder;
 
-	private final SimpleDomainRepository<T, ID> repository;
+	private final SimpleDomainRepository<T, I> repository;
 
 	private final Class<T> entityType;
-	public FilterDomainServiceBaseImplBase(SimpleDomainRepository<T, ID> repository, QueryBuilder<F, ?> queryBuilder) {
+	public FilterDomainServiceBaseImplBase(SimpleDomainRepository<T, I> repository, QueryBuilder<F, ?> queryBuilder) {
 		super(repository);
 		this.queryBuilder = queryBuilder;
 		this.repository = repository;
-		Class<?>[] types = GenericTypeResolver.resolveTypeArguments(getClass(), SimpleDomainServiceBaseImplBase.class);
-		this.entityType = (Class<T>) types[0];
+		Class<?>[] types = GenericTypeResolver.resolveTypeArguments(getClass(), FilterDomainServiceBaseImplBase.class);
+		this.entityType = types ==null ? null : (Class<T>) types[0];
 	}
 
 	@Override

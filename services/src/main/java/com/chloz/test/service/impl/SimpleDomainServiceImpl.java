@@ -4,11 +4,11 @@ import com.chloz.test.repository.SimpleDomainRepository;
 import com.chloz.test.service.SimpleDomainService;
 import com.chloz.test.service.base.SimpleDomainServiceBaseImplBase;
 
-public abstract class SimpleDomainServiceImpl<T, ID> extends SimpleDomainServiceBaseImplBase<T, ID>
+public abstract class SimpleDomainServiceImpl<T, I> extends SimpleDomainServiceBaseImplBase<T, I>
 		implements
-			SimpleDomainService<T, ID> {
+			SimpleDomainService<T, I> {
 
-	public SimpleDomainServiceImpl(SimpleDomainRepository<T, ID> repository) {
+	protected SimpleDomainServiceImpl(SimpleDomainRepository<T, I> repository) {
 		super(repository);
 	}
 
