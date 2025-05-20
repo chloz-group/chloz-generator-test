@@ -43,9 +43,6 @@ public class TemplateQueryBuilderImplBase extends QueryBuilderBaseImplBase<Simpl
 		if (filter.getShortContent() != null) {
 			predicates.addAll(this.buildStringPredicate(path.shortContent, filter.getShortContent()));
 		}
-		if (filter instanceof TemplateFilter) {
-			TemplateFilter f = (TemplateFilter) filter;
-		}
 		return predicates;
 	}
 

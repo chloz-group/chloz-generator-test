@@ -2,6 +2,7 @@ package com.chloz.test.web.resource.base;
 
 import com.chloz.test.domain.Role;
 import com.chloz.test.service.RoleService;
+import com.chloz.test.web.Constants;
 import com.chloz.test.web.exception.BadRequestException;
 import com.chloz.test.service.filter.SimpleRoleFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
@@ -36,7 +37,7 @@ public class RoleResourceBase extends FilterDomainResource<Role, String, RoleDto
 	@Override
 	public ResponseEntity<RoleDto> update(@Valid RoleDto dto, String graph) {
 		if (dto.getName() == null || service.findById(dto.getName()).isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 		}
 		return super.update(dto, graph);
 	}
@@ -45,7 +46,7 @@ public class RoleResourceBase extends FilterDomainResource<Role, String, RoleDto
 	public ResponseEntity<List<RoleDto>> bulkUpdate(@Valid List<RoleDto> list, String graph) {
 		list.forEach(dto -> {
 			if (dto.getName() == null || service.findById(dto.getName()).isEmpty()) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 			}
 		});
 		return super.bulkUpdate(list, graph);
@@ -55,7 +56,7 @@ public class RoleResourceBase extends FilterDomainResource<Role, String, RoleDto
 		this.handleDtoBeforeUpdate(dto);
 		Optional<Role> opt = service.findById(dto.getName());
 		if (dto.getName() == null || opt.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 		}
 		// set fields
 		Role ent = opt.get();

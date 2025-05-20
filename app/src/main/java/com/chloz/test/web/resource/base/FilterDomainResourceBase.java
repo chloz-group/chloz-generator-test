@@ -11,10 +11,14 @@ import org.springframework.data.web.PagedModel;
 import java.util.List;
 
 /**
- * @param <T> The entity class
- * @param <I> The class of the entity id field
- * @param <F> The Filter class for the entity
- * @param <D> The DTO class for the entity
+ * @param <T>
+ *            The entity class
+ * @param <I>
+ *            The class of the entity id field
+ * @param <F>
+ *            The Filter class for the entity
+ * @param <D>
+ *            The DTO class for the entity
  */
 public class FilterDomainResourceBase<T, I, D, F extends SimpleFilter> extends SimpleDomainResource<T, I, D> {
 
@@ -22,7 +26,7 @@ public class FilterDomainResourceBase<T, I, D, F extends SimpleFilter> extends S
 
 	private final DomainMapper<T, D> mapper;
 	public <S extends FilterDomainService<T, I, F>, M extends DomainMapper<T, D>> FilterDomainResourceBase(S service,
-																										   M mapper) {
+			M mapper) {
 		super(service, mapper);
 		this.service = service;
 		this.mapper = mapper;

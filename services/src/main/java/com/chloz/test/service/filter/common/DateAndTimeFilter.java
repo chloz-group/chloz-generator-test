@@ -2,14 +2,13 @@ package com.chloz.test.service.filter.common;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
 import java.io.Serializable;
 
 /**
  * Filter class for Comparable types, where less than / greater than / etc
  * relations could be interpreted. It can be added to a criteria class as a
  * member, to support the following query parameters:
- *
+ * 
  * <pre>
  *      fieldName.eq=42
  *      fieldName.neq=42

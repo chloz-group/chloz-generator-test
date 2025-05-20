@@ -2,6 +2,7 @@ package com.chloz.test.web.resource.base;
 
 import com.chloz.test.domain.UserGroup;
 import com.chloz.test.service.UserGroupService;
+import com.chloz.test.web.Constants;
 import com.chloz.test.web.exception.BadRequestException;
 import com.chloz.test.service.filter.SimpleUserGroupFilter;
 import com.chloz.test.web.resource.FilterDomainResource;
@@ -36,7 +37,7 @@ public class UserGroupResourceBase extends FilterDomainResource<UserGroup, Long,
 	@Override
 	public ResponseEntity<UserGroupDto> update(@Valid UserGroupDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 		}
 		return super.update(dto, graph);
 	}
@@ -45,7 +46,7 @@ public class UserGroupResourceBase extends FilterDomainResource<UserGroup, Long,
 	public ResponseEntity<List<UserGroupDto>> bulkUpdate(@Valid List<UserGroupDto> list, String graph) {
 		list.forEach(dto -> {
 			if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 			}
 		});
 		return super.bulkUpdate(list, graph);
@@ -55,7 +56,7 @@ public class UserGroupResourceBase extends FilterDomainResource<UserGroup, Long,
 		this.handleDtoBeforeUpdate(dto);
 		Optional<UserGroup> opt = service.findById(dto.getId());
 		if (dto.getId() == null || opt.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 		}
 		// set fields
 		UserGroup ent = opt.get();

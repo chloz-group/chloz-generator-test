@@ -8,29 +8,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class GraphBuilderTest {
 
 	private final GraphBuilder builder;
-
 	public GraphBuilderTest(GraphBuilder builder) {
 		this.builder = builder;
 	}
 
 	@BeforeEach
 	void setUp() {
-		//This will be implemented later
+		// This will be implemented later
 	}
 
 	@AfterEach
 	void tearDown() {
-		//This will be implemented later
+		// This will be implemented later
 	}
 
 	@Test

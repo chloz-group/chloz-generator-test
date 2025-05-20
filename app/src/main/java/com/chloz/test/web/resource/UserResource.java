@@ -67,7 +67,7 @@ public class UserResource extends UserResourceBase {
 		return super.update(dto, graph);
 	}
 
-	// TODO : authorize this to only the administrator
+	// TODOs : authorize this to only the administrator
 	@PostMapping(path = "{id}/change-password")
 	public void changePassword(@NotNull @PathVariable("id") Long id, @RequestParam String password) {
 		Optional<User> opt;

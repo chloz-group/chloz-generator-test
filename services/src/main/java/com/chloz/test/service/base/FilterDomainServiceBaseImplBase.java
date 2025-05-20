@@ -25,7 +25,7 @@ public class FilterDomainServiceBaseImplBase<T, I, F extends SimpleFilter> exten
 		this.queryBuilder = queryBuilder;
 		this.repository = repository;
 		Class<?>[] types = GenericTypeResolver.resolveTypeArguments(getClass(), FilterDomainServiceBaseImplBase.class);
-		this.entityType = types ==null ? null : (Class<T>) types[0];
+		this.entityType = types == null ? null : (Class<T>) types[0];
 	}
 
 	@Override

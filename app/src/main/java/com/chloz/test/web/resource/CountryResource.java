@@ -72,8 +72,8 @@ public class CountryResource extends CountryResourceBase {
 		return super.bulkUpdate(dto, graph);
 	}
 
-	@PostMapping(path = "updateFields")
 	@Override
+	@PostMapping(path = "updateFields")
 	public ResponseEntity<CountryDto> updateFields(@Valid @RequestBody CountryDto dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.updateFields(dto, graph);

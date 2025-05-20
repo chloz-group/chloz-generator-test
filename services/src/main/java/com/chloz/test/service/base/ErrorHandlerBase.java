@@ -27,7 +27,6 @@ public class ErrorHandlerBase {
 	private String administratorsEmails;
 
 	private Logger logger = LoggerFactory.getLogger(ErrorHandlerBase.class);
-
 	public ErrorHandlerBase(MailMessagingService mailMessagingService, SMSMessagingService smsMessagingService) {
 		this.mailMessagingService = mailMessagingService;
 		this.smsMessagingService = smsMessagingService;

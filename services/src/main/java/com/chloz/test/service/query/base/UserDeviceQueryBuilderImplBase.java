@@ -34,9 +34,6 @@ public class UserDeviceQueryBuilderImplBase extends QueryBuilderBaseImplBase<Sim
 		if (filter.getToken() != null) {
 			predicates.addAll(this.buildStringPredicate(path.token, filter.getToken()));
 		}
-		if (filter instanceof UserDeviceFilter) {
-			UserDeviceFilter f = (UserDeviceFilter) filter;
-		}
 		return predicates;
 	}
 

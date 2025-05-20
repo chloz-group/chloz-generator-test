@@ -20,9 +20,12 @@ import java.util.Optional;
 
 /**
  *
- * @param <T> The entity class
- * @param <I> The class of the entity id field
- * @param <D> The DTO class for the entity
+ * @param <T>
+ *            The entity class
+ * @param <I>
+ *            The class of the entity id field
+ * @param <D>
+ *            The DTO class for the entity
  */
 @Transactional
 public class SimpleDomainResourceBase<T, I, D> extends DefaultResource {
@@ -31,7 +34,7 @@ public class SimpleDomainResourceBase<T, I, D> extends DefaultResource {
 
 	private final SimpleDomainService<T, I> service;
 	public <S extends SimpleDomainService<T, I>, M extends DomainMapper<T, D>> SimpleDomainResourceBase(S service,
-																										M mapper) {
+			M mapper) {
 		this.service = service;
 		this.mapper = mapper;
 	}
@@ -158,7 +161,7 @@ public class SimpleDomainResourceBase<T, I, D> extends DefaultResource {
 
 	/**
 	 * Do some work on the model after it has been created.
-	 * 
+	 *
 	 * @param model
 	 * @param dto
 	 */
@@ -167,7 +170,7 @@ public class SimpleDomainResourceBase<T, I, D> extends DefaultResource {
 
 	/**
 	 * Do some work on the model after it has been updated.
-	 * 
+	 *
 	 * @param model
 	 * @param dto
 	 */

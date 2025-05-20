@@ -72,6 +72,7 @@ public class TownResource extends TownResourceBase {
 		return super.bulkUpdate(dto, graph);
 	}
 
+	@Override
 	@PostMapping(path = "updateFields")
 	public ResponseEntity<TownDto> updateFields(@Valid @RequestBody TownDto dto,
 			@Nullable @RequestParam("graph") String graph) {

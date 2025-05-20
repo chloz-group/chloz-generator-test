@@ -43,9 +43,7 @@ public class ChlozTestAuthenticationManager implements AuthenticationManager {
 		}
 		List<SimpleGrantedAuthority> userRoles = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName())).toList();
-		List<SimpleGrantedAuthority> groupRoles = user.getGroups().stream()
-				//.filter(g -> !g.isDeleted())
-				.map(UserGroupBase::getRoles)
+		List<SimpleGrantedAuthority> groupRoles = user.getGroups().stream().map(UserGroupBase::getRoles)
 				.reduce(new ArrayList<>(), (roles1, roles2) -> {
 					roles1.addAll(roles2);
 					return roles1;

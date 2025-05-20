@@ -35,8 +35,7 @@ public class TownQueryBuilderImplBase extends QueryBuilderBaseImplBase<SimpleTow
 		if (filter.getName() != null) {
 			predicates.addAll(this.buildStringPredicate(path.name, filter.getName()));
 		}
-		if (filter instanceof TownFilter) {
-			TownFilter f = (TownFilter) filter;
+		if (filter instanceof TownFilter f) {
 			if (f.getCountry() != null) {
 				predicates.add(applicationContext.getBean(CountryQueryBuilder.class).createPredicate(f.getCountry(),
 						path.country));

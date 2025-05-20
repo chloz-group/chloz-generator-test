@@ -52,7 +52,6 @@ public abstract class AbstractAuditingEntityBase implements Serializable {
 
 	@Builder.Default
 	private Boolean disabled = false;
-
 	/**
 	 * @deprecated (Deprecated code after use of Hibernate @SQLRestriction)
 	 */

@@ -34,9 +34,6 @@ public class RoleQueryBuilderImplBase extends QueryBuilderBaseImplBase<SimpleRol
 		if (filter.getDescription() != null) {
 			predicates.addAll(this.buildStringPredicate(path.description, filter.getDescription()));
 		}
-		if (filter instanceof RoleFilter) {
-			RoleFilter f = (RoleFilter) filter;
-		}
 		return predicates;
 	}
 

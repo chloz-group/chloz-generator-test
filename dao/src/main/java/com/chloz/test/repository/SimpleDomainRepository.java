@@ -6,8 +6,11 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  * A common repositoty class for an entity to do common CRUD operations
- * @param <T> The entity class
- * @param <I> The class of the entity id field
+ * 
+ * @param <T>
+ *            The entity class
+ * @param <I>
+ *            The class of the entity id field
  */
 @NoRepositoryBean
 public interface SimpleDomainRepository<T, I>

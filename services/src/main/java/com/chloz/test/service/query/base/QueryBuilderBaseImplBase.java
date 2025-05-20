@@ -10,7 +10,6 @@ import com.chloz.test.service.filter.SimpleFilter;
 import com.chloz.test.service.filter.common.*;
 import com.chloz.test.service.query.UserQueryBuilder;
 import org.springframework.context.ApplicationContext;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,8 +141,8 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 	 * @param filter
 	 * @return
 	 */
-	protected <A extends Comparable & Serializable> List<Predicate> buildDateAndTimePredicate(DateTimePath<A> expression,
-																							  DateAndTimeFilter<A> filter) {
+	protected <A extends Comparable & Serializable> List<Predicate> buildDateAndTimePredicate(
+			DateTimePath<A> expression, DateAndTimeFilter<A> filter) {
 		List<Predicate> list = this.buildPredicate(expression, filter);
 		if (filter.getGoe() != null) {
 			list.add(expression.goe(filter.getGoe()));
@@ -238,7 +237,7 @@ public abstract class QueryBuilderBaseImplBase<T extends SimpleFilter, Q extends
 		return list;
 	}
 
-	// Todo : Creer tout les predicates (pour les Duration, Instant, OffsetDate,
+	// TODOs : Creer tout les predicates (pour les Duration, Instant, OffsetDate,
 	// LocalDate, UUID, ...,
 	protected List<Predicate> createAbstractEntityPredicates(QAbstractAuditingEntity path, T filter) {
 		List<Predicate> predicates = new ArrayList<>();

@@ -22,7 +22,6 @@ public class GraphBuilder {
 	private Map<String, EntityGraph<?>> entityGraphCache = new HashMap<>(1000);
 
 	private Map<String, DomainGraph> domainGraphCache = new HashMap<>(1000);
-
 	public GraphBuilder(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}

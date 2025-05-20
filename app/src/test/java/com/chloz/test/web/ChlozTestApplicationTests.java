@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ChlozTestApplicationTests {
 
 	private final ApplicationContext applicationContext;
-
 	ChlozTestApplicationTests(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}

@@ -38,8 +38,7 @@ public class UserGroupQueryBuilderImplBase extends QueryBuilderBaseImplBase<Simp
 		if (filter.getDescription() != null) {
 			predicates.addAll(this.buildStringPredicate(path.description, filter.getDescription()));
 		}
-		if (filter instanceof UserGroupFilter) {
-			UserGroupFilter f = (UserGroupFilter) filter;
+		if (filter instanceof UserGroupFilter f) {
 			if (f.getUsers() != null) {
 				predicates.add(applicationContext.getBean(UserQueryBuilder.class).createPredicate(f.getUsers(),
 						path.users.any()));

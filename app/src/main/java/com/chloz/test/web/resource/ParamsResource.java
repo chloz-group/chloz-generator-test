@@ -72,6 +72,7 @@ public class ParamsResource extends ParamsResourceBase {
 		return super.bulkUpdate(dto, graph);
 	}
 
+	@Override
 	@PostMapping(path = "updateFields")
 	public ResponseEntity<ParamsDto> updateFields(@Valid @RequestBody ParamsDto dto,
 			@Nullable @RequestParam("graph") String graph) {

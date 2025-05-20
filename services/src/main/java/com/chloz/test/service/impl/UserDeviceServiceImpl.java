@@ -28,11 +28,6 @@ public class UserDeviceServiceImpl extends UserDeviceServiceBaseImplBase impleme
 	public void deleteToken(String token) {
 		this.repository.findByToken(token).ifPresent(userDevice -> {
 			repository.delete(userDevice);
-			// Deprecated code after use of Hibernate @SQLRestriction
-			/*
-			 * userDevice.setDisabled(true); userDevice.setDeleted(true);
-			 * repository.save(userDevice);
-			 */
 		});
 	}
 

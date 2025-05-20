@@ -13,8 +13,11 @@ import java.util.Optional;
 
 /**
  * A Service class for an entity to do common CRUD operations
- * @param <T> The entity class
- * @param <I> The class of the entity id field
+ * 
+ * @param <T>
+ *            The entity class
+ * @param <I>
+ *            The class of the entity id field
  */
 public interface SimpleDomainServiceBase<T, I> extends DefaultService {
 

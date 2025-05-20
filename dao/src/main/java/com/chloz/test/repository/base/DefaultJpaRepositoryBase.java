@@ -11,8 +11,10 @@ import java.util.Optional;
 /**
  * The base class for the default repository
  *
- * @param <T> The entity class
- * @param <I> The class of the entity id field
+ * @param <T>
+ *            The entity class
+ * @param <I>
+ *            The class of the entity id field
  */
 @NoRepositoryBean
 public interface DefaultJpaRepositoryBase<T, I> {
@@ -108,7 +110,7 @@ public interface DefaultJpaRepositoryBase<T, I> {
 
 	/**
 	 * Change the entity enable state
-	 * 
+	 *
 	 * @param ids
 	 *            list of ids for witch the enable
 	 * @param value

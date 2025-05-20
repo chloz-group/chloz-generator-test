@@ -46,9 +46,6 @@ public class ParamsQueryBuilderImplBase extends QueryBuilderBaseImplBase<SimpleP
 		if (filter.getBooleanValue() != null) {
 			predicates.addAll(this.buildBooleanPredicate(path.booleanValue, filter.getBooleanValue()));
 		}
-		if (filter instanceof ParamsFilter) {
-			ParamsFilter f = (ParamsFilter) filter;
-		}
 		return predicates;
 	}
 

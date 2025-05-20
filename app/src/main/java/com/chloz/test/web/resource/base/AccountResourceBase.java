@@ -165,10 +165,8 @@ public class AccountResourceBase extends DefaultResource {
 		if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
 			throw new InvalidPasswordException();
 		}
-		SecurityUtils.getCurrentUserLogin().flatMap(userService::findOneByLogin).ifPresent(user ->
-			userService.changePassword(user, passwordChangeDto.getCurrentPassword(),
-					passwordChangeDto.getNewPassword())
-		);
+		SecurityUtils.getCurrentUserLogin().flatMap(userService::findOneByLogin).ifPresent(user -> userService
+				.changePassword(user, passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword()));
 	}
 
 	protected static boolean checkPasswordLength(String password) {
@@ -206,7 +204,7 @@ public class AccountResourceBase extends DefaultResource {
 			e = new InvalidVerificationCodeException();
 		} else {
 			try {
-				jwt=this.authenticate(loginDto,user,accountActivated, accountLocked);
+				jwt = this.authenticate(loginDto, user, accountActivated, accountLocked);
 			} catch (AuthenticationException ex) {
 				log.warn("Authentication failed {}", ex.getMessage());
 				e = ex;
@@ -301,11 +299,10 @@ public class AccountResourceBase extends DefaultResource {
 		boolean ok = false;
 		List<VerificationCode> codeList = this.userService.findUserVerificationCodesOrderByExpiryDateDesc(user,
 				verificationType);
-		VerificationCode verificationCode = Optional.ofNullable(codeList).orElse(new ArrayList<>()).stream()
-				.filter(vc ->
-					 vc.isEnable() && !vc.isCodeUsed() && vc.getExpiryDate().isAfter(Instant.now())
-							&& vc.getCode().equals(code)
-				).findFirst().orElse(null);
+		VerificationCode verificationCode = Optional
+				.ofNullable(codeList).orElse(new ArrayList<>()).stream().filter(vc -> vc.isEnable() && !vc.isCodeUsed()
+						&& vc.getExpiryDate().isAfter(Instant.now()) && vc.getCode().equals(code))
+				.findFirst().orElse(null);
 		if (verificationCode != null) {
 			ok = true;
 			verificationCode.setCodeUsed(true);

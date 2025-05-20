@@ -66,8 +66,7 @@ public class UserQueryBuilderImplBase extends QueryBuilderBaseImplBase<SimpleUse
 		if (filter.getLang() != null) {
 			predicates.addAll(this.buildStringPredicate(path.lang, filter.getLang()));
 		}
-		if (filter instanceof UserFilter) {
-			UserFilter f = (UserFilter) filter;
+		if (filter instanceof UserFilter f) {
 			if (f.getPicture() != null) {
 				predicates.add(applicationContext.getBean(MediaQueryBuilder.class).createPredicate(f.getPicture(),
 						path.picture));

@@ -56,7 +56,7 @@ public class SMSMessagingService implements MessagingService {
 	@Value("${sms.apiAddress}")
 	private URI apiAddress;
 	public SMSMessagingService() {
-		//empty constructor
+		// empty constructor
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class SMSMessagingService implements MessagingService {
 		HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
 		ResponseEntity<ApiResult> responseEntity = this.sendRequest(request);
 		ApiResult result = responseEntity.getBody();
-		if(result == null ){
+		if (result == null) {
 			return false;
 		}
 		log.info("Sms sending to {} result is {}. The message is {}.", phoneStr, result, message);

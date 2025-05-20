@@ -2,6 +2,7 @@ package com.chloz.test.web.resource.base;
 
 import com.chloz.test.domain.UserDevice;
 import com.chloz.test.service.UserDeviceService;
+import com.chloz.test.web.Constants;
 import com.chloz.test.web.exception.BadRequestException;
 import com.chloz.test.web.resource.SimpleDomainResource;
 import com.chloz.test.web.dto.UserDeviceDto;
@@ -35,7 +36,7 @@ public class UserDeviceResourceBase extends SimpleDomainResource<UserDevice, Lon
 	@Override
 	public ResponseEntity<UserDeviceDto> update(@Valid UserDeviceDto dto, String graph) {
 		if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 		}
 		return super.update(dto, graph);
 	}
@@ -44,7 +45,7 @@ public class UserDeviceResourceBase extends SimpleDomainResource<UserDevice, Lon
 	public ResponseEntity<List<UserDeviceDto>> bulkUpdate(@Valid List<UserDeviceDto> list, String graph) {
 		list.forEach(dto -> {
 			if (dto.getId() == null || service.findById(dto.getId()).isEmpty()) {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 			}
 		});
 		return super.bulkUpdate(list, graph);
@@ -54,7 +55,7 @@ public class UserDeviceResourceBase extends SimpleDomainResource<UserDevice, Lon
 		this.handleDtoBeforeUpdate(dto);
 		Optional<UserDevice> opt = service.findById(dto.getId());
 		if (dto.getId() == null || opt.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND);
 		}
 		// set fields
 		UserDevice ent = opt.get();

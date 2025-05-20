@@ -23,13 +23,10 @@ public abstract class SimpleDomainServiceBaseImplBase<T, I> extends DefaultServi
 
 	@Autowired
 	private GraphBuilder entityGraphBuilder;
-
 	protected SimpleDomainServiceBaseImplBase(SimpleDomainRepository<T, I> repository) {
 		this.repository = repository;
 		Class<?>[] types = GenericTypeResolver.resolveTypeArguments(getClass(), SimpleDomainServiceBaseImplBase.class);
 		this.entityType = types == null ? null : (Class<T>) types[0];
-		//this.idType = (Class<I>) types[1];
-		//this.logicalDeletion = AbstractAuditingEntity.class.isAssignableFrom(entityType);
 	}
 
 	@Override
@@ -83,7 +80,7 @@ public abstract class SimpleDomainServiceBaseImplBase<T, I> extends DefaultServi
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<T> findById(I id, String graph) {
-		return this.findById(id, this.createGraph(this.entityType, graph));
+		return this.repository.findOneById(id, this.createGraph(this.entityType, graph));
 	}
 
 	@Override
@@ -101,7 +98,7 @@ public abstract class SimpleDomainServiceBaseImplBase<T, I> extends DefaultServi
 	@Override
 	@Transactional(readOnly = true)
 	public Page<T> findAll(Predicate predicate, String graph, Pageable pageable) {
-		return this.findAll(predicate, this.createGraph(this.entityType, graph), pageable);
+		return this.repository.findAll(predicate, this.createGraph(this.entityType, graph), pageable);
 	}
 
 	@Override

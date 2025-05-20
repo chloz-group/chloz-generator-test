@@ -26,8 +26,10 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @param <T> The entity class
- * @param <I> The class of the entity id field
+ * @param <T>
+ *            The entity class
+ * @param <I>
+ *            The class of the entity id field
  */
 @Transactional
 public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaRepositoryBase<T, I> {
@@ -143,7 +145,7 @@ public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaReposit
 	@Override
 	public void updateEnableStatus(List<I> ids, Boolean value) {
 		SingularAttribute<? super T, ?> idAttr = entityInformation.getIdAttribute();
-		if(idAttr != null){
+		if (idAttr != null) {
 			String idFieldName = idAttr.getName();
 			Query query = em.createQuery("UPDATE " + entityInformation.getEntityName()
 					+ " ent SET ent.disabled = :disabled WHERE ent." + idFieldName + " IN :id");

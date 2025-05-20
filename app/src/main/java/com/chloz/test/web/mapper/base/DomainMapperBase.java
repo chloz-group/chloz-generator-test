@@ -23,7 +23,6 @@ public abstract class DomainMapperBase<T, DTO> {
 
 	@Autowired
 	private GraphBuilder graphBuilder;
-
 	protected DomainMapperBase() {
 		Class<?>[] types = GenericTypeResolver.resolveTypeArguments(getClass(), DomainMapperBase.class);
 		this.modelType = (Class<T>) types[0];
@@ -34,7 +33,7 @@ public abstract class DomainMapperBase<T, DTO> {
 
 	/**
 	 * Generate the dto from the model
-	 * 
+	 *
 	 * @param model
 	 * @param graph
 	 * @return The Dto from the model
@@ -47,7 +46,7 @@ public abstract class DomainMapperBase<T, DTO> {
 	/**
 	 * Return the entity from the dto ID if an ID has been provided in the DTO. If
 	 * not, transform the DTO to a model object.
-	 * 
+	 *
 	 * @param dto
 	 * @return
 	 */
@@ -56,7 +55,7 @@ public abstract class DomainMapperBase<T, DTO> {
 	/**
 	 * Transform the dto to a model. When transforming, the model dependencies are
 	 * fetched from the database if theirs IDs are provided in the DTO.
-	 * 
+	 *
 	 * @param dto
 	 *            The DTO object
 	 * @return The model from the DTO object
@@ -110,7 +109,8 @@ public abstract class DomainMapperBase<T, DTO> {
 			List<?> list = (List) PropertyUtils.getProperty(model, targetField.getName());
 			if (list != null && !list.isEmpty()) {
 				List destinationList = new ArrayList<>();
-				Class<?> desType = (Class) ((ParameterizedType) targetField.getGenericType()).getActualTypeArguments()[0];
+				Class<?> desType = (Class) ((ParameterizedType) targetField.getGenericType())
+						.getActualTypeArguments()[0];
 				list.forEach(src -> {
 					Object dest = map(graph, src, desType);
 					if (dest != null)
@@ -128,7 +128,8 @@ public abstract class DomainMapperBase<T, DTO> {
 			Set<?> set = (Set) PropertyUtils.getProperty(model, targetField.getName());
 			if (set != null && !set.isEmpty()) {
 				Set destinationList = new HashSet<>();
-				Class<?> desType = (Class) ((ParameterizedType) targetField.getGenericType()).getActualTypeArguments()[0];
+				Class<?> desType = (Class) ((ParameterizedType) targetField.getGenericType())
+						.getActualTypeArguments()[0];
 				set.forEach(src -> {
 					Object dest = map(graph, src, desType);
 					if (dest != null)
@@ -150,7 +151,6 @@ public abstract class DomainMapperBase<T, DTO> {
 			throw new IllegalStateException(e);
 		}
 	}
-
 	private static class ClassDescriptor {
 
 		private static Map<Class<?>, DomainMapperBase.ClassDescriptor> descriptors = new HashMap<>();

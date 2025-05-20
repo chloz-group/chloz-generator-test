@@ -26,7 +26,6 @@ public class UserGroupResource extends UserGroupResourceBase {
 	}
 
 	@GetMapping(path = "{id}")
-	@Override
 	public ResponseEntity<UserGroupDto> getById(@NotNull @PathVariable("id") Long id,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.getById(id, graph);
@@ -73,8 +72,8 @@ public class UserGroupResource extends UserGroupResourceBase {
 		return super.bulkUpdate(dto, graph);
 	}
 
-	@PostMapping(path = "updateFields")
 	@Override
+	@PostMapping(path = "updateFields")
 	public ResponseEntity<UserGroupDto> updateFields(@Valid @RequestBody UserGroupDto dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.updateFields(dto, graph);

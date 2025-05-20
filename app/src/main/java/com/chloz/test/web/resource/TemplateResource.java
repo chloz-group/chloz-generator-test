@@ -72,6 +72,7 @@ public class TemplateResource extends TemplateResourceBase {
 		return super.bulkUpdate(dto, graph);
 	}
 
+	@Override
 	@PostMapping(path = "updateFields")
 	public ResponseEntity<TemplateDto> updateFields(@Valid @RequestBody TemplateDto dto,
 			@Nullable @RequestParam("graph") String graph) {

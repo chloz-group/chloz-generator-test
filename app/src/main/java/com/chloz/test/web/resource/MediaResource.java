@@ -53,6 +53,7 @@ import java.util.Optional;
 public class MediaResource extends MediaResourceBase {
 
 	private static final String MEDIA_NOT_FOUND_MESSAGE = "Media not found";
+
 	private final Logger logger = LoggerFactory.getLogger(MediaResource.class);
 
 	@Value("${media.storageLocation:}")
@@ -99,7 +100,7 @@ public class MediaResource extends MediaResourceBase {
 	}
 
 	// @PostMapping
-	// TODO : comment this because there is an issue when generating client on dart
+	// TODOs : comment this because there is an issue when generating client on dart
 	// using OpenAPI Generator
 	// [SEVERE] json_serializable on lib/src/model/create_request.dart (cached):
 	// Cannot populate the required constructor argument: file. It is assigned to a
@@ -193,7 +194,7 @@ public class MediaResource extends MediaResourceBase {
 		return res;
 	}
 
-	// TODO : comment this because there is an issue when generating client on dart
+	// TODOs : comment this because there is an issue when generating client on dart
 	// using OpenAPI Generator
 	// [SEVERE] json_serializable on lib/src/model/create_request.dart (cached):
 	// Cannot populate the required constructor argument: file. It is assigned to a
@@ -219,7 +220,8 @@ public class MediaResource extends MediaResourceBase {
 
 	@Transactional(readOnly = true)
 	@GetMapping(path = "download/{id}")
-	public ResponseEntity<Resource> downloadFile(@NotNull @PathVariable("id") Long id, HttpServletRequest request) throws IOException {
+	public ResponseEntity<Resource> downloadFile(@NotNull @PathVariable("id") Long id, HttpServletRequest request)
+			throws IOException {
 		Optional<Media> opt = service.findById(id);
 		if (!opt.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, MEDIA_NOT_FOUND_MESSAGE);

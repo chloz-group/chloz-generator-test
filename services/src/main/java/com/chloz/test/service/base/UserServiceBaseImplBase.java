@@ -99,7 +99,7 @@ public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long,
 				throw new EmailAlreadyUsedException();
 			}
 		});
-		// TODO : check if user email and phone number are in a correct format
+		// TODOs : check if user email and phone number are in a correct format
 		return user;
 	}
 
@@ -168,11 +168,10 @@ public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long,
 		}
 		List<VerificationCode> codeList = this.findUserVerificationCodesOrderByExpiryDateDesc(user, verType);
 		VerificationCode verificationCode = Optional.ofNullable(codeList).orElse(new ArrayList<>()).stream()
-				.filter(vc ->
-					vc.isEnable() && vc.getExpiryDate().isAfter(Instant.now()) && !vc.getCodeUsed()
-				).findFirst().orElse(null);
+				.filter(vc -> vc.isEnable() && vc.getExpiryDate().isAfter(Instant.now()) && !vc.getCodeUsed())
+				.findFirst().orElse(null);
 		if (verificationCode != null) {
-			// TODO : Find a way to get the locale
+			// TODOs : Find a way to get the locale
 			Locale locale = Locale.ENGLISH;
 			Map<String, Object> templateParams = new HashMap<>();
 			templateParams.put("user", user);
