@@ -6,4 +6,4 @@ pluginManagement {
 }
 
 rootProject.name = 'Chloz test'
-include('app', 'dao', 'domain-model', 'services')
+include('app', 'dao', 'domain-model', 'services', 'common')

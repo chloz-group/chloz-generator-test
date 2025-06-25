@@ -59,8 +59,10 @@ dart run build_runner build
 ```
 
 ## SonarQube Analysis
+```bash
 ./gradlew sonar ^
--Dsonar.projectKey=Chloz-Generator-Test ^
--Dsonar.projectName='Chloz Generator Test' ^
+-Dsonar.projectKey=Chloz test ^
+-Dsonar.projectName='Chloz test' ^
 -Dsonar.host.url=http://localhost:9000 ^
--Dsonar.token=sqp_4c716d0b7b04a2f69dd712b8033250868360d1e2
+-Dsonar.token=
+```

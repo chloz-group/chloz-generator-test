@@ -72,7 +72,7 @@ public class UserResource extends UserResourceBase {
 	public void changePassword(@NotNull @PathVariable("id") Long id, @RequestParam String password) {
 		Optional<User> opt;
 		if (id == null || (opt = service.findById(id)).isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "#E#A005 User not found");
 		}
 		super.changePassword(opt.get(), password);
 	}

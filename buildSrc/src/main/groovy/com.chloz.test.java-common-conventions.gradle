@@ -1,7 +1,6 @@
 plugins {
     // Apply the java Plugin to add support for Java.
     id 'java'
-    id "org.sonarqube"
 }
 
 group = 'com.chloz.test'
@@ -51,7 +50,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // Use JUnit Jupiter for testing.
     testImplementation "com.h2database:h2"
-    //testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

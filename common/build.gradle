@@ -6,15 +6,6 @@ plugins {
 
 version = applicationVersion
 
-dependencies {
-    api project(':dao')
-    api project(':domain-model')
-    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
-    implementation "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    testImplementation project(':app')
-}
-
 tasks.named("bootJar") {
     enabled = false
 }

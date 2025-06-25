@@ -110,7 +110,7 @@ public class AccountResourceBase extends DefaultResource {
 	public UserDto getAccount() {
 		return SecurityUtils.getCurrentUserLogin().flatMap(userService::findOneByLogin)
 				.map(user -> userMapper.mapToDto(user, "*"))
-				.orElseThrow(() -> new AccountResourceException("User could not be found"));
+				.orElseThrow(() -> new AccountResourceException("User could not be found", "A005"));
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class AccountResourceBase extends DefaultResource {
 	 */
 	public void updateAccount(@Valid UserDto userDTO) {
 		String userLogin = SecurityUtils.getCurrentUserLogin()
-				.orElseThrow(() -> new AccountResourceException("Current user login not found"));
+				.orElseThrow(() -> new AccountResourceException("Current user login not found", "A005"));
 		Optional<User> existingUser = userService.findOneByEmailIgnoreCase(userDTO.getEmail());
 		if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
 			throw new EmailAlreadyUsedException();
@@ -139,7 +139,7 @@ public class AccountResourceBase extends DefaultResource {
 		}
 		Optional<User> userOpt = userService.findOneByLogin(userLogin);
 		if (!userOpt.isPresent()) {
-			throw new AccountResourceException("User could not be found");
+			throw new AccountResourceException("User could not be found", "A005");
 		}
 		User user = userOpt.get();
 		if (user.getEmail() != null && !user.getEmail().equals(userDTO.getEmail())) {
@@ -184,18 +184,19 @@ public class AccountResourceBase extends DefaultResource {
 	public ResponseEntity<AuthTokenDto> authorize(@Valid LoginDto loginDto) {
 		User user = this.findUser(loginDto.getUsername());
 		if (user == null) {
-			throw new UserAccountNotFoundException("User account " + loginDto.getUsername() + " not found");
+			throw new UserAccountNotFoundException("#E#A006(401::" + loginDto.getUsername() + ") User account "
+					+ loginDto.getUsername() + " not found");
 		}
 		boolean accountActivated = Optional.ofNullable(user.getActivated()).orElse(false);
 		boolean otpCodeNotProvided = loginDto.getSmsCode() == null && loginDto.getEmailCode() == null;
 		if (!accountActivated && otpCodeNotProvided) {
 			// user account is not activated
-			throw new AccountResourceException("Account not activated");
+			throw new AccountResourceException("Account not activated", "A007");
 		}
 		boolean accountLocked = Optional.ofNullable(user.getAccountLocked()).orElse(false);
 		if (accountLocked && otpCodeNotProvided) {
 			// user account is locked
-			throw new AccountResourceException("Locked account");
+			throw new AccountResourceException("Locked account", "A008");
 		}
 		boolean checkCodes = this.verifyCodes(user, loginDto);
 		RuntimeException e = null;
@@ -249,7 +250,8 @@ public class AccountResourceBase extends DefaultResource {
 	public void requestAuthenticationCode(@Valid AuthenticationCodeRequestDto lp) {
 		User user = this.findUser(lp.getUsername());
 		if (user == null) {
-			throw new UserAccountNotFoundException("User account " + lp.getUsername() + " not found");
+			throw new UserAccountNotFoundException(
+					"#E#A006(401::" + lp.getUsername() + ") User account " + lp.getUsername() + " not found");
 		}
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(lp.getUsername(),
 				lp.getPassword());

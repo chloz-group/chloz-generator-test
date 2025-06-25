@@ -26,7 +26,7 @@ public class Constants {
 	 */
 	public static final String SPRING_PROFILE_SWAGGER = "swagger";
 
-	public static final String ERROR_MESSAGE_OBJECT_NOT_FOUND = "Object not found";
+	public static final String ERROR_MESSAGE_OBJECT_NOT_FOUND = "#E#S003 Object not found";
 	private Constants() {
 	}
 

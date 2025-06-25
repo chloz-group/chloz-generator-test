@@ -1,13 +1,15 @@
 package com.chloz.test.web.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;

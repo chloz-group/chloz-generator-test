@@ -1,10 +1,12 @@
 package com.chloz.test.service.exception;
 
-public class InvalidPasswordException extends RuntimeException {
+import com.chloz.test.common.exception.BusinessException;
+
+public class InvalidPasswordException extends BusinessException {
 
 	private static final long serialVersionUID = 1L;
 	public InvalidPasswordException() {
-		super("Incorrect password");
+		super("Invalid password", "A002", 401);
 	}
 
 }

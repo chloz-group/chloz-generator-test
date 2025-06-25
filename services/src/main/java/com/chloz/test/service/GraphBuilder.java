@@ -1,5 +1,6 @@
 package com.chloz.test.service;
 
+import com.chloz.test.common.exception.BusinessException;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -116,7 +117,8 @@ public class GraphBuilder {
 						// entities
 						.filter(s -> {
 							if (simpleFields.stream().noneMatch(field -> field.getName().equals(s))) {
-								throw new IllegalArgumentException("Unknown field " + s + " provided in the graph");
+								throw new BusinessException("Unknown field " + s + " provided in the graph", "S001",
+										400, s);
 							}
 							return true;
 						}).forEach(attributes::add);
@@ -127,7 +129,7 @@ public class GraphBuilder {
 							|| entitiesFields.stream().anyMatch(field -> field.getName().equals(s)))
 					.map(s -> s.indexOf(".") < 0 ? s : s.substring(0, s.indexOf("."))).distinct().filter(s -> {
 						if (entitiesFields.stream().noneMatch(field -> field.getName().equals(s))) {
-							throw new IllegalArgumentException("Unknown subGraph " + s + " requested");
+							throw new BusinessException("Unknown subGraph " + s + " requested", "S002", 400, s);
 						}
 						return true;
 					}).forEach(fieldName -> {

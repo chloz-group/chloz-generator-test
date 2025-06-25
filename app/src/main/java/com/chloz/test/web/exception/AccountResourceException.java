@@ -1,9 +1,11 @@
 package com.chloz.test.web.exception;
 
-public class AccountResourceException extends RuntimeException {
+import com.chloz.test.common.exception.BusinessException;
 
-	public AccountResourceException(String message) {
-		super(message);
+public class AccountResourceException extends BusinessException {
+
+	public AccountResourceException(String message, String errorCode) {
+		super(message, errorCode, 401);
 	}
 
 }

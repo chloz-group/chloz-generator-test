@@ -28,7 +28,7 @@ public abstract class DefaultRequestAuthenticationProvider implements RequestAut
 			}
 		}
 		if (user == null) {
-			throw new UserAccountNotFoundException("User " + subject + " not found");
+			throw new UserAccountNotFoundException("#E#A005 User " + subject + " not found");
 		}
 		auth.setDetails(user);
 		return auth;

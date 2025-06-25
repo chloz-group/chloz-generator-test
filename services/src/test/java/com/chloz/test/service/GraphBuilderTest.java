@@ -1,5 +1,6 @@
 package com.chloz.test.service;
 
+import com.chloz.test.common.exception.BusinessException;
 import com.chloz.test.domain.User;
 import jakarta.persistence.AttributeNode;
 import jakarta.persistence.EntityGraph;
@@ -7,15 +8,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = com.chloz.test.web.ChlozTestApplication.class)
 class GraphBuilderTest {
 
 	private final GraphBuilder builder;
+	@Autowired
 	public GraphBuilderTest(GraphBuilder builder) {
 		this.builder = builder;
 	}
@@ -39,9 +42,9 @@ class GraphBuilderTest {
 
 	@Test
 	void createEntityGraphWithUnkownProperty() {
-		assertThrows(IllegalArgumentException.class,
+		assertThrows(BusinessException.class,
 				() -> builder.createEntityGraph(User.class, "aSampleProperty,anotherOne"));
-		assertThrows(IllegalArgumentException.class,
+		assertThrows(BusinessException.class,
 				() -> builder.createEntityGraph(User.class, "unknownChild.id,unknownChild.name"));
 	}
 

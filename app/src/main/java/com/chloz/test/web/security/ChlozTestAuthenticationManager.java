@@ -34,12 +34,12 @@ public class ChlozTestAuthenticationManager implements AuthenticationManager {
 		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
 		User user = this.findUser((String) token.getPrincipal());
 		if (user == null) {
-			throw new UserAccountNotFoundException("Unknown user account or password incorrect");
+			throw new UserAccountNotFoundException("#E#A009 Unknown user account or password incorrect");
 		}
 		String providedPassword = (String) token.getCredentials();
 		String currentEncryptedPassword = user.getPassword();
 		if (!passwordEncoder.matches(providedPassword, currentEncryptedPassword)) {
-			throw new BadCredentialsException("Unknown user account or password incorrect");
+			throw new BadCredentialsException("#E#A009 Unknown user account or password incorrect");
 		}
 		List<SimpleGrantedAuthority> userRoles = user.getRoles().stream()
 				.map(role -> new SimpleGrantedAuthority(role.getName())).toList();
