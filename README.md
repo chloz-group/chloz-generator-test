@@ -66,3 +66,25 @@ dart run build_runner build
 -Dsonar.host.url=http://localhost:9000 ^
 -Dsonar.token=
 ```
+
+
+## Angular API Generation
+* Install Node.js
+
+* Install NPM :
+```bash
+npm install -g npm
+```
+* Install openapi-generator :
+```bash
+npm install @openapitools/openapi-generator-cli -g
+```
+* Create the directory for the project (same name as pubName below), and run the below commands in that directory
+* Next run the following to generate the api on windows (set specPath and pubName to correct values)
+```bash
+openapi-generator-cli generate -g typescript-angular -i http://localhost:8488/v3/api-docs --enable-post-process-file --generate-alias-as-model --skip-validate-spec
+```
+* Then run
+```bash
+dart run build_runner build
+```
