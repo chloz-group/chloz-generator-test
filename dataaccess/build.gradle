@@ -1,0 +1,22 @@
+plugins {
+    id 'com.chloz.test.java-library-conventions'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+}
+
+version = applicationVersion
+
+dependencies {
+    api project(':repository')
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+}
+
+tasks.named("bootJar") {
+    enabled = false
+}
+
+tasks.named("bootBuildImage") {
+    enabled = false
+}

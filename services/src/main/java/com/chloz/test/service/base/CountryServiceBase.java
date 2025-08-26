@@ -1,12 +1,14 @@
 package com.chloz.test.service.base;
 
-import com.chloz.test.domain.Country;
-import com.chloz.test.service.FilterDomainService;
-import com.chloz.test.service.filter.SimpleCountryFilter;
+import com.chloz.test.service.dto.CountryDto;
+import com.chloz.test.dataaccess.filter.SimpleCountryFilter;
+import com.chloz.test.service.DefaultDomainService;
 import java.util.*;
 
-public interface CountryServiceBase extends FilterDomainService<Country, String, SimpleCountryFilter> {
+public interface CountryServiceBase extends DefaultDomainService<String, CountryDto, SimpleCountryFilter> {
 
-	Optional<Country> findById(String code);
+	Optional<CountryDto> findById(String code);
+
+	CountryDto updateFields(CountryDto dto, String graph);
 
 }

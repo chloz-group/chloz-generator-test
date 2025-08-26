@@ -23,7 +23,7 @@ public class TemplateBase extends AbstractAuditingEntity implements Serializable
 	@Column(name = "id")
 	protected Long id;
 
-	@Column(name = "code", length = 100)
+	@Column(name = "code", length = 100, unique = true)
 	protected String code;
 
 	@Column(name = "content")

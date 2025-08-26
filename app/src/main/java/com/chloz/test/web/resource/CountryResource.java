@@ -1,12 +1,11 @@
 package com.chloz.test.web.resource;
 
+import com.chloz.test.dataaccess.filter.SimpleCountryFilter;
+import com.chloz.test.dataaccess.filter.CountryFilter;
 import com.chloz.test.service.CountryService;
-import com.chloz.test.service.filter.SimpleCountryFilter;
-import com.chloz.test.service.filter.CountryFilter;
-import com.chloz.test.web.dto.CountryDto;
-import com.chloz.test.web.mapper.CountryMapper;
-import com.chloz.test.web.resource.base.CountryResourceBase;
+import com.chloz.test.service.dto.CountryDto;
 import com.chloz.test.web.Constants;
+import com.chloz.test.web.resource.base.CountryResourceBase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -21,8 +20,8 @@ import java.util.List;
 @RequestMapping(path = Constants.API_BASE_PATH + "/countrys")
 public class CountryResource extends CountryResourceBase {
 
-	public CountryResource(CountryService service, CountryMapper mapper) {
-		super(service, mapper);
+	public CountryResource(CountryService service) {
+		super(service);
 	}
 
 	@GetMapping(path = "{code}")

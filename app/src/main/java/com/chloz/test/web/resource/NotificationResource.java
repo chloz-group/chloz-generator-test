@@ -1,13 +1,13 @@
 package com.chloz.test.web.resource;
 
-import com.chloz.test.service.UserService;
+import com.chloz.test.dataaccess.UserDataAccess;
 import com.chloz.test.domain.User;
 import com.chloz.test.domain.base.UserDeviceBase;
+import com.chloz.test.service.dto.NotificationDto;
 import com.chloz.test.service.UserDeviceService;
 import com.chloz.test.service.messaging.DefaultMessagingService;
 import com.chloz.test.service.messaging.PushNotificationMessagingService;
 import com.chloz.test.web.Constants;
-import com.chloz.test.web.dto.NotificationDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +23,14 @@ import java.util.Map;
 @RequestMapping(path = Constants.API_BASE_PATH + "/notification")
 public class NotificationResource {
 
-	private final UserService userService;
+	private final UserDataAccess userDataAccess;
 
 	private final UserDeviceService userDeviceService;
 
 	private final PushNotificationMessagingService messagingService;
-	public NotificationResource(UserService userService, UserDeviceService userDeviceService,
+	public NotificationResource(UserDataAccess userDataAccess, UserDeviceService userDeviceService,
 			PushNotificationMessagingService messagingService) {
-		this.userService = userService;
+		this.userDataAccess = userDataAccess;
 		this.userDeviceService = userDeviceService;
 		this.messagingService = messagingService;
 	}
@@ -39,7 +39,7 @@ public class NotificationResource {
 	public ResponseEntity<String> sendToUsers(@Valid @RequestBody NotificationDto dto) throws IOException {
 		List<String> tokens = null;
 		if (dto.getUserFilter() != null) {
-			List<User> users = userService.findByFilter(dto.getUserFilter(), "*");
+			List<User> users = userDataAccess.findByFilter(dto.getUserFilter(), "*");
 			if (users != null && !users.isEmpty()) {
 				tokens = this.userDeviceService.findDevicesOwnedByUsers(users).stream().map(UserDeviceBase::getToken)
 						.toList();

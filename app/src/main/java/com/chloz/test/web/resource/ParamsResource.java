@@ -1,12 +1,11 @@
 package com.chloz.test.web.resource;
 
+import com.chloz.test.dataaccess.filter.SimpleParamsFilter;
+import com.chloz.test.dataaccess.filter.ParamsFilter;
 import com.chloz.test.service.ParamsService;
-import com.chloz.test.service.filter.SimpleParamsFilter;
-import com.chloz.test.service.filter.ParamsFilter;
-import com.chloz.test.web.dto.ParamsDto;
-import com.chloz.test.web.mapper.ParamsMapper;
-import com.chloz.test.web.resource.base.ParamsResourceBase;
+import com.chloz.test.service.dto.ParamsDto;
 import com.chloz.test.web.Constants;
+import com.chloz.test.web.resource.base.ParamsResourceBase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -21,8 +20,8 @@ import java.util.List;
 @RequestMapping(path = Constants.API_BASE_PATH + "/paramss")
 public class ParamsResource extends ParamsResourceBase {
 
-	public ParamsResource(ParamsService service, ParamsMapper mapper) {
-		super(service, mapper);
+	public ParamsResource(ParamsService service) {
+		super(service);
 	}
 
 	@GetMapping(path = "{id}")

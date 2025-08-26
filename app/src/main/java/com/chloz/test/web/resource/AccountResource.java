@@ -1,17 +1,19 @@
 package com.chloz.test.web.resource;
 
-import com.chloz.test.service.UserService;
-import com.chloz.test.web.dto.*;
-import com.chloz.test.web.mapper.UserMapper;
-import com.chloz.test.web.resource.base.AccountResourceBase;
-import com.chloz.test.web.security.jwt.TokenProvider;
+import com.chloz.test.service.AccountService;
+import com.chloz.test.service.dto.UserDto;
+import com.chloz.test.service.dto.UserRegistrationDto;
+import com.chloz.test.service.dto.PasswordChangeDto;
+import com.chloz.test.service.dto.AuthTokenDto;
+import com.chloz.test.service.dto.LoginDto;
+import com.chloz.test.service.dto.AuthenticationCodeRequestDto;
 import com.chloz.test.web.Constants;
+import com.chloz.test.web.resource.base.AccountResourceBase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * REST controller for managing the current user's account.
@@ -20,9 +22,8 @@ import jakarta.validation.Valid;
 @RequestMapping(path = Constants.API_BASE_PATH)
 public class AccountResource extends AccountResourceBase {
 
-	public AccountResource(UserService userService, UserMapper userMapper, AuthenticationManager authenticationManager,
-			TokenProvider tokenProvider) {
-		super(userService, userMapper, authenticationManager, tokenProvider);
+	public AccountResource(AccountService accountService) {
+		super(accountService);
 	}
 
 	@PostMapping("/register")

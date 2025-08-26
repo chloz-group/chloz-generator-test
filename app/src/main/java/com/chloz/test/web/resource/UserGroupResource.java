@@ -1,12 +1,11 @@
 package com.chloz.test.web.resource;
 
+import com.chloz.test.dataaccess.filter.SimpleUserGroupFilter;
+import com.chloz.test.dataaccess.filter.UserGroupFilter;
 import com.chloz.test.service.UserGroupService;
-import com.chloz.test.service.filter.SimpleUserGroupFilter;
-import com.chloz.test.service.filter.UserGroupFilter;
-import com.chloz.test.web.dto.UserGroupDto;
-import com.chloz.test.web.mapper.UserGroupMapper;
-import com.chloz.test.web.resource.base.UserGroupResourceBase;
+import com.chloz.test.service.dto.UserGroupDto;
 import com.chloz.test.web.Constants;
+import com.chloz.test.web.resource.base.UserGroupResourceBase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -21,8 +20,8 @@ import java.util.List;
 @RequestMapping(path = Constants.API_BASE_PATH + "/userGroups")
 public class UserGroupResource extends UserGroupResourceBase {
 
-	public UserGroupResource(UserGroupService service, UserGroupMapper mapper) {
-		super(service, mapper);
+	public UserGroupResource(UserGroupService service) {
+		super(service);
 	}
 
 	@GetMapping(path = "{id}")

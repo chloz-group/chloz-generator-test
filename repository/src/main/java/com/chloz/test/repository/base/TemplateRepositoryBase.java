@@ -8,6 +8,6 @@ import java.util.Optional;
 @NoRepositoryBean
 public interface TemplateRepositoryBase extends SimpleDomainRepository<Template, Long> {
 
-	public Optional<Template> findByCode(String code);
+	Optional<Template> findByCode(String code);
 
 }

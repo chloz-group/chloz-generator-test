@@ -1,5 +1,8 @@
 package com.chloz.test.service.base;
 
+import com.chloz.test.common.exception.BusinessException;
+import com.chloz.test.dataaccess.UserDataAccess;
+import com.chloz.test.dataaccess.filter.SimpleUserFilter;
 import com.chloz.test.domain.User;
 import com.chloz.test.domain.VerificationCode;
 import com.chloz.test.domain.enums.VerificationType;
@@ -7,15 +10,17 @@ import com.chloz.test.repository.UserRepository;
 import com.chloz.test.repository.VerificationCodeRepository;
 import com.chloz.test.service.Constants;
 import com.chloz.test.service.Utils;
+import com.chloz.test.service.dto.UserDto;
 import com.chloz.test.service.exception.EmailAlreadyUsedException;
 import com.chloz.test.service.exception.InvalidPasswordException;
 import com.chloz.test.service.exception.PhoneAlreadyUsedException;
 import com.chloz.test.service.exception.UsernameAlreadyUsedException;
-import com.chloz.test.service.filter.SimpleUserFilter;
-import com.chloz.test.service.impl.FilterDomainServiceImpl;
+import com.chloz.test.service.exception.LoginAlreadyUsedException;
+import com.chloz.test.service.exception.BadRequestException;
+import com.chloz.test.service.impl.DefaultDomainServiceImpl;
 import com.chloz.test.service.messaging.DefaultMessagingService;
 import com.chloz.test.service.messaging.MessageType;
-import com.chloz.test.service.query.UserQueryBuilder;
+import com.chloz.test.service.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +31,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
-public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long, SimpleUserFilter>
+public class UserServiceBaseImplBase extends DefaultDomainServiceImpl<User, Long, UserDto, SimpleUserFilter>
 		implements
 			UserServiceBase {
 
@@ -50,16 +55,19 @@ public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long,
 
 	private final PasswordEncoder passwordEncoder;
 
+	private final UserMapper mapper;
+
 	@Value("${spring.application.name}")
 	private String applicationName;
-	public UserServiceBaseImplBase(UserRepository repository, UserQueryBuilder queryBuilder,
+	public UserServiceBaseImplBase(UserRepository repository, UserDataAccess dataAccess, UserMapper mapper,
 			VerificationCodeRepository verificationCodeRepository, DefaultMessagingService messagingService,
 			PasswordEncoder passwordEncoder) {
-		super(repository, queryBuilder);
+		super(dataAccess, mapper);
 		this.repository = repository;
 		this.verificationCodeRepository = verificationCodeRepository;
 		this.messagingService = messagingService;
 		this.passwordEncoder = passwordEncoder;
+		this.mapper = mapper;
 	}
 
 	@Override
@@ -186,6 +194,62 @@ public class UserServiceBaseImplBase extends FilterDomainServiceImpl<User, Long,
 			messagingService.sendMessageFromTemplateAsynchronous(Collections.singleton(messageType), locale,
 					applicationName, Constants.TEMPLATE_MESSAGE_USER_ACTIVATION_CODE, templateParams, messageParams);
 		}
+	}
+
+	@Override
+	public UserDto create(UserDto dto, String graph) {
+		if (dto.getId() != null) {
+			throw new BadRequestException("A new User cannot already have the id field");
+		}
+		return super.create(dto, graph);
+	}
+
+	@Override
+	public UserDto update(UserDto dto, String graph) {
+		if (dto.getId() == null || this.repository.findById(dto.getId()).isEmpty()) {
+			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND, null, 404);
+		}
+		Optional<User> existingUser = this.findOneByEmailIgnoreCase(dto.getEmail());
+		if (existingUser.isPresent() && (!existingUser.get().getId().equals(dto.getId()))) {
+			throw new EmailAlreadyUsedException();
+		}
+		existingUser = this.findOneByPhone(dto.getPhone());
+		if (existingUser.isPresent() && (!existingUser.get().getId().equals(dto.getId()))) {
+			throw new PhoneAlreadyUsedException();
+		}
+		existingUser = this.findOneByLogin(dto.getLogin());
+		if (existingUser.isPresent() && (!existingUser.get().getId().equals(dto.getId()))) {
+			throw new LoginAlreadyUsedException();
+		}
+		Boolean emailChecked = null;
+		Boolean phoneChecked = null;
+		if (existingUser.isPresent() && existingUser.get().getEmail() != null
+				&& !existingUser.get().getEmail().equals(dto.getEmail())) {
+			emailChecked = false;
+		}
+		if (existingUser.isPresent() && existingUser.get().getPhone() != null
+				&& !existingUser.get().getPhone().equals(dto.getPhone())) {
+			phoneChecked = false;
+		}
+		User user = this.mapper.modelFromDto(dto);
+		if (emailChecked != null) {
+			user.setEmailChecked(emailChecked);
+		}
+		if (phoneChecked != null) {
+			user.setPhoneChecked(phoneChecked);
+		}
+		user = this.repository.save(user);
+		return mapper.mapToDto(user, graph);
+	}
+
+	@Transactional
+	@Override
+	public void changePassword(Long id, String password) {
+		Optional<User> opt;
+		if (id == null || (opt = repository.findById(id)).isEmpty()) {
+			throw new BusinessException("#E#A005 User not found", null, 404);
+		}
+		this.changePassword(opt.get(), password);
 	}
 
 	@Override

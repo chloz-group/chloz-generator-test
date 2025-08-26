@@ -7,11 +7,16 @@ plugins {
 version = applicationVersion
 
 dependencies {
-    api project(':repository')
-    api project(':domain-model')
+    api project(':dataaccess')
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "net.coobird:thumbnailator:0.4.20"
+
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
     testImplementation project(':app')
 }
 

@@ -1,12 +1,11 @@
 package com.chloz.test.web.resource;
 
+import com.chloz.test.dataaccess.filter.SimpleTemplateFilter;
+import com.chloz.test.dataaccess.filter.TemplateFilter;
 import com.chloz.test.service.TemplateService;
-import com.chloz.test.service.filter.SimpleTemplateFilter;
-import com.chloz.test.service.filter.TemplateFilter;
-import com.chloz.test.web.dto.TemplateDto;
-import com.chloz.test.web.mapper.TemplateMapper;
-import com.chloz.test.web.resource.base.TemplateResourceBase;
+import com.chloz.test.service.dto.TemplateDto;
 import com.chloz.test.web.Constants;
+import com.chloz.test.web.resource.base.TemplateResourceBase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -21,8 +20,8 @@ import java.util.List;
 @RequestMapping(path = Constants.API_BASE_PATH + "/templates")
 public class TemplateResource extends TemplateResourceBase {
 
-	public TemplateResource(TemplateService service, TemplateMapper mapper) {
-		super(service, mapper);
+	public TemplateResource(TemplateService service) {
+		super(service);
 	}
 
 	@GetMapping(path = "{id}")

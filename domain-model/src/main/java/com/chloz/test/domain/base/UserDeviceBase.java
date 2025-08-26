@@ -23,7 +23,7 @@ public class UserDeviceBase extends AbstractAuditingEntity implements Serializab
 	@Column(name = "id")
 	protected Long id;
 
-	@Column(name = "token", length = 512)
+	@Column(name = "token", length = 512, unique = true)
 	protected String token;
 
 }

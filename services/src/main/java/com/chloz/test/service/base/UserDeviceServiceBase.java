@@ -1,11 +1,14 @@
 package com.chloz.test.service.base;
 
-import com.chloz.test.domain.UserDevice;
-import com.chloz.test.service.SimpleDomainService;
+import com.chloz.test.service.dto.UserDeviceDto;
+import com.chloz.test.dataaccess.filter.SimpleUserDeviceFilter;
+import com.chloz.test.service.DefaultDomainService;
 import java.util.*;
 
-public interface UserDeviceServiceBase extends SimpleDomainService<UserDevice, Long> {
+public interface UserDeviceServiceBase extends DefaultDomainService<Long, UserDeviceDto, SimpleUserDeviceFilter> {
 
-	Optional<UserDevice> findById(Long id);
+	Optional<UserDeviceDto> findById(Long id);
+
+	UserDeviceDto updateFields(UserDeviceDto dto, String graph);
 
 }

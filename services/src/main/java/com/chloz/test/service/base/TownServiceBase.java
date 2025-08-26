@@ -1,12 +1,14 @@
 package com.chloz.test.service.base;
 
-import com.chloz.test.domain.Town;
-import com.chloz.test.service.FilterDomainService;
-import com.chloz.test.service.filter.SimpleTownFilter;
+import com.chloz.test.service.dto.TownDto;
+import com.chloz.test.dataaccess.filter.SimpleTownFilter;
+import com.chloz.test.service.DefaultDomainService;
 import java.util.*;
 
-public interface TownServiceBase extends FilterDomainService<Town, Long, SimpleTownFilter> {
+public interface TownServiceBase extends DefaultDomainService<Long, TownDto, SimpleTownFilter> {
 
-	Optional<Town> findById(Long id);
+	Optional<TownDto> findById(Long id);
+
+	TownDto updateFields(TownDto dto, String graph);
 
 }

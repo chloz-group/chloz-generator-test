@@ -1,9 +1,9 @@
 package com.chloz.test.service.impl;
 
-import com.chloz.test.repository.MediaRepository;
+import com.chloz.test.dataaccess.MediaDataAccess;
 import com.chloz.test.service.MediaService;
 import com.chloz.test.service.base.MediaServiceBaseImplBase;
-import com.chloz.test.service.query.MediaQueryBuilder;
+import com.chloz.test.service.mapper.MediaMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MediaServiceImpl extends MediaServiceBaseImplBase implements MediaService {
 
-	private final MediaRepository repository;
-	public MediaServiceImpl(MediaRepository repository, MediaQueryBuilder queryBuilder) {
-		super(repository, queryBuilder);
-		this.repository = repository;
+	private final MediaDataAccess dataAccess;
+	public MediaServiceImpl(MediaDataAccess dataAccess, MediaMapper mapper) {
+		super(dataAccess, mapper);
+		this.dataAccess = dataAccess;
 	}
 
 }

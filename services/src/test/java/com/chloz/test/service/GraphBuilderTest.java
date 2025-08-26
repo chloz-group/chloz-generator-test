@@ -1,6 +1,7 @@
 package com.chloz.test.service;
 
 import com.chloz.test.common.exception.BusinessException;
+import com.chloz.test.dataaccess.GraphBuilder;
 import com.chloz.test.domain.User;
 import jakarta.persistence.AttributeNode;
 import jakarta.persistence.EntityGraph;
@@ -14,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = com.chloz.test.web.ChlozTestApplication.class)
+//@SpringBootTest(classes = com.chloz.test.service.ChlozTestServiceTestsApplication.class)
+@SpringBootTest
 class GraphBuilderTest {
 
 	private final GraphBuilder builder;

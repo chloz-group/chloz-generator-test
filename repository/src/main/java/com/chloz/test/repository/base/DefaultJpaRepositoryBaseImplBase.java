@@ -31,7 +31,6 @@ import java.util.Optional;
  * @param <I>
  *            The class of the entity id field
  */
-@Transactional
 public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaRepositoryBase<T, I> {
 
 	private static final String ENTITY_GRAPH_TYPE = "jakarta.persistence.fetchgraph";
@@ -51,14 +50,12 @@ public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaReposit
 	}
 
 	@Override
-	@Transactional
 	public void deletePermanently(T entity) {
 		Assert.notNull(entity, "Entity must not be null!");
 		em.remove(em.contains(entity) ? entity : em.merge(entity));
 	}
 
 	@Override
-	@Transactional
 	public void deleteAllPermanently(Iterable<? extends T> entities) {
 		Assert.notNull(entities, "Entities must not be null!");
 		for (T entity : entities) {

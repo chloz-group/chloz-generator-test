@@ -1,12 +1,11 @@
 package com.chloz.test.web.resource;
 
+import com.chloz.test.dataaccess.filter.SimpleRoleFilter;
+import com.chloz.test.dataaccess.filter.RoleFilter;
 import com.chloz.test.service.RoleService;
-import com.chloz.test.service.filter.SimpleRoleFilter;
-import com.chloz.test.service.filter.RoleFilter;
-import com.chloz.test.web.dto.RoleDto;
-import com.chloz.test.web.mapper.RoleMapper;
-import com.chloz.test.web.resource.base.RoleResourceBase;
+import com.chloz.test.service.dto.RoleDto;
 import com.chloz.test.web.Constants;
+import com.chloz.test.web.resource.base.RoleResourceBase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -21,8 +20,8 @@ import java.util.List;
 @RequestMapping(path = Constants.API_BASE_PATH + "/roles")
 public class RoleResource extends RoleResourceBase {
 
-	public RoleResource(RoleService service, RoleMapper mapper) {
-		super(service, mapper);
+	public RoleResource(RoleService service) {
+		super(service);
 	}
 
 	@GetMapping(path = "{name}")

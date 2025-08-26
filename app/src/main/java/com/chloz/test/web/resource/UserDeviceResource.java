@@ -1,10 +1,11 @@
 package com.chloz.test.web.resource;
 
+import com.chloz.test.dataaccess.filter.SimpleUserDeviceFilter;
+import com.chloz.test.dataaccess.filter.UserDeviceFilter;
 import com.chloz.test.service.UserDeviceService;
-import com.chloz.test.web.dto.UserDeviceDto;
-import com.chloz.test.web.mapper.UserDeviceMapper;
-import com.chloz.test.web.resource.base.UserDeviceResourceBase;
+import com.chloz.test.service.dto.UserDeviceDto;
 import com.chloz.test.web.Constants;
+import com.chloz.test.web.resource.base.UserDeviceResourceBase;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -19,8 +20,8 @@ import java.util.List;
 @RequestMapping(path = Constants.API_BASE_PATH + "/userDevices")
 public class UserDeviceResource extends UserDeviceResourceBase {
 
-	public UserDeviceResource(UserDeviceService service, UserDeviceMapper mapper) {
-		super(service, mapper);
+	public UserDeviceResource(UserDeviceService service) {
+		super(service);
 	}
 
 	@GetMapping(path = "{id}")

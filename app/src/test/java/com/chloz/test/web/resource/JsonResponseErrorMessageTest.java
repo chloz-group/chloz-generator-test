@@ -2,8 +2,8 @@ package com.chloz.test.web.resource;
 
 import com.chloz.test.domain.User;
 import com.chloz.test.service.UserService;
-import com.chloz.test.web.dto.LoginDto;
-import com.chloz.test.web.dto.UserRegistrationDto;
+import com.chloz.test.service.dto.LoginDto;
+import com.chloz.test.service.dto.UserRegistrationDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +37,9 @@ class JsonResponseErrorMessageTest {
 		// this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 		Optional<User> opt = this.userService.findOneByLogin("user1");
 		if (opt.isEmpty()) {
-			User user = User.builder().login("user1").email("user1@test.org").name("User1").build();
-			this.userService.createNewUser(user, "user1");
+			UserRegistrationDto user = UserRegistrationDto.builder().login("user1").email("user1@test.org")
+					.name("User1").build();
+			this.userService.createNewUser(user, "user1", "*");
 		}
 	}
 

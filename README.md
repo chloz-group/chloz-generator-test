@@ -1,4 +1,12 @@
 # Chloz test
+## Intellij IDEA Execution
+Add a Run Configuration and type the run command below
+
+`bootRun --args='--spring.profiles.active=test,swagger,mariadb --spring.output.ansi.enabled=ALWAYS --spring.application.admin.enabled=true'
+`
+
+Replace the --args arguments and specify profiles you are activating or other arguments.
+
 ## Standalone execution
 ### Run the application
 ```bash
@@ -79,12 +87,7 @@ npm install -g npm
 ```bash
 npm install @openapitools/openapi-generator-cli -g
 ```
-* Create the directory for the project (same name as pubName below), and run the below commands in that directory
-* Next run the following to generate the api on windows (set specPath and pubName to correct values)
+* Create the directory for the api client and run the below commands in that directory
 ```bash
 openapi-generator-cli generate -g typescript-angular -i http://localhost:8488/v3/api-docs --enable-post-process-file --generate-alias-as-model --skip-validate-spec
-```
-* Then run
-```bash
-dart run build_runner build
 ```

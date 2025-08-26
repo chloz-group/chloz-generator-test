@@ -2,7 +2,7 @@ package com.chloz.test.web.security;
 
 import com.chloz.test.domain.User;
 import com.chloz.test.service.UserService;
-import com.chloz.test.web.exception.UserAccountNotFoundException;
+import com.chloz.test.service.exception.UserAccountNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

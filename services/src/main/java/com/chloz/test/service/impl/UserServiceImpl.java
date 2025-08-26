@@ -1,12 +1,15 @@
 package com.chloz.test.service.impl;
 
+import com.chloz.test.dataaccess.UserDataAccess;
 import com.chloz.test.domain.User;
 import com.chloz.test.repository.UserRepository;
 import com.chloz.test.repository.VerificationCodeRepository;
 import com.chloz.test.service.UserService;
 import com.chloz.test.service.base.UserServiceBaseImplBase;
+import com.chloz.test.service.dto.UserDto;
+import com.chloz.test.service.dto.UserRegistrationDto;
 import com.chloz.test.service.messaging.DefaultMessagingService;
-import com.chloz.test.service.query.UserQueryBuilder;
+import com.chloz.test.service.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,17 +25,21 @@ public class UserServiceImpl extends UserServiceBaseImplBase implements UserServ
 	private final PasswordEncoder passwordEncoder;
 
 	private final UserRepository repository;
-	public UserServiceImpl(UserRepository repository, UserQueryBuilder queryBuilder,
+
+	private final UserMapper mapper;
+	public UserServiceImpl(UserRepository repository, UserDataAccess dataAccess, UserMapper mapper,
 			VerificationCodeRepository verificationCodeRepository, DefaultMessagingService messagingService,
 			PasswordEncoder passwordEncoder) {
-		super(repository, queryBuilder, verificationCodeRepository, messagingService, passwordEncoder);
+		super(repository, dataAccess, mapper, verificationCodeRepository, messagingService, passwordEncoder);
 		this.passwordEncoder = passwordEncoder;
 		this.repository = repository;
+		this.mapper = mapper;
 	}
 
 	@Override
 	@Transactional
-	public User createNewUser(User user, String password) {
+	public UserDto createNewUser(UserRegistrationDto dto, String password, String graph) {
+		User user = this.mapper.modelFromDto(dto);
 		User newUser = prepareUserCreation(user);
 		String encryptedPassword = passwordEncoder.encode(password);
 		newUser.setPassword(encryptedPassword);
@@ -43,7 +50,7 @@ public class UserServiceImpl extends UserServiceBaseImplBase implements UserServ
 		newUser.setDisabled(false);
 		newUser = repository.save(newUser);
 		log.debug("Created Information for User: {}", newUser);
-		return newUser;
+		return mapper.mapToDto(user, graph);
 	}
 
 }

@@ -1,8 +1,8 @@
 package com.chloz.test.service.messaging;
 
+import com.chloz.test.dataaccess.TemplateDataAccess;
 import com.chloz.test.domain.Template;
 import com.chloz.test.service.ErrorHandler;
-import com.chloz.test.service.TemplateService;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.*;
@@ -53,7 +53,7 @@ public class DefaultMessagingService {
 
 	private static final freemarker.template.Version VERSION = Configuration.VERSION_2_3_30;
 
-	private final TemplateService templateService;
+	private final TemplateDataAccess templateDataAccess;
 
 	private final MailMessagingService mailService;
 
@@ -64,10 +64,10 @@ public class DefaultMessagingService {
 	private final ErrorHandler errorHandler;
 
 	private final Configuration configuration;
-	public DefaultMessagingService(TemplateService templateService, MailMessagingService mailService,
+	public DefaultMessagingService(TemplateDataAccess templateDataAccess, MailMessagingService mailService,
 			SMSMessagingService smsService, PushNotificationMessagingService pushNotificationService,
 			ErrorHandler errorHandler) {
-		this.templateService = templateService;
+		this.templateDataAccess = templateDataAccess;
 		this.mailService = mailService;
 		this.smsService = smsService;
 		this.pushNotificationService = pushNotificationService;
@@ -186,7 +186,7 @@ public class DefaultMessagingService {
 
 	public Optional<Template> transformMessage(Locale locale, String title, String templateCode,
 			Map<String, Object> templateParams) {
-		Optional<Template> opt = this.templateService.findByCode(templateCode);
+		Optional<Template> opt = this.templateDataAccess.findByCode(templateCode);
 		if (!opt.isPresent()) {
 			return Optional.empty();
 		}
@@ -199,7 +199,7 @@ public class DefaultMessagingService {
 		Template localizedTemplate = null;
 		if (locale != null) {
 			String i10nCode = templateCode + ".i10n." + locale.getLanguage().toLowerCase();
-			localizedTemplate = this.templateService.findByCode(i10nCode).orElse(null);
+			localizedTemplate = this.templateDataAccess.findByCode(i10nCode).orElse(null);
 			if (localizedTemplate != null) {
 				res.setTitle(Optional.ofNullable(localizedTemplate.getTitle()).orElse(res.getTitle()));
 				res.setContent(Optional.ofNullable(localizedTemplate.getContent()).orElse(res.getContent()));

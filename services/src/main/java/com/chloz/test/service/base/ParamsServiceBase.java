@@ -1,12 +1,14 @@
 package com.chloz.test.service.base;
 
-import com.chloz.test.domain.Params;
-import com.chloz.test.service.FilterDomainService;
-import com.chloz.test.service.filter.SimpleParamsFilter;
+import com.chloz.test.service.dto.ParamsDto;
+import com.chloz.test.dataaccess.filter.SimpleParamsFilter;
+import com.chloz.test.service.DefaultDomainService;
 import java.util.*;
 
-public interface ParamsServiceBase extends FilterDomainService<Params, Long, SimpleParamsFilter> {
+public interface ParamsServiceBase extends DefaultDomainService<Long, ParamsDto, SimpleParamsFilter> {
 
-	Optional<Params> findById(Long id);
+	Optional<ParamsDto> findById(Long id);
+
+	ParamsDto updateFields(ParamsDto dto, String graph);
 
 }

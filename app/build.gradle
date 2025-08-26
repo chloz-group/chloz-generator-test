@@ -12,13 +12,9 @@ version = applicationVersion
 dependencies {
     implementation project(':services')
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
-    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     //implementation "io.springfox:springfox-boot-starter:${springfoxVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-common:${springdocVersion}"
-    implementation "net.coobird:thumbnailator:0.4.20"
-
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'

@@ -1,7 +1,7 @@
 package com.chloz.test.web.security.base;
 
 import com.chloz.test.web.security.AuthenticationFilter;
-import com.chloz.test.web.security.jwt.TokenProvider;
+import com.chloz.test.service.security.jwt.JwtTokenProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -47,12 +47,12 @@ public class SecurityConfigurationBase {
 	@Value("${springdoc.api-docs.path:/v3/api-docs}")
 	private String apiDocsPath;
 
-	private final TokenProvider tokenProvider;
+	private final JwtTokenProvider tokenProvider;
 
 	private final AuthenticationFilter authenticationFilter;
 
 	private final SecurityProblemSupport problemSupport;
-	public SecurityConfigurationBase(TokenProvider tokenProvider, AuthenticationFilter authenticationFilter,
+	public SecurityConfigurationBase(JwtTokenProvider tokenProvider, AuthenticationFilter authenticationFilter,
 			SecurityProblemSupport problemSupport) {
 		this.tokenProvider = tokenProvider;
 		this.authenticationFilter = authenticationFilter;
@@ -72,9 +72,7 @@ public class SecurityConfigurationBase {
 						.accessDeniedHandler(problemSupport));
 		http = addFilters(http);
 		return http.authorizeHttpRequests(authz -> {
-			filterPublicRequests(authz);
-			filterUserRequests(authz);
-			filterOtherRequests(authz);
+			authorizeHttpRequests(authz);
 			authz.anyRequest().authenticated();
 		}).build();
 	}
@@ -85,23 +83,13 @@ public class SecurityConfigurationBase {
 		return http;
 	}
 
-	protected AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry filterPublicRequests(
+	protected AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizeHttpRequests(
 			AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authz) {
 		return authz.requestMatchers(this.swaggerUiPath).permitAll().requestMatchers("/swagger-ui/**").permitAll()
 				.requestMatchers(this.apiDocsPath + "/**").permitAll()
 				.requestMatchers(HttpMethod.POST, API_BASE_PATH + "/authenticate").permitAll()
 				.requestMatchers(API_BASE_PATH + "/request-authentication-code").permitAll()
 				.requestMatchers(API_BASE_PATH + "/register").permitAll();
-	}
-
-	protected AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry filterUserRequests(
-			AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authz) {
-		return authz;
-	}
-
-	protected AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry filterOtherRequests(
-			AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authz) {
-		return authz;
 	}
 
 	public CorsFilter corsFilter() {

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"com.chloz.test.service"})
+@ComponentScan(basePackages = {"com.chloz.test.dataaccess", "com.chloz.test.service"})
 public class ServiceConfiguration {
 
 	@Bean

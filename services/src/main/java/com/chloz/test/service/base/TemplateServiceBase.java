@@ -1,12 +1,14 @@
 package com.chloz.test.service.base;
 
-import com.chloz.test.domain.Template;
-import com.chloz.test.service.FilterDomainService;
-import com.chloz.test.service.filter.SimpleTemplateFilter;
-import java.util.Optional;
+import com.chloz.test.service.dto.TemplateDto;
+import com.chloz.test.dataaccess.filter.SimpleTemplateFilter;
+import com.chloz.test.service.DefaultDomainService;
+import java.util.*;
 
-public interface TemplateServiceBase extends FilterDomainService<Template, Long, SimpleTemplateFilter> {
+public interface TemplateServiceBase extends DefaultDomainService<Long, TemplateDto, SimpleTemplateFilter> {
 
-	Optional<Template> findByCode(String templateCode);
+	Optional<TemplateDto> findById(Long id);
+
+	TemplateDto updateFields(TemplateDto dto, String graph);
 
 }

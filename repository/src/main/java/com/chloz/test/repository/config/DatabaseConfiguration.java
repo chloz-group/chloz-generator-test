@@ -20,7 +20,6 @@ import java.util.Optional;
 @Configuration
 @EnableJpaRepositories(basePackages = {
 		"com.chloz.test.repository"}, repositoryBaseClass = RepositoryBaseImpl.class, repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class)
-@EnableTransactionManagement
 @EntityScan(basePackages = {"com.chloz.test.domain"})
 @EnableJpaAuditing(auditorAwareRef = "jpaAuditorAwareProvider", dateTimeProviderRef = "jpaAuditorDateTimeProvider")
 public class DatabaseConfiguration {
