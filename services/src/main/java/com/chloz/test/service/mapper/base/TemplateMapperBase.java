@@ -40,14 +40,25 @@ public class TemplateMapperBase extends DomainMapper<Template, TemplateDto> {
 		model.setTitle(dto.getTitle());
 		model.setShortContent(dto.getShortContent());
 		if (dto.getId() != null) {
-			dataAccess.findById(dto.getId()).ifPresent(ent -> {
-				model.setCreatedBy(ent.getCreatedBy());
-				model.setCreatedDate(ent.getCreatedDate());
-				model.setLastModifiedBy(ent.getLastModifiedBy());
-				model.setLastModifiedDate(ent.getLastModifiedDate());
-			});
+			setCommonField(model, dataAccess.findById(dto.getId()));
 		}
 		return model;
+	}
+
+	@Override
+	public void partialUpdate(Template ent, TemplateDto dto) {
+		// set model simple fields
+		if (dto.getId() != null)
+			ent.setId(dto.getId());
+		if (dto.getCode() != null)
+			ent.setCode(dto.getCode());
+		if (dto.getContent() != null)
+			ent.setContent(dto.getContent());
+		if (dto.getTitle() != null)
+			ent.setTitle(dto.getTitle());
+		if (dto.getShortContent() != null)
+			ent.setShortContent(dto.getShortContent());
+		// set model relations
 	}
 
 }

@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Optional;
 
+@Transactional
 public class MediaServiceBaseImplBase extends DefaultDomainServiceImpl<Media, Long, MediaDto, SimpleMediaFilter>
 		implements
 			MediaServiceBase {
@@ -184,9 +185,8 @@ public class MediaServiceBaseImplBase extends DefaultDomainServiceImpl<Media, Lo
 	}
 
 	@Override
-	public MediaDto updateFields(MediaDto dto, String graph) {
-		// Todo : Not implemented
-		return dto;
+	protected Long getIdFromDto(MediaDto dto) {
+		return dto.getId();
 	}
 
 }

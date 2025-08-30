@@ -9,6 +9,4 @@ public interface RoleServiceBase extends DefaultDomainService<String, RoleDto, S
 
 	Optional<RoleDto> findById(String name);
 
-	RoleDto updateFields(RoleDto dto, String graph);
-
 }

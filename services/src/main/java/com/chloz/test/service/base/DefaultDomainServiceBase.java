@@ -56,6 +56,18 @@ public interface DefaultDomainServiceBase<I, D, F extends SimpleFilter> {
 	public D update(D dto, String graph);
 
 	/**
+	 * Partial Update a given object with, only setting not null properties.
+	 *
+	 * @param dto
+	 *            must not be {@literal null}.
+	 * @param graph
+	 *            The graph of fields in the returned dto.
+	 *
+	 * @return the updated dto with the field specify in the graph param;
+	 */
+	public D partialUpdate(D dto, String graph);
+
+	/**
 	 * update a list of objects.
 	 *
 	 * @param list

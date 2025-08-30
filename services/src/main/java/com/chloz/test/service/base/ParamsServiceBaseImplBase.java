@@ -8,8 +8,12 @@ import com.chloz.test.service.Constants;
 import com.chloz.test.service.dto.ParamsDto;
 import com.chloz.test.service.mapper.ParamsMapper;
 import com.chloz.test.service.impl.DefaultDomainServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
+@Service
+@Transactional
 public class ParamsServiceBaseImplBase extends DefaultDomainServiceImpl<Params, Long, ParamsDto, SimpleParamsFilter>
 		implements
 			ParamsServiceBase {
@@ -24,45 +28,14 @@ public class ParamsServiceBaseImplBase extends DefaultDomainServiceImpl<Params, 
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<ParamsDto> findById(Long id) {
 		return dataAccess.findById(id).map(v -> mapper.mapToDto(v, "*"));
 	}
 
 	@Override
-	public ParamsDto update(ParamsDto dto, String graph) {
-		if (dto.getId() == null || dataAccess.findById(dto.getId()).isEmpty()) {
-			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND, null, 404);
-		}
-		return super.update(dto, graph);
-	}
-
-	@Override
-	public List<ParamsDto> bulkUpdate(List<ParamsDto> list, String graph) {
-		list.forEach(dto -> {
-			if (dto.getId() == null || dataAccess.findById(dto.getId()).isEmpty()) {
-				throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND, null, 404);
-			}
-		});
-		return super.bulkUpdate(list, graph);
-	}
-
-	@Override
-	public ParamsDto updateFields(ParamsDto dto, String graph) {
-		Optional<Params> opt = dataAccess.findById(dto.getId());
-		if (dto.getId() == null || opt.isEmpty()) {
-			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND, null, 404);
-		}
-		// set fields
-		Params ent = opt.get();
-		ent.setId(dto.getId());
-		ent.setParamKey(dto.getParamKey());
-		ent.setStringValue(dto.getStringValue());
-		ent.setNumberValue(dto.getNumberValue());
-		ent.setDecimalValue(dto.getDecimalValue());
-		ent.setBooleanValue(dto.getBooleanValue());
-		// end of set fields
-		ent = this.dataAccess.save(ent);
-		return mapper.mapToDto(ent, graph);
+	protected Long getIdFromDto(ParamsDto dto) {
+		return dto.getId();
 	}
 
 }

@@ -2,6 +2,7 @@ package com.chloz.test.service.mapper.base;
 
 import com.chloz.test.dataaccess.DomainGraph;
 import com.chloz.test.dataaccess.GraphBuilder;
+import com.chloz.test.domain.AbstractAuditingEntity;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.modelmapper.ModelMapper;
@@ -51,6 +52,15 @@ public abstract class DomainMapperBase<T, DTO> {
 	 * @return
 	 */
 	public abstract T entityFromIdOrModelFromDto(DTO dto);
+
+	/**
+	 * Update entity fields and dependencies using only the values from dto that are
+	 * not null
+	 * 
+	 * @param entity
+	 * @param dto
+	 */
+	public abstract void partialUpdate(T entity, DTO dto);
 
 	/**
 	 * Transform the dto to a model. When transforming, the model dependencies are
@@ -172,6 +182,14 @@ public abstract class DomainMapperBase<T, DTO> {
 			return descriptors.computeIfAbsent(clazz, ClassDescriptor::new);
 		}
 
+	}
+	protected void setCommonField(AbstractAuditingEntity target, Optional<? extends AbstractAuditingEntity> src) {
+		src.ifPresent(ent -> {
+			target.setCreatedBy(ent.getCreatedBy());
+			target.setCreatedDate(ent.getCreatedDate());
+			target.setLastModifiedBy(ent.getLastModifiedBy());
+			target.setLastModifiedDate(ent.getLastModifiedDate());
+		});
 	}
 
 }

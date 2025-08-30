@@ -72,10 +72,10 @@ public class TownResource extends TownResourceBase {
 	}
 
 	@Override
-	@PostMapping(path = "updateFields")
-	public ResponseEntity<TownDto> updateFields(@Valid @RequestBody TownDto dto,
+	@PatchMapping
+	public ResponseEntity<TownDto> partialUpdate(@Valid @RequestBody TownDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.updateFields(dto, graph);
+		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{ids}")

@@ -16,8 +16,6 @@ public interface MediaServiceBase extends DefaultDomainService<Long, MediaDto, S
 
 	public MediaDto update(Long id, FileUploadDto fileUpload, String graph);
 
-	public MediaDto updateFields(MediaDto dto, String graph);
-
 	public InputStream getMediaContentById(Long id) throws IOException;
 
 	public InputStream getMediaContentByKey(String key) throws IOException;

@@ -1,7 +1,7 @@
 package com.chloz.test.dataaccess.base;
 
 import com.querydsl.core.types.Predicate;
-import com.chloz.test.repository.SimpleDomainRepository;
+import com.chloz.test.repository.DefaultDomainRepository;
 import com.chloz.test.dataaccess.GraphBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.GenericTypeResolver;
@@ -12,15 +12,16 @@ import jakarta.persistence.EntityGraph;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class DefaultDomainDataAccessBaseImplBase<T, I> implements DefaultDomainDataAccessBase<T, I> {
+@Transactional(readOnly = true)
+public class DefaultDomainDataAccessBaseImplBase<T, I> implements DefaultDomainDataAccessBase<T, I> {
 
-	private final SimpleDomainRepository<T, I> repository;
+	private final DefaultDomainRepository<T, I> repository;
 
 	private final Class<T> entityType;
 
 	@Autowired
 	private GraphBuilder entityGraphBuilder;
-	protected DefaultDomainDataAccessBaseImplBase(SimpleDomainRepository<T, I> repository) {
+	protected DefaultDomainDataAccessBaseImplBase(DefaultDomainRepository<T, I> repository) {
 		this.repository = repository;
 		Class<?>[] types = GenericTypeResolver.resolveTypeArguments(getClass(),
 				DefaultDomainDataAccessBaseImplBase.class);
@@ -28,11 +29,13 @@ public abstract class DefaultDomainDataAccessBaseImplBase<T, I> implements Defau
 	}
 
 	@Override
+	@Transactional
 	public <S extends T> S save(S entity) {
 		return this.repository.save(entity);
 	}
 
 	@Override
+	@Transactional
 	public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
 		return this.repository.saveAll(entities);
 	}
@@ -48,21 +51,25 @@ public abstract class DefaultDomainDataAccessBaseImplBase<T, I> implements Defau
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(I id) {
 		this.repository.deleteById(id);
 	}
 
 	@Override
+	@Transactional
 	public void deleteAllById(Iterable<I> ids) {
 		ids.forEach(this::deleteById);
 	}
 
 	@Override
+	@Transactional
 	public void delete(T entity) {
 		this.repository.delete(entity);
 	}
 
 	@Override
+	@Transactional
 	public void deleteAll(Iterable<? extends T> entities) {
 		entities.forEach(this::delete);
 	}
@@ -123,6 +130,7 @@ public abstract class DefaultDomainDataAccessBaseImplBase<T, I> implements Defau
 	}
 
 	@Override
+	@Transactional
 	public void updateEnableStatus(List<I> ids, Boolean value) {
 		this.repository.updateEnableStatus(ids, value);
 	}

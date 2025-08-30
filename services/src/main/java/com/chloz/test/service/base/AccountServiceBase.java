@@ -26,6 +26,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.Optional;
 /**
  * Service class for managing user's account and authentication
  */
+@Transactional
 public class AccountServiceBase {
 
 	private final Logger log = LoggerFactory.getLogger(AccountServiceBase.class);
@@ -92,6 +94,7 @@ public class AccountServiceBase {
 	 *             {@code 500 (Internal Server Error)} if the user couldn't be
 	 *             returned.
 	 */
+	@Transactional(readOnly = true)
 	public UserDto getAccount() {
 		return SecurityUtils.getCurrentUserLogin().flatMap(userService::findOneByLogin)
 				.map(user -> userMapper.mapToDto(user, "*"))

@@ -31,6 +31,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
+@Transactional
 public class UserServiceBaseImplBase extends DefaultDomainServiceImpl<User, Long, UserDto, SimpleUserFilter>
 		implements
 			UserServiceBase {
@@ -137,7 +138,7 @@ public class UserServiceBaseImplBase extends DefaultDomainServiceImpl<User, Long
 		if (existingUser.getActivated() != null && existingUser.getActivated()) {
 			return false;
 		}
-		repository.deletePermanently(existingUser);
+		repository.hardDeleteById(existingUser.getId());
 		return true;
 	}
 
@@ -276,6 +277,11 @@ public class UserServiceBaseImplBase extends DefaultDomainServiceImpl<User, Long
 	@Override
 	public Optional<User> findOneByPhone(String phone) {
 		return repository.findOneByPhone(phone);
+	}
+
+	@Override
+	protected Long getIdFromDto(UserDto dto) {
+		return dto.getId();
 	}
 
 }

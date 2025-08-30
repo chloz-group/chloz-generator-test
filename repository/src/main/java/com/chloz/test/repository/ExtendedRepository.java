@@ -1,11 +1,12 @@
 package com.chloz.test.repository;
 
+import com.chloz.test.repository.base.ExtendedRepositoryBase;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.data.repository.NoRepositoryBean;
 
 /**
- * A common repositoty class for an entity to do common CRUD operations
+ * The repository fragment where we define customs repository methods
  * 
  * @param <T>
  *            The entity class
@@ -13,9 +14,5 @@ import org.springframework.data.repository.NoRepositoryBean;
  *            The class of the entity id field
  */
 @NoRepositoryBean
-public interface SimpleDomainRepository<T, I>
-		extends
-			JpaRepository<T, I>,
-			QuerydslPredicateExecutor<T>,
-			DefaultJpaRepository<T, I> {
+public interface ExtendedRepository<T, ID> extends ExtendedRepositoryBase<T, ID> {
 }

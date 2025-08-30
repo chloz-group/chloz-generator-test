@@ -32,8 +32,8 @@ public class RoleResourceBase extends DefaultDomainResource<String, RoleDto, Sim
 		return super.bulkUpdate(list, graph);
 	}
 
-	public ResponseEntity<RoleDto> updateFields(@Valid RoleDto dto, String graph) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.service.updateFields(dto, graph));
+	public ResponseEntity<RoleDto> partialUpdate(@Valid RoleDto dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 
 }

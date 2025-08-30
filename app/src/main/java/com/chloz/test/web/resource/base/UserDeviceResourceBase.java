@@ -32,8 +32,8 @@ public class UserDeviceResourceBase extends DefaultDomainResource<Long, UserDevi
 		return super.bulkUpdate(list, graph);
 	}
 
-	public ResponseEntity<UserDeviceDto> updateFields(@Valid UserDeviceDto dto, String graph) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.service.updateFields(dto, graph));
+	public ResponseEntity<UserDeviceDto> partialUpdate(@Valid UserDeviceDto dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 
 }

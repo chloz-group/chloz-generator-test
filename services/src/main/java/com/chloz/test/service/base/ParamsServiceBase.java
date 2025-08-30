@@ -9,6 +9,4 @@ public interface ParamsServiceBase extends DefaultDomainService<Long, ParamsDto,
 
 	Optional<ParamsDto> findById(Long id);
 
-	ParamsDto updateFields(ParamsDto dto, String graph);
-
 }

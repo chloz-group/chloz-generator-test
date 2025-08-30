@@ -9,6 +9,4 @@ public interface UserDeviceServiceBase extends DefaultDomainService<Long, UserDe
 
 	Optional<UserDeviceDto> findById(Long id);
 
-	UserDeviceDto updateFields(UserDeviceDto dto, String graph);
-
 }

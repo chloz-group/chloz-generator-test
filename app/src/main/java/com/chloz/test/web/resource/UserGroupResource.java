@@ -72,10 +72,10 @@ public class UserGroupResource extends UserGroupResourceBase {
 	}
 
 	@Override
-	@PostMapping(path = "updateFields")
-	public ResponseEntity<UserGroupDto> updateFields(@Valid @RequestBody UserGroupDto dto,
+	@PatchMapping
+	public ResponseEntity<UserGroupDto> partialUpdate(@Valid @RequestBody UserGroupDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.updateFields(dto, graph);
+		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{ids}")

@@ -9,6 +9,4 @@ public interface CountryServiceBase extends DefaultDomainService<String, Country
 
 	Optional<CountryDto> findById(String code);
 
-	CountryDto updateFields(CountryDto dto, String graph);
-
 }

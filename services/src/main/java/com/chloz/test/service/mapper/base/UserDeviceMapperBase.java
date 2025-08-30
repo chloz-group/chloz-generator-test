@@ -37,14 +37,19 @@ public class UserDeviceMapperBase extends DomainMapper<UserDevice, UserDeviceDto
 		model.setId(dto.getId());
 		model.setToken(dto.getToken());
 		if (dto.getId() != null) {
-			dataAccess.findById(dto.getId()).ifPresent(ent -> {
-				model.setCreatedBy(ent.getCreatedBy());
-				model.setCreatedDate(ent.getCreatedDate());
-				model.setLastModifiedBy(ent.getLastModifiedBy());
-				model.setLastModifiedDate(ent.getLastModifiedDate());
-			});
+			setCommonField(model, dataAccess.findById(dto.getId()));
 		}
 		return model;
+	}
+
+	@Override
+	public void partialUpdate(UserDevice ent, UserDeviceDto dto) {
+		// set model simple fields
+		if (dto.getId() != null)
+			ent.setId(dto.getId());
+		if (dto.getToken() != null)
+			ent.setToken(dto.getToken());
+		// set model relations
 	}
 
 }

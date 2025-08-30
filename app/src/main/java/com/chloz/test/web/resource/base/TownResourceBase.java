@@ -32,8 +32,8 @@ public class TownResourceBase extends DefaultDomainResource<Long, TownDto, Simpl
 		return super.bulkUpdate(list, graph);
 	}
 
-	public ResponseEntity<TownDto> updateFields(@Valid TownDto dto, String graph) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.service.updateFields(dto, graph));
+	public ResponseEntity<TownDto> partialUpdate(@Valid TownDto dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 
 }

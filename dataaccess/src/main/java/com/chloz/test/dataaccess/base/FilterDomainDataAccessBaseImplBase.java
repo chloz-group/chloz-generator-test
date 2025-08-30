@@ -1,7 +1,7 @@
 package com.chloz.test.dataaccess.base;
 
 import com.querydsl.core.types.Predicate;
-import com.chloz.test.repository.SimpleDomainRepository;
+import com.chloz.test.repository.DefaultDomainRepository;
 import com.chloz.test.dataaccess.filter.SimpleFilter;
 import com.chloz.test.dataaccess.impl.DefaultDomainDataAccessImpl;
 import com.chloz.test.dataaccess.query.QueryBuilder;
@@ -17,10 +17,10 @@ public class FilterDomainDataAccessBaseImplBase<T, I, F extends SimpleFilter> ex
 
 	private final QueryBuilder<F, ?> queryBuilder;
 
-	private final SimpleDomainRepository<T, I> repository;
+	private final DefaultDomainRepository<T, I> repository;
 
 	private final Class<T> entityType;
-	public FilterDomainDataAccessBaseImplBase(SimpleDomainRepository<T, I> repository,
+	public FilterDomainDataAccessBaseImplBase(DefaultDomainRepository<T, I> repository,
 			QueryBuilder<F, ?> queryBuilder) {
 		super(repository);
 		this.queryBuilder = queryBuilder;

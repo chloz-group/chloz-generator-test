@@ -32,8 +32,8 @@ public class MediaResourceBase extends DefaultDomainResource<Long, MediaDto, Sim
 		return super.bulkUpdate(list, graph);
 	}
 
-	public ResponseEntity<MediaDto> updateFields(@Valid MediaDto dto, String graph) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.service.updateFields(dto, graph));
+	public ResponseEntity<MediaDto> partialUpdate(@Valid MediaDto dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 
 }

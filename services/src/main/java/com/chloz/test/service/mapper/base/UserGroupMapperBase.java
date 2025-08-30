@@ -50,14 +50,21 @@ public class UserGroupMapperBase extends DomainMapper<UserGroup, UserGroupDto> {
 					.forEach(model.getRoles()::add);
 		}
 		if (dto.getId() != null) {
-			dataAccess.findById(dto.getId()).ifPresent(ent -> {
-				model.setCreatedBy(ent.getCreatedBy());
-				model.setCreatedDate(ent.getCreatedDate());
-				model.setLastModifiedBy(ent.getLastModifiedBy());
-				model.setLastModifiedDate(ent.getLastModifiedDate());
-			});
+			setCommonField(model, dataAccess.findById(dto.getId()));
 		}
 		return model;
+	}
+
+	@Override
+	public void partialUpdate(UserGroup ent, UserGroupDto dto) {
+		// set model simple fields
+		if (dto.getId() != null)
+			ent.setId(dto.getId());
+		if (dto.getName() != null)
+			ent.setName(dto.getName());
+		if (dto.getDescription() != null)
+			ent.setDescription(dto.getDescription());
+		// set model relations
 	}
 
 }

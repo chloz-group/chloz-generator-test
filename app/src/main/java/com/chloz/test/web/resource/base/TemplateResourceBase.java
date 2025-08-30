@@ -32,8 +32,8 @@ public class TemplateResourceBase extends DefaultDomainResource<Long, TemplateDt
 		return super.bulkUpdate(list, graph);
 	}
 
-	public ResponseEntity<TemplateDto> updateFields(@Valid TemplateDto dto, String graph) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.service.updateFields(dto, graph));
+	public ResponseEntity<TemplateDto> partialUpdate(@Valid TemplateDto dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 
 }

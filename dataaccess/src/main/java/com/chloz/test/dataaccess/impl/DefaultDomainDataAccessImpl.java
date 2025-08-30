@@ -1,6 +1,6 @@
 package com.chloz.test.dataaccess.impl;
 
-import com.chloz.test.repository.SimpleDomainRepository;
+import com.chloz.test.repository.DefaultDomainRepository;
 import com.chloz.test.dataaccess.base.DefaultDomainDataAccessBaseImplBase;
 import com.chloz.test.dataaccess.DefaultDomainDataAccess;
 
@@ -16,7 +16,7 @@ public class DefaultDomainDataAccessImpl<T, I> extends DefaultDomainDataAccessBa
 		implements
 			DefaultDomainDataAccess<T, I> {
 
-	protected DefaultDomainDataAccessImpl(SimpleDomainRepository<T, I> repository) {
+	protected DefaultDomainDataAccessImpl(DefaultDomainRepository<T, I> repository) {
 		super(repository);
 	}
 

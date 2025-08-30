@@ -32,8 +32,8 @@ public class ParamsResourceBase extends DefaultDomainResource<Long, ParamsDto, S
 		return super.bulkUpdate(list, graph);
 	}
 
-	public ResponseEntity<ParamsDto> updateFields(@Valid ParamsDto dto, String graph) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.service.updateFields(dto, graph));
+	public ResponseEntity<ParamsDto> partialUpdate(@Valid ParamsDto dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 
 }

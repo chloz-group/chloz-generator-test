@@ -72,10 +72,10 @@ public class ParamsResource extends ParamsResourceBase {
 	}
 
 	@Override
-	@PostMapping(path = "updateFields")
-	public ResponseEntity<ParamsDto> updateFields(@Valid @RequestBody ParamsDto dto,
+	@PatchMapping
+	public ResponseEntity<ParamsDto> partialUpdate(@Valid @RequestBody ParamsDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.updateFields(dto, graph);
+		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{ids}")

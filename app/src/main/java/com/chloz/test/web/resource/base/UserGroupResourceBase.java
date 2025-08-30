@@ -32,8 +32,8 @@ public class UserGroupResourceBase extends DefaultDomainResource<Long, UserGroup
 		return super.bulkUpdate(list, graph);
 	}
 
-	public ResponseEntity<UserGroupDto> updateFields(@Valid UserGroupDto dto, String graph) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.service.updateFields(dto, graph));
+	public ResponseEntity<UserGroupDto> partialUpdate(@Valid UserGroupDto dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 
 }

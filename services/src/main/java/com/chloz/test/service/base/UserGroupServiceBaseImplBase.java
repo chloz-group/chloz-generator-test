@@ -8,8 +8,12 @@ import com.chloz.test.service.Constants;
 import com.chloz.test.service.dto.UserGroupDto;
 import com.chloz.test.service.mapper.UserGroupMapper;
 import com.chloz.test.service.impl.DefaultDomainServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
+@Service
+@Transactional
 public class UserGroupServiceBaseImplBase
 		extends
 			DefaultDomainServiceImpl<UserGroup, Long, UserGroupDto, SimpleUserGroupFilter>
@@ -26,42 +30,14 @@ public class UserGroupServiceBaseImplBase
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<UserGroupDto> findById(Long id) {
 		return dataAccess.findById(id).map(v -> mapper.mapToDto(v, "*"));
 	}
 
 	@Override
-	public UserGroupDto update(UserGroupDto dto, String graph) {
-		if (dto.getId() == null || dataAccess.findById(dto.getId()).isEmpty()) {
-			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND, null, 404);
-		}
-		return super.update(dto, graph);
-	}
-
-	@Override
-	public List<UserGroupDto> bulkUpdate(List<UserGroupDto> list, String graph) {
-		list.forEach(dto -> {
-			if (dto.getId() == null || dataAccess.findById(dto.getId()).isEmpty()) {
-				throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND, null, 404);
-			}
-		});
-		return super.bulkUpdate(list, graph);
-	}
-
-	@Override
-	public UserGroupDto updateFields(UserGroupDto dto, String graph) {
-		Optional<UserGroup> opt = dataAccess.findById(dto.getId());
-		if (dto.getId() == null || opt.isEmpty()) {
-			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_NOT_FOUND, null, 404);
-		}
-		// set fields
-		UserGroup ent = opt.get();
-		ent.setId(dto.getId());
-		ent.setName(dto.getName());
-		ent.setDescription(dto.getDescription());
-		// end of set fields
-		ent = this.dataAccess.save(ent);
-		return mapper.mapToDto(ent, graph);
+	protected Long getIdFromDto(UserGroupDto dto) {
+		return dto.getId();
 	}
 
 }

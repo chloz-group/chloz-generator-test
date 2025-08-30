@@ -32,8 +32,8 @@ public class CountryResourceBase extends DefaultDomainResource<String, CountryDt
 		return super.bulkUpdate(list, graph);
 	}
 
-	public ResponseEntity<CountryDto> updateFields(@Valid CountryDto dto, String graph) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.service.updateFields(dto, graph));
+	public ResponseEntity<CountryDto> partialUpdate(@Valid CountryDto dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 
 }

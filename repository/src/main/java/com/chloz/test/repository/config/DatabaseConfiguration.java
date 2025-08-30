@@ -1,8 +1,7 @@
 package com.chloz.test.repository.config;
 
 import com.chloz.test.domain.User;
-import com.chloz.test.repository.CustomJpaRepositoryFactoryBean;
-import com.chloz.test.repository.RepositoryBaseImpl;
+import com.chloz.test.repository.ExtendedRepositoryImpl;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +12,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Configuration
-@EnableJpaRepositories(basePackages = {
-		"com.chloz.test.repository"}, repositoryBaseClass = RepositoryBaseImpl.class, repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class)
+@EnableJpaRepositories(basePackages = {"com.chloz.test.repository"}, repositoryBaseClass = ExtendedRepositoryImpl.class)
 @EntityScan(basePackages = {"com.chloz.test.domain"})
 @EnableJpaAuditing(auditorAwareRef = "jpaAuditorAwareProvider", dateTimeProviderRef = "jpaAuditorDateTimeProvider")
 public class DatabaseConfiguration {

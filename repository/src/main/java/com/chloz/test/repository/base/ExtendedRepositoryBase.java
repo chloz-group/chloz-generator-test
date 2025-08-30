@@ -3,6 +3,7 @@ package com.chloz.test.repository.base;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import jakarta.persistence.EntityGraph;
 import java.util.List;
@@ -17,21 +18,14 @@ import java.util.Optional;
  *            The class of the entity id field
  */
 @NoRepositoryBean
-public interface DefaultJpaRepositoryBase<T, I> {
+public interface ExtendedRepositoryBase<T, I> extends JpaRepository<T, I> {
 
 	/**
 	 * Will Remove the entity physically from the datastore
 	 *
-	 * @param entity
+	 * @param id
 	 */
-	void deletePermanently(T entity);
-
-	/**
-	 * Remove the entities permanently from the database
-	 *
-	 * @param entities
-	 */
-	void deleteAllPermanently(Iterable<? extends T> entities);
+	void hardDeleteById(I id);
 
 	/**
 	 * Return the entity matching the given ID or {@link Optional#empty()} if none

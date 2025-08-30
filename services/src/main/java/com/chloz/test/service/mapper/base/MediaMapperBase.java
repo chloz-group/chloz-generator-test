@@ -39,14 +39,23 @@ public class MediaMapperBase extends DomainMapper<Media, MediaDto> {
 		model.setContentType(dto.getContentType());
 		model.setKey(dto.getKey());
 		if (dto.getId() != null) {
-			dataAccess.findById(dto.getId()).ifPresent(ent -> {
-				model.setCreatedBy(ent.getCreatedBy());
-				model.setCreatedDate(ent.getCreatedDate());
-				model.setLastModifiedBy(ent.getLastModifiedBy());
-				model.setLastModifiedDate(ent.getLastModifiedDate());
-			});
+			setCommonField(model, dataAccess.findById(dto.getId()));
 		}
 		return model;
+	}
+
+	@Override
+	public void partialUpdate(Media ent, MediaDto dto) {
+		// set model simple fields
+		if (dto.getId() != null)
+			ent.setId(dto.getId());
+		if (dto.getName() != null)
+			ent.setName(dto.getName());
+		if (dto.getContentType() != null)
+			ent.setContentType(dto.getContentType());
+		if (dto.getKey() != null)
+			ent.setKey(dto.getKey());
+		// set model relations
 	}
 
 }

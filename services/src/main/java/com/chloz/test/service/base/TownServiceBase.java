@@ -9,6 +9,4 @@ public interface TownServiceBase extends DefaultDomainService<Long, TownDto, Sim
 
 	Optional<TownDto> findById(Long id);
 
-	TownDto updateFields(TownDto dto, String graph);
-
 }

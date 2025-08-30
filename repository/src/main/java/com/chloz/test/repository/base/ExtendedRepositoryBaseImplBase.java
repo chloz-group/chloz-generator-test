@@ -11,11 +11,11 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.jpa.repository.support.Querydsl;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.lang.Nullable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import jakarta.persistence.Query;
 import jakarta.persistence.EntityGraph;
@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Repository;
 
 /**
  * @param <T>
@@ -31,7 +33,11 @@ import java.util.Optional;
  * @param <I>
  *            The class of the entity id field
  */
-public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaRepositoryBase<T, I> {
+@Transactional(readOnly = true)
+@Repository
+public class ExtendedRepositoryBaseImplBase<T, I> extends SimpleJpaRepository<T, I>
+		implements
+			ExtendedRepositoryBase<T, I> {
 
 	private static final String ENTITY_GRAPH_TYPE = "jakarta.persistence.fetchgraph";
 
@@ -42,7 +48,8 @@ public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaReposit
 	private final EntityPath<T> path;
 
 	private final JpaEntityInformation<T, ?> entityInformation;
-	public DefaultJpaRepositoryBaseImplBase(JpaEntityInformation<T, ?> entityInformation, EntityManager em) {
+	public ExtendedRepositoryBaseImplBase(JpaEntityInformation<T, ?> entityInformation, EntityManager em) {
+		super(entityInformation, em);
 		this.em = em;
 		this.entityInformation = entityInformation;
 		this.path = SimpleEntityPathResolver.INSTANCE.createPath(entityInformation.getJavaType());
@@ -50,16 +57,18 @@ public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaReposit
 	}
 
 	@Override
-	public void deletePermanently(T entity) {
-		Assert.notNull(entity, "Entity must not be null!");
-		em.remove(em.contains(entity) ? entity : em.merge(entity));
-	}
-
-	@Override
-	public void deleteAllPermanently(Iterable<? extends T> entities) {
-		Assert.notNull(entities, "Entities must not be null!");
-		for (T entity : entities) {
-			deletePermanently(entity);
+	@Transactional
+	public void hardDeleteById(I id) {
+		SingularAttribute<? super T, ?> idAttr = entityInformation.getIdAttribute();
+		if (idAttr != null) {
+			String idFieldName = idAttr.getName();
+			Query query = em.createQuery(
+					"DELETE FROM " + entityInformation.getEntityName() + " ent WHERE ent." + idFieldName + " = :id");
+			query.setParameter("id", id);
+			// Execute the update and check if it succeeded
+			query.executeUpdate();
+		} else {
+			em.remove(em.find(path.getType(), id));
 		}
 	}
 
@@ -140,6 +149,7 @@ public class DefaultJpaRepositoryBaseImplBase<T, I> implements DefaultJpaReposit
 	}
 
 	@Override
+	@Transactional
 	public void updateEnableStatus(List<I> ids, Boolean value) {
 		SingularAttribute<? super T, ?> idAttr = entityInformation.getIdAttribute();
 		if (idAttr != null) {

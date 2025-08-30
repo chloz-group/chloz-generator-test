@@ -49,14 +49,21 @@ public class CountryMapperBase extends DomainMapper<Country, CountryDto> {
 					});
 		}
 		if (dto.getCode() != null) {
-			dataAccess.findById(dto.getCode()).ifPresent(ent -> {
-				model.setCreatedBy(ent.getCreatedBy());
-				model.setCreatedDate(ent.getCreatedDate());
-				model.setLastModifiedBy(ent.getLastModifiedBy());
-				model.setLastModifiedDate(ent.getLastModifiedDate());
-			});
+			setCommonField(model, dataAccess.findById(dto.getCode()));
 		}
 		return model;
+	}
+
+	@Override
+	public void partialUpdate(Country ent, CountryDto dto) {
+		// set model simple fields
+		if (dto.getCode() != null)
+			ent.setCode(dto.getCode());
+		if (dto.getName() != null)
+			ent.setName(dto.getName());
+		if (dto.getCallingCode() != null)
+			ent.setCallingCode(dto.getCallingCode());
+		// set model relations
 	}
 
 }

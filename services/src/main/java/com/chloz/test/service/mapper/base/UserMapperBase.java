@@ -55,14 +55,41 @@ public class UserMapperBase extends DomainMapper<User, UserDto> {
 		}
 		model.setPicture(applicationContext.getBean(MediaMapper.class).entityFromIdOrModelFromDto(dto.getPicture()));
 		if (dto.getId() != null) {
-			dataAccess.findById(dto.getId()).ifPresent(ent -> {
-				model.setCreatedBy(ent.getCreatedBy());
-				model.setCreatedDate(ent.getCreatedDate());
-				model.setLastModifiedBy(ent.getLastModifiedBy());
-				model.setLastModifiedDate(ent.getLastModifiedDate());
-			});
+			setCommonField(model, dataAccess.findById(dto.getId()));
 		}
 		return model;
+	}
+
+	@Override
+	public void partialUpdate(User ent, UserDto dto) {
+		// set model simple fields
+		if (dto.getId() != null)
+			ent.setId(dto.getId());
+		if (dto.getLogin() != null)
+			ent.setLogin(dto.getLogin());
+		if (dto.getEmail() != null)
+			ent.setEmail(dto.getEmail());
+		if (dto.getPhone() != null)
+			ent.setPhone(dto.getPhone());
+		if (dto.getPhoneChecked() != null)
+			ent.setPhoneChecked(dto.getPhoneChecked());
+		if (dto.getAccountLocked() != null)
+			ent.setAccountLocked(dto.getAccountLocked());
+		if (dto.getEmailChecked() != null)
+			ent.setEmailChecked(dto.getEmailChecked());
+		if (dto.getActivated() != null)
+			ent.setActivated(dto.getActivated());
+		if (dto.getAttempts() != null)
+			ent.setAttempts(dto.getAttempts());
+		if (dto.getFirstName() != null)
+			ent.setFirstName(dto.getFirstName());
+		if (dto.getName() != null)
+			ent.setName(dto.getName());
+		if (dto.getLang() != null)
+			ent.setLang(dto.getLang());
+		// set model relations
+		if (dto.getPicture() != null)
+			ent.setPicture(applicationContext.getBean(MediaMapper.class).entityFromIdOrModelFromDto(dto.getPicture()));
 	}
 
 }

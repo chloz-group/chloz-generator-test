@@ -72,10 +72,10 @@ public class CountryResource extends CountryResourceBase {
 	}
 
 	@Override
-	@PostMapping(path = "updateFields")
-	public ResponseEntity<CountryDto> updateFields(@Valid @RequestBody CountryDto dto,
+	@PatchMapping
+	public ResponseEntity<CountryDto> partialUpdate(@Valid @RequestBody CountryDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.updateFields(dto, graph);
+		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{codes}")

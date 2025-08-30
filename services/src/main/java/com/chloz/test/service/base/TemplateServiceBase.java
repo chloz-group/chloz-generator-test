@@ -9,6 +9,4 @@ public interface TemplateServiceBase extends DefaultDomainService<Long, Template
 
 	Optional<TemplateDto> findById(Long id);
 
-	TemplateDto updateFields(TemplateDto dto, String graph);
-
 }

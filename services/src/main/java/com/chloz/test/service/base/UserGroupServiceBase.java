@@ -9,6 +9,4 @@ public interface UserGroupServiceBase extends DefaultDomainService<Long, UserGro
 
 	Optional<UserGroupDto> findById(Long id);
 
-	UserGroupDto updateFields(UserGroupDto dto, String graph);
-
 }

@@ -72,10 +72,10 @@ public class TemplateResource extends TemplateResourceBase {
 	}
 
 	@Override
-	@PostMapping(path = "updateFields")
-	public ResponseEntity<TemplateDto> updateFields(@Valid @RequestBody TemplateDto dto,
+	@PatchMapping
+	public ResponseEntity<TemplateDto> partialUpdate(@Valid @RequestBody TemplateDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.updateFields(dto, graph);
+		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{ids}")

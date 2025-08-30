@@ -11,4 +11,14 @@ public class RoleMapperBase extends DomainMapper<Role, RoleDto> {
 		return this.modelFromDto(dto);
 	}
 
+	@Override
+	public void partialUpdate(Role entity, RoleDto roleDto) {
+		if (roleDto.getDisabled() != null) {
+			entity.setDisabled(roleDto.getDisabled());
+		}
+		if (roleDto.getDescription() != null) {
+			entity.setDescription(roleDto.getDescription());
+		}
+	}
+
 }

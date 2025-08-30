@@ -41,14 +41,27 @@ public class ParamsMapperBase extends DomainMapper<Params, ParamsDto> {
 		model.setDecimalValue(dto.getDecimalValue());
 		model.setBooleanValue(dto.getBooleanValue());
 		if (dto.getId() != null) {
-			dataAccess.findById(dto.getId()).ifPresent(ent -> {
-				model.setCreatedBy(ent.getCreatedBy());
-				model.setCreatedDate(ent.getCreatedDate());
-				model.setLastModifiedBy(ent.getLastModifiedBy());
-				model.setLastModifiedDate(ent.getLastModifiedDate());
-			});
+			setCommonField(model, dataAccess.findById(dto.getId()));
 		}
 		return model;
+	}
+
+	@Override
+	public void partialUpdate(Params ent, ParamsDto dto) {
+		// set model simple fields
+		if (dto.getId() != null)
+			ent.setId(dto.getId());
+		if (dto.getParamKey() != null)
+			ent.setParamKey(dto.getParamKey());
+		if (dto.getStringValue() != null)
+			ent.setStringValue(dto.getStringValue());
+		if (dto.getNumberValue() != null)
+			ent.setNumberValue(dto.getNumberValue());
+		if (dto.getDecimalValue() != null)
+			ent.setDecimalValue(dto.getDecimalValue());
+		if (dto.getBooleanValue() != null)
+			ent.setBooleanValue(dto.getBooleanValue());
+		// set model relations
 	}
 
 }

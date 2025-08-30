@@ -39,14 +39,22 @@ public class TownMapperBase extends DomainMapper<Town, TownDto> {
 		model.setName(dto.getName());
 		model.setCountry(applicationContext.getBean(CountryMapper.class).entityFromIdOrModelFromDto(dto.getCountry()));
 		if (dto.getId() != null) {
-			dataAccess.findById(dto.getId()).ifPresent(ent -> {
-				model.setCreatedBy(ent.getCreatedBy());
-				model.setCreatedDate(ent.getCreatedDate());
-				model.setLastModifiedBy(ent.getLastModifiedBy());
-				model.setLastModifiedDate(ent.getLastModifiedDate());
-			});
+			setCommonField(model, dataAccess.findById(dto.getId()));
 		}
 		return model;
+	}
+
+	@Override
+	public void partialUpdate(Town ent, TownDto dto) {
+		// set model simple fields
+		if (dto.getId() != null)
+			ent.setId(dto.getId());
+		if (dto.getName() != null)
+			ent.setName(dto.getName());
+		// set model relations
+		if (dto.getCountry() != null)
+			ent.setCountry(
+					applicationContext.getBean(CountryMapper.class).entityFromIdOrModelFromDto(dto.getCountry()));
 	}
 
 }
