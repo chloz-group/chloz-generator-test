@@ -51,10 +51,17 @@ public class TownResource extends TownResourceBase {
 	}
 
 	@Override
-	@PutMapping
-	public ResponseEntity<TownDto> update(@Valid @RequestBody TownDto dto,
+	@PutMapping(path = "{id}")
+	public ResponseEntity<TownDto> update(@NotNull @PathVariable("id") Long id, @Valid @RequestBody TownDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.update(dto, graph);
+		return super.update(id, dto, graph);
+	}
+
+	@Override
+	@PatchMapping(path = "{id}")
+	public ResponseEntity<TownDto> partialUpdate(@NotNull @PathVariable("id") Long id, @RequestBody TownDto dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.partialUpdate(id, dto, graph);
 	}
 
 	@Override
@@ -69,13 +76,6 @@ public class TownResource extends TownResourceBase {
 	public ResponseEntity<List<TownDto>> bulkUpdate(@Valid @RequestBody List<TownDto> dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.bulkUpdate(dto, graph);
-	}
-
-	@Override
-	@PatchMapping
-	public ResponseEntity<TownDto> partialUpdate(@Valid @RequestBody TownDto dto,
-			@Nullable @RequestParam("graph") String graph) {
-		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{ids}")

@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = Constants.API_BASE_PATH + "/countrys")
+@RequestMapping(path = Constants.API_BASE_PATH + "/countries")
 public class CountryResource extends CountryResourceBase {
 
 	public CountryResource(CountryService service) {
@@ -51,10 +51,17 @@ public class CountryResource extends CountryResourceBase {
 	}
 
 	@Override
-	@PutMapping
-	public ResponseEntity<CountryDto> update(@Valid @RequestBody CountryDto dto,
-			@Nullable @RequestParam("graph") String graph) {
-		return super.update(dto, graph);
+	@PutMapping(path = "{code}")
+	public ResponseEntity<CountryDto> update(@NotNull @PathVariable("code") String code,
+			@Valid @RequestBody CountryDto dto, @Nullable @RequestParam("graph") String graph) {
+		return super.update(code, dto, graph);
+	}
+
+	@Override
+	@PatchMapping(path = "{code}")
+	public ResponseEntity<CountryDto> partialUpdate(@NotNull @PathVariable("code") String code,
+			@RequestBody CountryDto dto, @Nullable @RequestParam("graph") String graph) {
+		return super.partialUpdate(code, dto, graph);
 	}
 
 	@Override
@@ -69,13 +76,6 @@ public class CountryResource extends CountryResourceBase {
 	public ResponseEntity<List<CountryDto>> bulkUpdate(@Valid @RequestBody List<CountryDto> dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.bulkUpdate(dto, graph);
-	}
-
-	@Override
-	@PatchMapping
-	public ResponseEntity<CountryDto> partialUpdate(@Valid @RequestBody CountryDto dto,
-			@Nullable @RequestParam("graph") String graph) {
-		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{codes}")

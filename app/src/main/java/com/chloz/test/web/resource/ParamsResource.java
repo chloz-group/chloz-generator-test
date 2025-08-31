@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = Constants.API_BASE_PATH + "/paramss")
+@RequestMapping(path = Constants.API_BASE_PATH + "/paramses")
 public class ParamsResource extends ParamsResourceBase {
 
 	public ParamsResource(ParamsService service) {
@@ -51,10 +51,17 @@ public class ParamsResource extends ParamsResourceBase {
 	}
 
 	@Override
-	@PutMapping
-	public ResponseEntity<ParamsDto> update(@Valid @RequestBody ParamsDto dto,
+	@PutMapping(path = "{id}")
+	public ResponseEntity<ParamsDto> update(@NotNull @PathVariable("id") Long id, @Valid @RequestBody ParamsDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.update(dto, graph);
+		return super.update(id, dto, graph);
+	}
+
+	@Override
+	@PatchMapping(path = "{id}")
+	public ResponseEntity<ParamsDto> partialUpdate(@NotNull @PathVariable("id") Long id, @RequestBody ParamsDto dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.partialUpdate(id, dto, graph);
 	}
 
 	@Override
@@ -69,13 +76,6 @@ public class ParamsResource extends ParamsResourceBase {
 	public ResponseEntity<List<ParamsDto>> bulkUpdate(@Valid @RequestBody List<ParamsDto> dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.bulkUpdate(dto, graph);
-	}
-
-	@Override
-	@PatchMapping
-	public ResponseEntity<ParamsDto> partialUpdate(@Valid @RequestBody ParamsDto dto,
-			@Nullable @RequestParam("graph") String graph) {
-		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{ids}")

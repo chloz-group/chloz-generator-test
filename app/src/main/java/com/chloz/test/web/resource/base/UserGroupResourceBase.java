@@ -1,13 +1,15 @@
 package com.chloz.test.web.resource.base;
 
+import com.chloz.test.common.exception.BusinessException;
 import com.chloz.test.dataaccess.filter.SimpleUserGroupFilter;
 import com.chloz.test.service.UserGroupService;
 import com.chloz.test.service.dto.UserGroupDto;
+import com.chloz.test.web.Constants;
 import com.chloz.test.web.resource.DefaultDomainResource;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import java.util.List;
+import java.util.Objects;
 
 public class UserGroupResourceBase extends DefaultDomainResource<Long, UserGroupDto, SimpleUserGroupFilter> {
 
@@ -17,22 +19,19 @@ public class UserGroupResourceBase extends DefaultDomainResource<Long, UserGroup
 		this.service = service;
 	}
 
-	@Override
-	public ResponseEntity<UserGroupDto> create(@Valid UserGroupDto dto, String graph) {
-		return super.create(dto, graph);
-	}
-
-	@Override
-	public ResponseEntity<UserGroupDto> update(@Valid UserGroupDto dto, String graph) {
+	public ResponseEntity<UserGroupDto> update(Long id, @Valid UserGroupDto dto, String graph) {
+		if (dto.getId() != null && !Objects.equals(id, dto.getId())) {
+			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_ID_DIFFERENT_FROM_ID_PARAM, null, 400);
+		}
+		dto.setId(id);
 		return super.update(dto, graph);
 	}
 
-	@Override
-	public ResponseEntity<List<UserGroupDto>> bulkUpdate(@Valid List<UserGroupDto> list, String graph) {
-		return super.bulkUpdate(list, graph);
-	}
-
-	public ResponseEntity<UserGroupDto> partialUpdate(@Valid UserGroupDto dto, String graph) {
+	public ResponseEntity<UserGroupDto> partialUpdate(Long id, UserGroupDto dto, String graph) {
+		if (dto.getId() != null && !Objects.equals(id, dto.getId())) {
+			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_ID_DIFFERENT_FROM_ID_PARAM, null, 400);
+		}
+		dto.setId(id);
 		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
 	}
 

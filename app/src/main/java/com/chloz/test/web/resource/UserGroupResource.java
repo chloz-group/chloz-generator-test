@@ -51,10 +51,17 @@ public class UserGroupResource extends UserGroupResourceBase {
 	}
 
 	@Override
-	@PutMapping
-	public ResponseEntity<UserGroupDto> update(@Valid @RequestBody UserGroupDto dto,
-			@Nullable @RequestParam("graph") String graph) {
-		return super.update(dto, graph);
+	@PutMapping(path = "{id}")
+	public ResponseEntity<UserGroupDto> update(@NotNull @PathVariable("id") Long id,
+			@Valid @RequestBody UserGroupDto dto, @Nullable @RequestParam("graph") String graph) {
+		return super.update(id, dto, graph);
+	}
+
+	@Override
+	@PatchMapping(path = "{id}")
+	public ResponseEntity<UserGroupDto> partialUpdate(@NotNull @PathVariable("id") Long id,
+			@RequestBody UserGroupDto dto, @Nullable @RequestParam("graph") String graph) {
+		return super.partialUpdate(id, dto, graph);
 	}
 
 	@Override
@@ -69,13 +76,6 @@ public class UserGroupResource extends UserGroupResourceBase {
 	public ResponseEntity<List<UserGroupDto>> bulkUpdate(@Valid @RequestBody List<UserGroupDto> dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.bulkUpdate(dto, graph);
-	}
-
-	@Override
-	@PatchMapping
-	public ResponseEntity<UserGroupDto> partialUpdate(@Valid @RequestBody UserGroupDto dto,
-			@Nullable @RequestParam("graph") String graph) {
-		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{ids}")

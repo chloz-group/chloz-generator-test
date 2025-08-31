@@ -53,10 +53,10 @@ public class UserResource extends UserResourceBase {
 	}
 
 	@Override
-	@PutMapping
-	public ResponseEntity<UserDto> update(@Valid @RequestBody UserDto dto,
+	@PutMapping(path = "{id}")
+	public ResponseEntity<UserDto> update(@NotNull @PathVariable("id") Long id, @Valid @RequestBody UserDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.update(dto, graph);
+		return super.update(id, dto, graph);
 	}
 
 	// TODOs : authorize this to only the administrator

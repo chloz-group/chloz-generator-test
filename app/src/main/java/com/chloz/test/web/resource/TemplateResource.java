@@ -51,10 +51,17 @@ public class TemplateResource extends TemplateResourceBase {
 	}
 
 	@Override
-	@PutMapping
-	public ResponseEntity<TemplateDto> update(@Valid @RequestBody TemplateDto dto,
+	@PutMapping(path = "{id}")
+	public ResponseEntity<TemplateDto> update(@NotNull @PathVariable("id") Long id, @Valid @RequestBody TemplateDto dto,
 			@Nullable @RequestParam("graph") String graph) {
-		return super.update(dto, graph);
+		return super.update(id, dto, graph);
+	}
+
+	@Override
+	@PatchMapping(path = "{id}")
+	public ResponseEntity<TemplateDto> partialUpdate(@NotNull @PathVariable("id") Long id, @RequestBody TemplateDto dto,
+			@Nullable @RequestParam("graph") String graph) {
+		return super.partialUpdate(id, dto, graph);
 	}
 
 	@Override
@@ -69,13 +76,6 @@ public class TemplateResource extends TemplateResourceBase {
 	public ResponseEntity<List<TemplateDto>> bulkUpdate(@Valid @RequestBody List<TemplateDto> dto,
 			@Nullable @RequestParam("graph") String graph) {
 		return super.bulkUpdate(dto, graph);
-	}
-
-	@Override
-	@PatchMapping
-	public ResponseEntity<TemplateDto> partialUpdate(@Valid @RequestBody TemplateDto dto,
-			@Nullable @RequestParam("graph") String graph) {
-		return super.partialUpdate(dto, graph);
 	}
 
 	@PostMapping(path = "enable-status/{ids}")

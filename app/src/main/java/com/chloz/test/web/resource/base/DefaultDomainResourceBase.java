@@ -80,4 +80,8 @@ public abstract class DefaultDomainResourceBase<I, D, F extends SimpleFilter> {
 		return list;
 	}
 
+	public ResponseEntity<D> partialUpdate(D dto, String graph) {
+		return ResponseEntity.status(HttpStatus.OK).body(this.service.partialUpdate(dto, graph));
+	}
+
 }
