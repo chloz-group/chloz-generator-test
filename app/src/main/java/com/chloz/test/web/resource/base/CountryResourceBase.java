@@ -7,6 +7,7 @@ import com.chloz.test.service.dto.CountryDto;
 import com.chloz.test.web.Constants;
 import com.chloz.test.web.resource.DefaultDomainResource;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class CountryResourceBase extends DefaultDomainResource<String, CountryDt
 		this.service = service;
 	}
 
-	public ResponseEntity<CountryDto> update(String code, @Valid CountryDto dto, String graph) {
+	public ResponseEntity<CountryDto> update(@NotNull String code, @Valid CountryDto dto, String graph) {
 		if (dto.getCode() != null && !Objects.equals(code, dto.getCode())) {
 			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_ID_DIFFERENT_FROM_ID_PARAM, null, 400);
 		}
@@ -27,7 +28,7 @@ public class CountryResourceBase extends DefaultDomainResource<String, CountryDt
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<CountryDto> partialUpdate(String code, CountryDto dto, String graph) {
+	public ResponseEntity<CountryDto> partialUpdate(@NotNull String code, CountryDto dto, String graph) {
 		if (dto.getCode() != null && !Objects.equals(code, dto.getCode())) {
 			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_ID_DIFFERENT_FROM_ID_PARAM, null, 400);
 		}

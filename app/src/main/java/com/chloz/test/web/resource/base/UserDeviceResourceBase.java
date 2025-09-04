@@ -7,6 +7,7 @@ import com.chloz.test.service.dto.UserDeviceDto;
 import com.chloz.test.web.Constants;
 import com.chloz.test.web.resource.DefaultDomainResource;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class UserDeviceResourceBase extends DefaultDomainResource<Long, UserDevi
 		this.service = service;
 	}
 
-	public ResponseEntity<UserDeviceDto> update(Long id, @Valid UserDeviceDto dto, String graph) {
+	public ResponseEntity<UserDeviceDto> update(@NotNull Long id, @Valid UserDeviceDto dto, String graph) {
 		if (dto.getId() != null && !Objects.equals(id, dto.getId())) {
 			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_ID_DIFFERENT_FROM_ID_PARAM, null, 400);
 		}
@@ -27,7 +28,7 @@ public class UserDeviceResourceBase extends DefaultDomainResource<Long, UserDevi
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<UserDeviceDto> partialUpdate(Long id, UserDeviceDto dto, String graph) {
+	public ResponseEntity<UserDeviceDto> partialUpdate(@NotNull Long id, UserDeviceDto dto, String graph) {
 		if (dto.getId() != null && !Objects.equals(id, dto.getId())) {
 			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_ID_DIFFERENT_FROM_ID_PARAM, null, 400);
 		}

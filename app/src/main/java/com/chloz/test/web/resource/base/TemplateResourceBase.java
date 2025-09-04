@@ -7,6 +7,7 @@ import com.chloz.test.service.dto.TemplateDto;
 import com.chloz.test.web.Constants;
 import com.chloz.test.web.resource.DefaultDomainResource;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class TemplateResourceBase extends DefaultDomainResource<Long, TemplateDt
 		this.service = service;
 	}
 
-	public ResponseEntity<TemplateDto> update(Long id, @Valid TemplateDto dto, String graph) {
+	public ResponseEntity<TemplateDto> update(@NotNull Long id, @Valid TemplateDto dto, String graph) {
 		if (dto.getId() != null && !Objects.equals(id, dto.getId())) {
 			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_ID_DIFFERENT_FROM_ID_PARAM, null, 400);
 		}
@@ -27,7 +28,7 @@ public class TemplateResourceBase extends DefaultDomainResource<Long, TemplateDt
 		return super.update(dto, graph);
 	}
 
-	public ResponseEntity<TemplateDto> partialUpdate(Long id, TemplateDto dto, String graph) {
+	public ResponseEntity<TemplateDto> partialUpdate(@NotNull Long id, TemplateDto dto, String graph) {
 		if (dto.getId() != null && !Objects.equals(id, dto.getId())) {
 			throw new BusinessException(Constants.ERROR_MESSAGE_OBJECT_ID_DIFFERENT_FROM_ID_PARAM, null, 400);
 		}
